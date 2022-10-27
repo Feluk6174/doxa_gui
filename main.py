@@ -73,9 +73,10 @@ class MyApp (App):
 
 
 if __name__ == "__main__":
+    #MyApp.run()
     try:
         MyApp().run()
-    except:
+    except IndexError:
         connection.close()
 
 #change description api def

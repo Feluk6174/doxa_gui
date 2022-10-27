@@ -8,6 +8,7 @@ from kivy.uix.button import ButtonBehavior
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import AsyncImage
 from kivy.uix.scrollview import ScrollView
@@ -28,6 +29,7 @@ from kivy.graphics import BorderImage
 from kivy.lang import Builder
 
 import access_my_info
+
 
 
 def change_time(date):
@@ -72,6 +74,22 @@ def hex_color(hex_num):
         col = '#06ffff'
     return col
 
+class MyButton(Button):
+    def __init__(self, screen, order_number, background, **kwargs):
+        super().__init__(**kwargs)
+        self.screen = screen
+        self.order_number = order_number
+        self.background = background
+    last_clicked = 1
+
+    def on_touch_down(self, touch):
+        if touch.is_double_tap:
+            screen = self.screen
+            partial(screen.like_press, self.order_number, self.background)
+            self.last_clicked *= -1
+        else:
+            screen = self.screen
+            partial(screen.name_press, self.order_number, self.background)
 
 def build_image(screen, user_image, order_number, width):
     image_grid = GridLayout(cols = 8, size_hint_x = None)
@@ -90,58 +108,27 @@ def filter_chars(text:str):
             text = "".join(text)
     return text
 
+def get_post_image(num, like):
+    if like == 0:
+        if num == 1:
+            return "./images/yellow.jpeg"
+        elif num == 2:
+            return "./images/purple.jpeg"
+        elif num == 3:
+            return "./images/green.jpeg"
+    elif like == 1:
+        return "./images/pink.jpeg"
+
 #def crear botó
-def make_post_btn(screen, user_name, user_image, post_flags, text_content, date, post_id, like_self, order_number):
-    post = BoxLayout(size_hint_y = None, height = Window.size[0] / 1.61, orientation = "vertical")
-        
-    post_like = int(like_self)
-        
-    first_box = BoxLayout(orientation = "horizontal", size_hint = (1, 0.5))
-    post.add_widget(first_box)
-            
-    image_grid = build_image(screen, user_image, order_number, Window.size[0] / 1.61 / 6)
-    first_box.add_widget(image_grid)
-        
-    post_user_name = Button(text = user_name)
-    first_box.add_widget(post_user_name)
-    post_user_name.bind(on_release = partial(screen.name_press, order_number))
+def make_post_btn(screen, user_name, text_content, date, like_self, order_number, background):
+    
+    post = BoxLayout(size_hint_y = None, height = Window.size[1] * 0.9 - Window.size[0] / 5, orientation = "vertical")
+    
+    main_btn = MyButton(screen=screen, order_number= order_number, background=background, background_normal = get_post_image(background, like_self))
+    post.add_widget(main_btn)
 
-    date = Label(size_hint_x = None, width = Window.size[0] / 1.61 / 3, text = str(change_time(date)))
-    first_box.add_widget(date)
-
-    second_box = BoxLayout(size_hint = (1, 2))
-    post.add_widget(second_box)
-
-    txt = Button (text = adapt_text_to_window(text_content, 15, Window.size[0]), on_release = partial(screen.content_post_press, order_number))
-    second_box.add_widget(txt)
-
-    third_box = BoxLayout(size_hint = (1, 0.5))
-    post.add_widget(third_box)
-
-    flags_box = BoxLayout(size_hint = (1, 1))
-    third_box.add_widget(flags_box)
-
-    all_flags = [['images/check_verd.png'], ['images/age18.png'], ['images/blood.png'], ['images/fist.png'], ['images/soga.png'], ['images/art.png'], ['images/discuss.png'], ['images/politic.png'], ['images/sport.png'], ['images/videogame.png'], ['images/music.png']]
-    for x in range (len(all_flags) - 1):
-        if post_flags[x] == "1":
-            flag_btn = Button(border = (0, 0, 0, 0), size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12, background_normal = all_flags[x + 1][0])
-            #all_flags[x + 1].append(f_btn)
-            #all_flags[x + 1].append(0)
-            flags_box.add_widget(flag_btn)
-
-    likes_box = BoxLayout(size_hint = (None, 1), width = Window.size[0] / 1.61 / 6)
-    third_box.add_widget(likes_box)
-
-    like_heart = Button(border = (0, 0, 0, 0))
-    if post_like == 0:
-        like_heart.background_normal = 'images/heart.png'
-    if post_like == 1:
-        like_heart.background_normal = 'images/heart2.png'
-    likes_box.add_widget(like_heart)
-    like_heart.bind(on_release = partial(screen.like_press, order_number))
-
-    #num_likes = Label (text = (str(nlikes)), size_hint = (1, 1))
-    #likes_box.add_widget(num_likes)
+    text = str(change_time(date)) + "\n" + adapt_text_to_window(text_content, 15, Window.size[0]) + "\n" + "    - " + user_name
+    main_btn.text = text
 
     return post
 

@@ -206,7 +206,8 @@ class RegisterScreen (Screen):
                 self.text_load = Label(text = "Creating user...", size_hint = (1, 0.12))
                 self.main_box_load.add_widget(self.text_load)
 
-                self.create_user()
+                Clock.shedule_once(self.create_user())
+
 
     #creating user keys and starting session
     def create_user(self):

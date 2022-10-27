@@ -53,41 +53,40 @@ class PostUserScreen (Screen):
         self.header_btn.bind(on_release = self.header_btn_press)
         
 
-        self.content_box = BoxLayout (size_hint = (1, 0.9))
+        self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
         self.main_all_box.add_widget(self.content_box)
-        
-        self.content_grid = BoxLayout(orientation = "vertical")
-        self.content_box.add_widget(self.content_grid)
 
         self.main_post_content_input = TextInput(multiline = True, size_hint = (1, 4))
-        self.content_grid.add_widget(self.main_post_content_input)
+        self.content_box.add_widget(self.main_post_content_input)
 
-        self.flag_box = BoxLayout(size_hint = (1, 0.5))
-        self.content_grid.add_widget(self.flag_box)
+        self.background_box = BoxLayout(size_hint = (1, 0.5))
+        self.content_box.add_widget(self.background_box)
 
-        #flags
-        #self.fl_bt = Button(text = "flags to add")
-        #self.flag_box.add_widget(self.fl_bt)
+        #backgrounds
+        #self.fl_bt = Button(text = "backgrounds to add")
+        #self.background_box.add_widget(self.fl_bt)
 
-        self.flag_grid = GridLayout(rows = 1, size_hint_x = None, spacing = 1)
-        self.flag_grid.bind(minimum_width=self.flag_grid.setter('width'))
+        self.background_grid = GridLayout(rows = 1, size_hint_x = None, spacing = 1)
+        self.background_grid.bind(minimum_width=self.background_grid.setter('width'))
         
-        self.flag_grid_scroll = ScrollView ()
-        self.flag_grid_scroll.add_widget (self.flag_grid)
-        self.flag_box.add_widget (self.flag_grid_scroll)
+        self.background_grid_scroll = ScrollView ()
+        self.background_grid_scroll.add_widget (self.background_grid)
+        self.background_box.add_widget (self.background_grid_scroll)
 
-        self.all_flags = [['images/check_verd.png'], ['images/age18.png'], ['images/blood.png'], ['images/fist.png'], ['images/soga.png'], ['images/art.png'], ['images/discuss.png'], ['images/politic.png'], ['images/sport.png'], ['images/videogame.png'], ['images/music.png']]
-        for d in range(len(self.all_flags) - 1):
-            self.all_flags[d + 1].append(str(d + 1))
+        self.all_backgrounds = ['images/check_verd.png', 'images/green.png', 'images/yellow.png', 'images/purple.png']
+        self.all_background_buttons = []
+        self.background_status = 1
         
-        for x in range (len(self.all_flags) - 1):
-            self.flag_btn = Button(border = (0, 0, 0, 0), font_size = 1, size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12, text = str(self.all_flags[x + 1][1]), on_release = self.flag_press, background_normal = self.all_flags[x + 1][0])
-            self.all_flags[x + 1].append(self.flag_btn)
-            self.all_flags[x + 1].append(0)
-            self.flag_grid.add_widget(self.flag_btn)
-            
+        for x in range (len(self.all_backgrounds) - 1):
+            self.background_btn = Button(border = (0, 0, 0, 0), font_size = 1, size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12, text = str(self.all_backgrounds[x + 1]), on_release = self.background_press, background_normal = self.all_backgrounds[x + 1][0])
+            self.all_background_buttons.append(self.background_btn)
+            self.background_grid.add_widget(self.background_btn)
+        
+        self.main_post_content_input.background_normal = self.all_backgrounds[1]
+        self.main_post_content_input.background_active = self.all_backgrounds[1]
+
         self.send_post_btn = Button (text = "Publish", size_hint = (1, 1))
-        self.content_grid.add_widget(self.send_post_btn)
+        self.content_box.add_widget(self.send_post_btn)
         self.send_post_btn.bind(on_press = self.send_post_press)
 
         #self.last = Button (text = "All your posts", size_hint = (1, 0.67))
@@ -123,33 +122,31 @@ class PostUserScreen (Screen):
     def header_btn_press(self, instance):
         pass
     
-    def flag_press(self, instance):
-        flag_number = int(instance.text)
-        self.all_flags[flag_number][3] = (self.all_flags[flag_number][3] + 1) % 2
-        if self.all_flags[flag_number][3] == 1:
-            instance.background_normal = self.all_flags[0][0]
-        if self.all_flags[flag_number][3] == 0:
-            instance.background_normal = self.all_flags[flag_number][0]
+    def background_press(self, instance):
+        background_number = int(instance.text)
+        self.background_status = self.all_backgrounds[background_number]
+        self.main_post_content_input.background_normal = self.all_backgrounds[background_number]
+        self.main_post_content_input.background_active = self.all_backgrounds[background_number]
+        instance.background_normal = self.all_backgrounds[0]
+        for x in range (len(self.all_backgrounds)-1):
+            if x+1 != background_number:
+                self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
 
     def send_post_press(self, instance):
-        self.flag_list = ""
-        for y in range (len(self.all_flags) - 1):
-            self.flag_list = self.flag_list + str(self.all_flags[y + 1][3])
-        self.send_post_final(self.flag_list, functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text)))
-        self.main_post_content_input.text = ""
-        for y in range (len(self.all_flags) - 1):
-            if self.all_flags[y + 1][3] == 1:
-                self.all_flags[y + 1][2].trigger_action(duration = 0)
-
-    def send_post_final(self, post_flags, text_content):
+        text_content = functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text))
         conn = self.connection
         user_name = access_my_info.get_user_name()
         private_key = access_my_info.get_priv_key()
-        post_flags = str(post_flags)
+        post_background = str(self.background_status)
         #post_likes = nlikes
         #date = int(time.time())
-        post_id = abs(hash(str(text_content) + str(user_name) + str(post_flags) + str(time.time())))
-        conn.post(text_content, post_id, user_name, post_flags, private_key)    
+        post_id = abs(hash(str(text_content) + str(user_name) + str(post_background) + str(time.time())))
+        conn.post(text_content, post_id, user_name, post_background, private_key)    
+        
+        self.main_post_content_input.text = ""
+        for x in range (len(self.all_backgrounds)-1):
+            self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
+
 
     def press_chat_btn(self, instance):
         self.manager.transition = SlideTransition()

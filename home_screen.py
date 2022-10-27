@@ -52,8 +52,8 @@ class MainScreen (Screen):
         my_following_screen.add_screens(self, self.profile_screen, self.other_profile_screen)
 
 
-        my_search_screen.refresh_search_screen(0)
-        my_profile_screen.refresh_profile_screen(0)
+        #my_search_screen.refresh_search_screen(0)
+        #my_profile_screen.refresh_profile_screen(0)
         print(32)
 
         self.connection = conn
@@ -157,24 +157,42 @@ class MainScreen (Screen):
         self.all_posts_i_get = []
         self.posts_box.clear_widgets()
         self.posts_grid.remove_widget(self.posts_box)
-        print(37)
-        self.all_posts_info = self.get_new_follower_posts(self.connection)
+
+        all_my_following = access_my_info.get_following()
+        print(301)
+        my_liked_posts = access_my_info.get_liked_id()
+        print(302)
+        my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following)
         print(310)
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = Window.size[0] / 1.61 * (len(self.all_posts_info)))
+        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1] * 0.9 - Window.size[0] / 5) * (len(my_posts)))
         self.posts_grid.add_widget(self.posts_box)
         print(38)
-        for p in range(len(self.all_posts_info)):
-            self.post_btn = functions.make_post_btn(self, self.all_posts_info[p][0], self.all_posts_info[p][1], self.all_posts_info[p][2], self.all_posts_info[p][3], self.all_posts_info[p][4], self.all_posts_info[p][5], self.all_posts_info[p][6], p)
+        for a in range(len(my_posts)):
+            #user_info = connection.get_user(all_test_posts[a]["user_id"])
+            #print(user_info)
+            print(304)
+            #0 none, 1 yes
+            actual_maybe_like = 0
+            print(305)
+            for liked in my_liked_posts:
+                    if liked == my_posts[a][0]["id"]:
+                        print(306)
+                        actual_maybe_like = 1
+            self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
             self.posts_box.add_widget(self.post_btn)
-            self.all_posts_i_get.append([self.all_posts_info[p][5], self.post_btn, self.all_posts_info[p][6]])
+            self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
+            print(307)
+        print(308)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         print(39)
 
+    """
     def get_new_follower_posts(self, connection):
         all_my_following = access_my_info.get_following()
         print(301)
         my_liked_posts = access_my_info.get_liked_id()
         print(302)
+        my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following)
         all_test_posts_1 = []
         all_posts = []
         self.all_users = []
@@ -187,7 +205,8 @@ class MainScreen (Screen):
             for post in follower_posts:
                 all_test_posts_1.append([post, b])
         all_test_posts = functions.order_posts_by_timestamp(all_test_posts_1)
-        for a in range(len(all_test_posts)):
+        
+        for a in range(len(my_posts)):
             #user_info = connection.get_user(all_test_posts[a]["user_id"])
             #print(user_info)
             print(304)
@@ -195,15 +214,17 @@ class MainScreen (Screen):
             actual_maybe_like = 0
             print(305)
             for liked in my_liked_posts:
-                    if liked == all_test_posts[a][0]["id"]:
+                    if liked == my_posts[a][0]["id"]:
                         print(306)
                         actual_maybe_like = 1
-            all_posts.append((all_test_posts[a][0]["user_id"], self.all_users[all_test_posts[a][1]]["profile_picture"], all_test_posts[a][0]["flags"], all_test_posts[a][0]["content"], all_test_posts[a][0]["time_posted"],all_test_posts[a][0]["id"], actual_maybe_like))
+            self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background"])
+            self.posts_box.add_widget(self.post_btn)
+            self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
             print(307)
         print(308)
-        return all_posts
-        
-    def name_press(self, order_number, instance):
+        return
+        """
+    def name_press(self, order_number, background, instance):
         #self.go_to_user_profile(order_number)
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.text)
@@ -211,6 +232,7 @@ class MainScreen (Screen):
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
 
+    """
     def go_to_user_profile(self, order_number):
         con = self.connection
         other_user_profile_screen = self.other_profile_screen
@@ -224,9 +246,10 @@ class MainScreen (Screen):
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
+        """
 
-    def image_press(self, order_number, instance):
-        self.go_to_user_profile(order_number)
+    #def image_press(self, order_number, instance):
+    #    self.go_to_user_profile(order_number)
 
     def content_post_press(self, order_number, instance):
         #con = self.connection
@@ -234,13 +257,12 @@ class MainScreen (Screen):
         #pyperclip.copy(instance.text)
         pass
 
-    def like_press(self, order_number, instance):
+    def like_press(self, order_number, background, instance):
         num = self.all_posts_i_get[order_number][2]
         num = (num + 1) % 2
         if num == 1:
-            instance.background_normal = 'images/heart2.png'
             access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], 1)
         if num == 0:
-            instance.background_normal = 'images/heart.png'
             access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], 0)
+        instance.background_normal = functions.get_post_image(background, num)
         self.all_posts_i_get[order_number][2] = num
