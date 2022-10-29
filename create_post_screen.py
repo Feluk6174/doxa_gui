@@ -73,12 +73,12 @@ class PostUserScreen (Screen):
         self.background_grid_scroll.add_widget (self.background_grid)
         self.background_box.add_widget (self.background_grid_scroll)
 
-        self.all_backgrounds = ['images/check_verd.png', 'images/green.png', 'images/yellow.png', 'images/purple.png']
+        self.all_backgrounds = ['images/check_verd.png', 'images/green.jpeg', 'images/yellow.jpeg', 'images/purple.jpeg']
         self.all_background_buttons = []
         self.background_status = 1
         
         for x in range (len(self.all_backgrounds) - 1):
-            self.background_btn = Button(border = (0, 0, 0, 0), font_size = 1, size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12, text = str(self.all_backgrounds[x + 1]), on_release = self.background_press, background_normal = self.all_backgrounds[x + 1][0])
+            self.background_btn = Button(border = (0, 0, 0, 0), font_size = 1, size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12, text = str(x + 1), on_release = self.background_press, background_normal = self.all_backgrounds[x + 1])
             self.all_background_buttons.append(self.background_btn)
             self.background_grid.add_widget(self.background_btn)
         
@@ -124,7 +124,7 @@ class PostUserScreen (Screen):
     
     def background_press(self, instance):
         background_number = int(instance.text)
-        self.background_status = self.all_backgrounds[background_number]
+        self.background_status = background_number
         self.main_post_content_input.background_normal = self.all_backgrounds[background_number]
         self.main_post_content_input.background_active = self.all_backgrounds[background_number]
         instance.background_normal = self.all_backgrounds[0]

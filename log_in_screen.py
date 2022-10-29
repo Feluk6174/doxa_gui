@@ -55,15 +55,6 @@ class LogInScreen (Screen):
         
         self.title = Label (text = ("Small brother"), size_hint=(1, None), height = Window.size[1] / 8)
         self.title_box.add_widget(self.title)
-        
-        self.logo_box = BoxLayout(orientation = "horizontal", size_hint = (1, None), height = Window.size[1] * (1- 4/8 - 1/10))
-        self.title_box.add_widget(self.logo_box)
-
-        self.black_label = Label(size_hint = (None, 1), width = (Window.size[0] - Window.size[1] * (1- 4/8 - 1/10))/2)
-        self.logo_box.add_widget(self.black_label)
-
-        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), height = Window.size[1] * (1- 4/8 - 1/10), width = Window.size[1] * (1- 4/8 - 1/10), background_normal = 'images/logo.png', background_down = 'images/logo.png')
-        self.logo_box.add_widget(self.logo)
 
         #cos de la pantalla. text inputs i boto
         self.username_box = BoxLayout(orientation = 'vertical', size_hint=(1, None), height = Window.size[1] / 8)
@@ -86,6 +77,17 @@ class LogInScreen (Screen):
         #self.password_text_input.bind(keyboard_on_key_down = self.password_text_input_background_image_f)
         self.password_box.add_widget(self.password_text_input)
         
+        #logo
+        self.logo_box = BoxLayout(orientation = "horizontal", size_hint = (1, None), height = Window.size[1] * (1- 4/8 - 1/10))
+        self.main_box.add_widget(self.logo_box)
+
+        self.black_label = Label(size_hint = (None, 1), width = (Window.size[0] - Window.size[1] * (1- 4/8 - 1/10))/2)
+        self.logo_box.add_widget(self.black_label)
+
+        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), height = Window.size[1] * (1- 4/8 - 1/10), width = Window.size[1] * (1- 4/8 - 1/10), background_normal = 'images/logo.png', background_down = 'images/logo.png')
+        self.logo_box.add_widget(self.logo)
+
+        #buttons
         self.log_in_btn = Button(text = "Log In", border = (0, 0, 0, 0), on_release = self.log_in_press, size_hint=(1, None), height = Window.size[1] / 8)
         self.main_box.add_widget(self.log_in_btn)
 

@@ -117,9 +117,6 @@ class RegisterScreen (Screen):
         #self.repeat_password_text_input.bind(keyboard_on_key_down = self.repeat_password_text_input_background_image_f)
         self.repeat_password_box.add_widget(self.repeat_password_text_input)
         
-        self.image_button = Button(text = "Make your profile image", on_press = self.to_image_making)
-        self.main_box.add_widget(self.image_button)
-        
         self.description_box = BoxLayout(orientation = 'vertical', size_hint_y = 2)
         self.main_box.add_widget(self.description_box)
 
@@ -129,6 +126,13 @@ class RegisterScreen (Screen):
         self.description_text_input = TextInput(multiline = False, size_hint_y = 3)
         #self.description_text_input.bind(keyboard_on_key_down = self.description_text_input_background_image_f)
         self.description_box.add_widget(self.description_text_input)
+        
+        self.image_button = Button(text = "Make your profile image", on_press = self.to_image_making)
+        self.main_box.add_widget(self.image_button)
+
+        self.register_btn = Button(size_hint = (1, 1), text = "Register")
+        self.main_box.add_widget(self.register_btn)
+        self.register_btn.bind(on_release = self.register)
         
         self.log_in_btn = Button(size_hint_y = 0.666666, text = "Log In", border = (0, 0, 0, 0), on_release = self.log_in_press)
         self.main_box.add_widget(self.log_in_btn)
@@ -143,10 +147,7 @@ class RegisterScreen (Screen):
         self.following_text_input = TextInput(multiline = False)
         #self.following_text_input.bind(keyboard_on_key_down = self.following_text_input_background_image_f)
         self.following_box.add_widget(self.following_text_input)"""
-        
-        self.register_btn = Button(size_hint = (1, 1), text = "Register")
-        self.main_box.add_widget(self.register_btn)
-        self.register_btn.bind(on_release = self.register)
+
         
     #creem o modifiquem la imatge de perfil 
     def to_image_making(self, instance):
@@ -206,7 +207,8 @@ class RegisterScreen (Screen):
                 self.text_load = Label(text = "Creating user...", size_hint = (1, 0.12))
                 self.main_box_load.add_widget(self.text_load)
 
-                Clock.shedule_once(self.create_user())
+                #Clock.shedule_once()
+                self.create_user()
 
 
     #creating user keys and starting session
@@ -249,7 +251,7 @@ class RegisterScreen (Screen):
         #dictionary["basic_info"]["user_key_storage"] = "rsa_key.bin"
         dictionary["semi_basic_info"]["profile_picture"] = self.image_str
         dictionary["semi_basic_info"]["description"] = self.description_text
-        dictionary["semi_basic_info"]["user_following"] = []
+        dictionary["semi_basic_info"]["user_following"] = ["doxa"]
         dictionary["semi_basic_info"]["liked_posts_id"] = []
         my_info_file = open("my_info.json", "w")
         my_info_file.write(json.dumps(dictionary))

@@ -75,8 +75,9 @@ def hex_color(hex_num):
     return col
 
 class MyButton(Button):
-    def __init__(self, screen, order_number, background, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, screen, order_number, background, like, **kwargs):
+        super(MyButton, self).__init__(**kwargs)
+        self.background_normal = get_post_image(background, like)
         self.screen = screen
         self.order_number = order_number
         self.background = background
@@ -109,6 +110,8 @@ def filter_chars(text:str):
     return text
 
 def get_post_image(num, like):
+    num = int(num)
+    like = int(like)
     if like == 0:
         if num == 1:
             return "./images/yellow.jpeg"
@@ -124,7 +127,7 @@ def make_post_btn(screen, user_name, text_content, date, like_self, order_number
     
     post = BoxLayout(size_hint_y = None, height = Window.size[1] * 0.9 - Window.size[0] / 5, orientation = "vertical")
     
-    main_btn = MyButton(screen=screen, order_number= order_number, background=background, background_normal = get_post_image(background, like_self))
+    main_btn = MyButton(screen=screen, order_number= order_number, background=background, like = like_self)
     post.add_widget(main_btn)
 
     text = str(change_time(date)) + "\n" + adapt_text_to_window(text_content, 15, Window.size[0]) + "\n" + "    - " + user_name
