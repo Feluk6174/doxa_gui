@@ -52,7 +52,7 @@ class MainScreen (Screen):
         my_following_screen.add_screens(self, self.profile_screen, self.other_profile_screen)
 
 
-        #my_search_screen.refresh_search_screen(0)
+        my_search_screen.refresh_search_screen(0)
         #my_profile_screen.refresh_profile_screen(0)
         print(32)
 
@@ -155,6 +155,7 @@ class MainScreen (Screen):
 
     def get_my_posts(self, instance):
         self.all_posts_i_get = []
+        self.posts_users_list = []
         self.posts_box.clear_widgets()
         self.posts_grid.remove_widget(self.posts_box)
 
@@ -162,7 +163,8 @@ class MainScreen (Screen):
         print(301)
         my_liked_posts = access_my_info.get_liked_id()
         print(302)
-        my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, include_background_color=1)
+        my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following)
+        #include_background_color=str(1)
         print(my_posts)
         self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1] * 0.9 - Window.size[0] / 5) * (len(my_posts)))
         self.posts_grid.add_widget(self.posts_box)
@@ -181,6 +183,7 @@ class MainScreen (Screen):
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
             self.posts_box.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
+            self.all_posts_i_get.append[my_posts[a]["user_id"]]
             print(307)
         print(308)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
@@ -227,7 +230,7 @@ class MainScreen (Screen):
     def name_press(self, order_number, background, instance):
         #self.go_to_user_profile(order_number)
         other_user_profile_screen = self.other_profile_screen
-        other_user_profile_screen.refresh_profile_screen(instance.text)
+        other_user_profile_screen.refresh_profile_screen(self.posts_users_list[order_number])
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"

@@ -53,7 +53,7 @@ class ChatScreen (Screen):
         self.content_box = BoxLayout (size_hint_y = 0.9)
         self.main_all_box.add_widget(self.content_box)
         
-        self.content_btn = Button(border = (0, 0, 0, 0), text = "Coming soon")
+        self.content_btn = Button(border = (0, 0, 0, 0), text = "Coming soon", background_normal = './images/pink.jpeg')
         self.content_box.add_widget(self.content_btn)
 
 
