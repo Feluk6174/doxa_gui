@@ -34,8 +34,10 @@ class ProfileScreen (Screen):
     def __init__(self, connection, **kwargs):
         super(ProfileScreen, self).__init__(**kwargs)
         print (5)
-
+        print(555)
         self.connection = connection
+
+        print(59)
 
         self.main_all_box = BoxLayout(orientation = "vertical")
         self.add_widget(self.main_all_box)
@@ -43,16 +45,23 @@ class ProfileScreen (Screen):
         self.header_box = BoxLayout (size_hint = (1, 0.1))
         self.main_all_box.add_widget(self.header_box)
 
+        print(56)
+
         self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.refresh_profile_screen)
         self.header_box.add_widget(self.logo)
         
+        print(57)
+
         self.header_text = Label(text = "Small brother", size_hint = (2, 1))
         self.header_box.add_widget(self.header_text)
         
+        print(58)
+
         self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
         self.header_box.add_widget(self.header_btn)
         self.header_btn.bind(on_release = self.header_btn_press)
         
+        print(53)
 
         self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
         self.main_all_box.add_widget(self.content_box)
@@ -70,12 +79,16 @@ class ProfileScreen (Screen):
         self.user_image_box = BoxLayout(size_hint_x = None, width = (Window.size[1]  - Window.size[0] / 5) * 0.9 / 5)
         self.user_image_name_box.add_widget(self.user_image_box)
         
+        print(54)
+
         self.user_image_grid = functions.build_image(self, access_my_info.get_profile_image(), -1, (Window.size[1]  - Window.size[0] / 5) * 0.9 / 5)
         self.user_image_box.add_widget(self.user_image_grid)
 
         self.user_name_btn = Button(text = access_my_info.get_user_name())
         self.user_image_name_box.add_widget(self.user_name_btn)
         #self.user_name_btn.bind(on_release = self.user_name_press)
+
+        print(52)
 
         self.description_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
         self.content_grid.add_widget(self.description_box)
@@ -84,6 +97,8 @@ class ProfileScreen (Screen):
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
+        print(55)
+
         self.user_following_btn = Button(text = "Following", size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
         self.content_grid.add_widget(self.user_following_btn)
         self.user_following_btn.bind(on_release = self.user_following_press)
@@ -91,18 +106,18 @@ class ProfileScreen (Screen):
         self.user_posts_header_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
         self.content_grid.add_widget(self.user_posts_header_box)
 
-        #self.user_posts = Button(text = "My Posts")
-        #self.user_posts_header_box.add_widget(self.user_posts)
-        #self.us_posts.bind(on_press = self.UserPosts)
+        self.user_posts_btn = Button(text = "My Posts", on_release = self.user_posts_press)
+        self.user_posts_header_box.add_widget(self.user_posts_btn)
         
-        #self.fav = Button (text = "Favourites")
-        #self.u_posts_all.add_widget(self.fav)
-        #self.fav.bind(on_press = self.UserFavourites)
+        self.favourite_posts_btn = Button (text = "Favourites")
+        self.user_posts_header_box.add_widget(self.favourite_posts_btn)
+        self.favourite_posts_btn.bind(on_release = self.user_favourites_press)
 
         #firstposts
         #current: 1 = my, 2 = fav
         self.current_posts = 0
         
+        print(51)
         
         #self.user_posts_press(0)
 
@@ -170,10 +185,10 @@ class ProfileScreen (Screen):
 
     def user_posts_press(self, instance):
         conn = self.connection
-        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text)
+        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_order = 'desc')
         #self.my_posts_list = access_my_info.get_my_posts()
         #self.my_posts_list = []
-        self.my_posts_list = functions.order_posts_by_timestamp(self.my_posts_list)
+        #self.my_posts_list = functions.order_posts_by_timestamp(self.my_posts_list)
 
         if self.current_posts == 2:
             self.favourite_posts_box.clear_widgets()

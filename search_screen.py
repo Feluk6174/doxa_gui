@@ -80,7 +80,8 @@ class SearchScreen (Screen):
 
         #firstposts
         #current: 1 = new, 2 = search
-        self.current_posts = 0        
+        self.current_posts = 0
+        self.last_clicked = 1      
 
         #self.new_posts_header_press(0)
         self.new_posts_header_display_btn = Button(text = "New")
@@ -176,7 +177,7 @@ class SearchScreen (Screen):
 
         self.sort_btn_list = []
         for a in range (len(self.sort_list)):
-            self.sort_btn = Button(text = a, font_size = 1, background_normal = self.all_flags[a + 1], border = (0, 0, 0, 0), size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12)
+            self.sort_btn = Button(text = str(a), font_size = 1, background_normal = self.all_flags[a + 1], border = (0, 0, 0, 0), size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 12)
             self.filter_box.add_widget(self.sort_btn)
             self.sort_btn_list.append(self.sort_btn)
 
@@ -214,7 +215,7 @@ class SearchScreen (Screen):
         self.search_header_display_btn.bind(on_release = self.search_header_press)
 
 
-        self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * Window.size[0] / 1.61
+        self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1] * 0.9 - Window.size[0] / 5)
 
         #new posts
         self.content_in_scroll_box.add_widget(self.new_posts_box)
@@ -226,13 +227,13 @@ class SearchScreen (Screen):
         connection = self.connection
         self.all_newest_posts_info = connection.get_posts(sort_by = "time_posted", sort_order = "desc", num = 10)
         #include_background_color = str(1)
-        
+
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
         #print(self.all_newest_posts_info)
         #create a list with users searched. in next def we get info from list
 
         self.new_posts_box = BoxLayout(orientation = 'vertical')
-        self.content_in_scroll_box.add_widget(self.new_posts_box)
+        #self.content_in_scroll_box.add_widget(self.new_posts_box)
 
         self.all_displayed_new_posts_list = []
 
@@ -249,7 +250,7 @@ class SearchScreen (Screen):
             self.new_posts_box.add_widget(self.post_btn)
             self.all_displayed_new_posts_list.append([self.all_newest_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_newest_posts_info[t]["user_id"]])
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
-        #self.display_newest_posts()
+        self.new_posts_header_press(0)
 
     #def display_newest_posts(self):
     #    self.content_in_scroll_box.add_widget(self.new_posts_box)
@@ -268,16 +269,20 @@ class SearchScreen (Screen):
             self.flag_list = self.flag_list + str(self.sort_list[y])
         return self.flag_list
 
-    def name_press(self, order_number, background, instance):
+    def name_press(self, instance):
         #self.go_to_user_profile(order_number)
-        other_user_profile_screen = self.other_profile_screen
-        if self.current_posts == 1:
-            other_user_profile_screen.refresh_profile_screen(self.all_displayed_new_posts_list[order_number][3])
-        elif self.current_posts == 2:
-            other_user_profile_screen.refresh_profile_screen(self.all_displayed_searched_posts_list[order_number][3])
-        self.manager.transition = SlideTransition()
-        self.manager.current = "other_profile"
-        self.manager.transition.direction = "right"
+        order_number = instance.order_number
+        if self.last_clicked == -1:
+            self.last_clicked = self.last_clicked * -1
+        elif self.last_clicked == 1:
+            other_user_profile_screen = self.other_profile_screen
+            if self.current_posts == 1:
+                other_user_profile_screen.refresh_profile_screen(self.all_displayed_new_posts_list[order_number][3])
+            elif self.current_posts == 2:
+                other_user_profile_screen.refresh_profile_screen(self.all_displayed_searched_posts_list[order_number][3])
+            self.manager.transition = SlideTransition()
+            self.manager.current = "other_profile"
+            self.manager.transition.direction = "right"
     
     def name_press_user(self, instance):
         other_user_profile_screen = self.other_profile_screen
@@ -319,7 +324,7 @@ class SearchScreen (Screen):
         self.search_user_input.text = ""
         self.search_post_hastags_input.text = ""
 
-        self.sort_list[0, 0]
+        self.sort_list = [0, 0]
         
         for x in range (len(self.all_flags) - 1):
             self.sort_btn_list[x].background_normal = self.all_flags[x + 1]
@@ -339,7 +344,7 @@ class SearchScreen (Screen):
         #self.searched_box.clear_widgets()
         if self.search_post_hastags_input.text != "" or self.get_filter_flags() != "00":
             print(1)
-            searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_post_hastags_input.text), num = 10)
+            searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_post_hastags_input.text), sort_by = "time_posted", sort_order = "desc", num = 10)
             #exclude_flags = self.get_filter_flags()
             if searched_posts != ():
                 self.all_displayed_searched_posts_list = []
@@ -386,20 +391,24 @@ class SearchScreen (Screen):
 
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
-    def like_press(self, order_number, background, instance):
+    def like_press(self, instance):
+        print(3)
+        order_number = instance.order_number
+        background = instance.background
         num = self.all_displayed_new_posts_list[order_number][2]
         num = (num + 1) % 2
         if num == 1:
             instance.background_normal = 'images/pink.jpeg'
             if self.current_posts == 1:
                 access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 1)
-            elif self.current_posts == 1:
+            elif self.current_posts == 2:
                 access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], 1)
-        if num == 0:
+        elif num == 0:
             instance.background_normal = background
+            print(background)
             if self.current_posts == 1:
                 access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 0)
-            if self.current_posts == 1:
+            elif self.current_posts == 2:
                 access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], 0)
         self.all_displayed_new_posts_list[order_number][2] = num
 

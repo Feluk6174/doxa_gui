@@ -103,7 +103,7 @@ class ImageScreen (Screen):
 
         prof_screen = self.profile_screen
         prof_screen.user_image_box.clear_widgets()
-        prof_screen.user_image_grid = functions.build_image(prof_screen, access_my_info.get_profile_image(), 0, (Window.size[1]  - Window.size[0] / 5) * 0.9 / 5)
+        prof_screen.user_image_grid = functions.build_image(prof_screen, access_my_info.get_profile_image(), -1, (Window.size[1]  - Window.size[0] / 5) * 0.9 / 5)
         prof_screen.user_image_box.add_widget(prof_screen.user_image_grid)
         self.manager.transition = FallOutTransition()
         self.manager.current = "profile"

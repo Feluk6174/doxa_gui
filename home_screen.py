@@ -101,7 +101,7 @@ class MainScreen (Screen):
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
 
-        self.chat_btn = Button (text = ("C"))
+        self.chat_btn = Button (background_normal = './images/chat.png')
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 

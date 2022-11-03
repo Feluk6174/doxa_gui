@@ -14,6 +14,7 @@ from kivy.uix.image import AsyncImage
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
 from kivy.base import runTouchApp
+from kivy.clock import Clock
 from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -75,22 +76,34 @@ def hex_color(hex_num):
     return col
 
 class MyButton(Button):
-    def __init__(self, screen, order_number, background, like, **kwargs):
+    def __init__(self, screen, order_number, background, user, like, date, content, **kwargs):
         super(MyButton, self).__init__(**kwargs)
         self.background_normal = get_post_image(background, like)
         self.screen = screen
         self.order_number = order_number
         self.background = background
-    last_clicked = 1
+        self.text = str(change_time(date)) + "               " + "\n" + adapt_text_to_window(content, 30, Window.size[0]) + "\n" + "           - " + user
+        self.color = (1, 0, 1, 1)
+        self.size_hint_y = None 
+        self.height = Window.size[1] * 0.9 - Window.size[0] / 5
+        self.orientation = "vertical"
+        self.user_name = user
+        self.last_clicked = 1
 
     def on_touch_down(self, touch):
-        if touch.is_double_tap:
+        if self.collide_point(touch.x, touch.y):
             screen = self.screen
-            partial(screen.like_press, self.order_number, self.background)
-            self.last_clicked *= -1
-        else:
-            screen = self.screen
-            partial(screen.name_press, self.order_number, self.background)
+            if touch.is_double_tap:
+                screen = self.screen
+                print(1)
+                screen.like_press(self)
+                #screen variable of clicks
+                screen.last_clicked *= -1
+            else:
+                Clock.shedule_once(screen.name_press(self), 0,5)
+                screen = self.screen
+                (print(2))
+                #screen.name_press(self.order_number, self.background, self)
 
 def build_image(screen, user_image, order_number, width):
     image_grid = GridLayout(cols = 8, size_hint_x = None)
@@ -127,11 +140,11 @@ def make_post_btn(screen, user_name, text_content, date, like_self, order_number
     
     post = BoxLayout(size_hint_y = None, height = Window.size[1] * 0.9 - Window.size[0] / 5, orientation = "vertical")
     
-    main_btn = MyButton(screen=screen, order_number= order_number, background=background, like = like_self)
+    main_btn = MyButton(screen=screen, order_number= order_number, background=background, user = user_name, like = like_self, date=date, content = text_content)
     post.add_widget(main_btn)
 
-    text = str(change_time(date)) + "\n" + adapt_text_to_window(text_content, 15, Window.size[0]) + "\n" + "    - " + user_name
-    main_btn.text = text
+    #text = str(change_time(date)) + "               " + "\n" + adapt_text_to_window(text_content, 30, Window.size[0]) + "\n" + "           - " + user_name
+    #main_btn.text = text
 
     return post
 
