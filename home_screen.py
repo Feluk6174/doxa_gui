@@ -41,19 +41,22 @@ class MainScreen (Screen):
         self.search_screen = my_search_screen
         self.other_profile_screen = my_other_profile_screen
         self.following_screen = my_following_screen
+        self.chat_screen = my_chat_screen
+        self.post_screen = my_post_screen
 
         print(31)
 
-        my_profile_screen.add_screens(self, self.search_screen, self.other_profile_screen, self.following_screen)
-        my_search_screen.add_screens(self, self.profile_screen, self.other_profile_screen)
-        my_other_profile_screen.add_screens(self, self.profile_screen, self.search_screen)
-        my_chat_screen.add_screens(self, self.profile_screen, self.search_screen, self.other_profile_screen)
-        my_post_screen.add_screens(self, self.profile_screen, self.search_screen, self.other_profile_screen)
-        my_following_screen.add_screens(self, self.profile_screen, self.other_profile_screen)
+        my_profile_screen.add_screens(self, self.search_screen, self.other_profile_screen, self.following_screen, self.chat_screen, self.post_screen)
+        my_search_screen.add_screens(self, self.profile_screen, self.other_profile_screen, self.chat_screen, self.post_screen)
+        my_other_profile_screen.add_screens(self, self.profile_screen, self.search_screen, self.chat_screen, self.post_screen)
+        my_chat_screen.add_screens(self, self.profile_screen, self.search_screen, self.other_profile_screen, self.post_screen)
+        my_post_screen.add_screens(self, self.profile_screen, self.search_screen, self.other_profile_screen, self.chat_screen)
+        my_following_screen.add_screens(self, self.profile_screen, self.other_profile_screen, self.chat_screen, self.post_screen)
 
 
         my_search_screen.refresh_search_screen(0)
         #my_profile_screen.refresh_profile_screen(0)
+        my_chat_screen.refresh_chat(0)
         print(32)
 
         self.connection = conn
@@ -64,19 +67,19 @@ class MainScreen (Screen):
         self.header_box = BoxLayout (size_hint = (1, 0.1))
         self.main_all_box.add_widget(self.header_box)
 
-        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.get_my_posts)
-        self.header_box.add_widget(self.logo)
+        #self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.get_my_posts)
+        #self.header_box.add_widget(self.logo)
         
-        self.header_text = Label(text = "Small brother", size_hint = (2, 1))
+        self.header_text = Button(background_normal = './images/banner.png', on_release = self.get_my_posts, size_hint_y = None, height = Window.size[0] / 3.855)
         self.header_box.add_widget(self.header_text)
         
-        self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
-        self.header_box.add_widget(self.header_btn)
-        self.header_btn.bind(on_release = self.header_btn_press)
+        #self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
+        #self.header_box.add_widget(self.header_btn)
+        #self.header_btn.bind(on_release = self.header_btn_press)
         
         print (33)
         
-        self.content_box = BoxLayout (size_hint = (1, 0.9))
+        self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)))
         self.main_all_box.add_widget(self.content_box)
         
         self.posts_grid = GridLayout(cols = 1, size_hint_y = None, spacing = 20)
@@ -160,13 +163,13 @@ class MainScreen (Screen):
         self.posts_grid.remove_widget(self.posts_box)
 
         all_my_following = access_my_info.get_following()
-        print(301)
+        print(all_my_following)
         my_liked_posts = access_my_info.get_liked_id()
         print(302)
         my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following)
         #include_background_color=str(1)
         print(my_posts)
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1] * 0.9 - Window.size[0] / 5) * (len(my_posts)))
+        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855) * (len(my_posts))))
         self.posts_grid.add_widget(self.posts_box)
         print(38)
         for a in range(len(my_posts)):
@@ -177,7 +180,7 @@ class MainScreen (Screen):
             actual_maybe_like = 0
             print(305)
             for liked in my_liked_posts:
-                    if liked == my_posts[a][0]["id"]:
+                    if liked == my_posts[a]["id"]:
                         print(306)
                         actual_maybe_like = 1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
@@ -227,7 +230,7 @@ class MainScreen (Screen):
         print(308)
         return
         """
-    def name_press(self, order_number, background, instance):
+    def name_press_2(self, order_number, background, instance):
         #self.go_to_user_profile(order_number)
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(self.posts_users_list[order_number])
@@ -260,7 +263,7 @@ class MainScreen (Screen):
         #pyperclip.copy(instance.text)
         pass
 
-    def like_press(self, order_number, background, instance):
+    def like_press_2(self, order_number, background, instance):
         num = self.all_posts_i_get[order_number][2]
         num = (num + 1) % 2
         if num == 1:
@@ -269,3 +272,47 @@ class MainScreen (Screen):
             access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], 0)
         instance.background_normal = functions.get_post_image(background, num)
         self.all_posts_i_get[order_number][2] = num
+
+    def like_press(self, instance):
+        print(3)
+        order_number = instance.order_number
+        print(9, order_number)
+        background = instance.background
+        print(77, background)
+        num = self.all_posts_i_get[order_number][2]
+        num = (num + 1) % 2
+        if num == 1:
+            instance.background_normal = 'images/pink.jpeg'
+            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 1)
+        elif num == 0:
+            instance.background_normal = background
+            print(background)
+            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 0)
+        self.all_posts_i_get[order_number][2] = num
+    
+    def name_press(self, instance):
+        #self.go_to_user_profile(order_number)
+        self.time_variable = 1
+        self.post_instance = instance
+        Clock.schedule_once(self.clock_def, 1)
+        print(7)
+    
+    def clock_def(self, instance):
+        print("a")
+        print(self.time_variable)
+        if self.time_variable == 1:
+            self.go_to_screen(self.post_instance)
+        self.time_variable = 0
+
+    def release_post(self, instance):
+        print(10)
+        self.time_variable = 0
+        
+    def go_to_screen(self, instance):
+        print(11)
+        order_number = instance.order_number
+        other_user_profile_screen = self.other_profile_screen
+        other_user_profile_screen.refresh_profile_screen(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "other_profile"
+        self.manager.transition.direction = "right"

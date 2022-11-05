@@ -81,7 +81,7 @@ class SearchScreen (Screen):
         #firstposts
         #current: 1 = new, 2 = search
         self.current_posts = 0
-        self.last_clicked = 1      
+        self.time_variable = 0 
 
         #self.new_posts_header_press(0)
         self.new_posts_header_display_btn = Button(text = "New")
@@ -215,7 +215,7 @@ class SearchScreen (Screen):
         self.search_header_display_btn.bind(on_release = self.search_header_press)
 
 
-        self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1] * 0.9 - Window.size[0] / 5)
+        self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1]  - Window.size[0] * ( 1 / 5 + 1 / 3.855))
 
         #new posts
         self.content_in_scroll_box.add_widget(self.new_posts_box)
@@ -246,6 +246,7 @@ class SearchScreen (Screen):
                         actual_maybe_like = 1
             except KeyError:
                 pass
+            print(self.all_newest_posts_info[t]["background_color"])
             self.post_btn = functions.make_post_btn(self, self.all_newest_posts_info[t]["user_id"], self.all_newest_posts_info[t]["content"], self.all_newest_posts_info[t]["time_posted"], actual_maybe_like, t, self.all_newest_posts_info[t]["background_color"])
             self.new_posts_box.add_widget(self.post_btn)
             self.all_displayed_new_posts_list.append([self.all_newest_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_newest_posts_info[t]["user_id"]])
@@ -269,20 +270,60 @@ class SearchScreen (Screen):
             self.flag_list = self.flag_list + str(self.sort_list[y])
         return self.flag_list
 
-    def name_press(self, instance):
+    def second_post_press(self, instance):
+        self.time_variable = 2
+        self.like_press(instance)
+
+    def first_post_press(self, instance):
         #self.go_to_user_profile(order_number)
+        self.time_variable = 1
+        self.post_instance = instance
+        Clock.schedule_once(self.clock_def, 1)
+        print(7)
+    
+    def clock_def(self, instance):
+        print("a")
+        print(self.time_variable)
+        if self.time_variable == 0:
+            self.go_to_screen(self.post_instance)
+        elif self.time_variable == 1:
+            self.reply_post(self.post_instance)
+        self.time_variable = 0
+
+    def release_post(self, instance):
+        print(10)
+        if self.time_variable == 1:
+            self.time_variable = 0
+        
+    def go_to_screen(self, instance):
+        print(11)
+        other_user_profile_screen = self.other_profile_screen
+        other_user_profile_screen.refresh_profile_screen(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "other_profile"
+        self.manager.transition.direction = "right"
+    
+    def reply_post(self, instance):
+        post_screen = self.post_screen
+        post_screen.reply(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "create"
+        self.manager.transition.direction = "left"
+    
+    def like_press(self, instance):
+        print(3)
         order_number = instance.order_number
-        if self.last_clicked == -1:
-            self.last_clicked = self.last_clicked * -1
-        elif self.last_clicked == 1:
-            other_user_profile_screen = self.other_profile_screen
-            if self.current_posts == 1:
-                other_user_profile_screen.refresh_profile_screen(self.all_displayed_new_posts_list[order_number][3])
-            elif self.current_posts == 2:
-                other_user_profile_screen.refresh_profile_screen(self.all_displayed_searched_posts_list[order_number][3])
-            self.manager.transition = SlideTransition()
-            self.manager.current = "other_profile"
-            self.manager.transition.direction = "right"
+        print(9, order_number)
+        background = instance.background
+        print(77, background)
+        num = self.all_displayed_new_posts_list[order_number][2]
+        num = (num + 1) % 2
+        instance.background_normal = functions.get_post_image(background, num)
+        if self.current_posts == 1:
+            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], num)
+        elif self.current_posts == 2:
+            access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], num)
+        self.all_displayed_new_posts_list[order_number][2] = num
     
     def name_press_user(self, instance):
         other_user_profile_screen = self.other_profile_screen
@@ -343,74 +384,68 @@ class SearchScreen (Screen):
         self.search_btn_box.add_widget(self.search_label_no_press)
         #self.searched_box.clear_widgets()
         if self.search_post_hastags_input.text != "" or self.get_filter_flags() != "00":
-            print(1)
-            searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_post_hastags_input.text), sort_by = "time_posted", sort_order = "desc", num = 10)
-            #exclude_flags = self.get_filter_flags()
-            if searched_posts != ():
-                self.all_displayed_searched_posts_list = []
-                my_liked_posts_id = access_my_info.get_liked_id()
-                for t in range(len(searched_posts)):
-                    actual_maybe_like = 0
-                    try:
-                        for liked in my_liked_posts_id:
-                            if liked == searched_posts[t]["id"]:
-                                actual_maybe_like = 1
-                    except KeyError:
-                        pass
-                    self.post_btn = functions.make_post_btn(self, searched_posts[t]["user_id"], searched_posts[t]["content"], searched_posts[t]["time_posted"], actual_maybe_like, t, searched_posts[t]["background_color"])
-                    self.searched_box.add_widget(self.post_btn)
-                    self.all_displayed_searched_posts_list.append([searched_posts[t]["id"], self.post_btn, actual_maybe_like, searched_posts[t]["user_id"]])
-                self.searched_box.height = (Window.size[1] * 0.9 - Window.size[0] / 5) * len(searched_posts)
-                self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
-            elif searched_posts == ():
-                self.not_found_label = Label(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8)
+            if self.search_post_hastags_input.text[0] == "#":
+                print(1)
+                searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_post_hastags_input.text), sort_by = "time_posted", sort_order = "desc", num = 10)
+                #exclude_flags = self.get_filter_flags()
+                if searched_posts != ():
+                    self.all_displayed_searched_posts_list = []
+                    my_liked_posts_id = access_my_info.get_liked_id()
+                    for t in range(len(searched_posts)):
+                        actual_maybe_like = 0
+                        try:
+                            for liked in my_liked_posts_id:
+                                if liked == searched_posts[t]["id"]:
+                                    actual_maybe_like = 1
+                        except KeyError:
+                            pass
+                        self.post_btn = functions.make_post_btn(self, searched_posts[t]["user_id"], searched_posts[t]["content"], searched_posts[t]["time_posted"], actual_maybe_like, t, searched_posts[t]["background_color"])
+                        self.searched_box.add_widget(self.post_btn)
+                        self.all_displayed_searched_posts_list.append([searched_posts[t]["id"], self.post_btn, actual_maybe_like, searched_posts[t]["user_id"]])
+                    self.searched_box.height = (Window.size[1] * 0.9 - Window.size[0] / 5) * len(searched_posts)
+                    self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
+                else:
+                    self.not_found_label = Label(text = "Hashtag not found", size_hint_y = None, height = Window.size[1]/8)
+                    self.searched_box.add_widget(self.not_found_label)
+                    self.searched_box.height = Window.size[1]/8
+                    self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
+            else:
+                self.not_found_label = Label(text = "Hashtag not found", size_hint_y = None, height = Window.size[1]/8)
                 self.searched_box.add_widget(self.not_found_label)
                 self.searched_box.height = Window.size[1]/8
                 self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
         elif self.search_post_hastags_input.text == "" and self.get_filter_flags() == "00" and self.search_user_input.text != "":
-            print(2)
-            searched_user = conn.get_user(functions.filter_chars(self.search_user_input.text))
-            print(searched_user)
-            if searched_user == {}:
+            if self.search_user_input.text[0] == "@":
+                print(2)
+                searched_user = conn.get_user(functions.filter_chars(self.search_user_input.text[1::]))
+                print(searched_user)
+                if searched_user != {}:
+                    self.searched_user_box = BoxLayout(orientation = 'horizontal', size_hint_y = None, height = Window.size[1]/6)
+                    self.searched_box.add_widget(self.searched_user_box)
+
+                    self.searched_user_image_grid = functions.build_image(self, searched_user["profile_picture"], -1, Window.size[1]/6)
+                    self.searched_user_box.add_widget(self.searched_user_image_grid)
+
+                    self.searched_user_name_btn = Button(text = searched_user["user_name"], on_release = partial(self.name_press_user))
+                    self.searched_user_box.add_widget(self.searched_user_name_btn)
+
+                    self.searched_box.height = Window.size[1]/6
+                    self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
+                else:
+                    self.not_found_label = Label(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8)
+                    self.searched_box.add_widget(self.not_found_label)
+                    self.searched_box.height = Window.size[1]/8
+                    self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
+            
+            else:
                 self.not_found_label = Label(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8)
                 self.searched_box.add_widget(self.not_found_label)
                 self.searched_box.height = Window.size[1]/8
                 self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
-            elif searched_user != {}:
-                self.searched_user_box = BoxLayout(orientation = 'horizontal', size_hint_y = None, height = Window.size[1]/6)
-                self.searched_box.add_widget(self.searched_user_box)
-
-                self.searched_user_image_grid = functions.build_image(self, searched_user["profile_picture"], -1, Window.size[1]/6)
-                self.searched_user_box.add_widget(self.searched_user_image_grid)
-
-                self.searched_user_name_btn = Button(text = searched_user["user_name"], on_release = partial(self.name_press_user))
-                self.searched_user_box.add_widget(self.searched_user_name_btn)
-
-                self.searched_box.height = Window.size[1]/6
-                self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
 
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
-    def like_press(self, instance):
-        print(3)
-        order_number = instance.order_number
-        background = instance.background
-        num = self.all_displayed_new_posts_list[order_number][2]
-        num = (num + 1) % 2
-        if num == 1:
-            instance.background_normal = 'images/pink.jpeg'
-            if self.current_posts == 1:
-                access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 1)
-            elif self.current_posts == 2:
-                access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], 1)
-        elif num == 0:
-            instance.background_normal = background
-            print(background)
-            if self.current_posts == 1:
-                access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 0)
-            elif self.current_posts == 2:
-                access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], 0)
-        self.all_displayed_new_posts_list[order_number][2] = num
+    
 
 
     def press_chat_btn(self, instance):
@@ -440,7 +475,9 @@ class SearchScreen (Screen):
         self.manager.current = "profile"
         self.manager.transition.direction = "left"
     
-    def add_screens(self, home_screen, profile_screen, other_profile_screen):
+    def add_screens(self, home_screen, profile_screen, other_profile_screen, chat_screen, post_screen):
         self.home_screen = home_screen
         self.profile_screen = profile_screen
         self.other_profile_screen = other_profile_screen
+        self.chat_screen = chat_screen
+        self.post_screen = post_screen

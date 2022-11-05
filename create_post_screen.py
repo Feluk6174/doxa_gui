@@ -132,21 +132,24 @@ class PostUserScreen (Screen):
             if x+1 != background_number:
                 self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
 
-    def send_post_press(self, instance):
-        text_content = functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text))
-        conn = self.connection
-        user_name = access_my_info.get_user_name()
-        private_key = access_my_info.get_priv_key()
-        post_background = str(self.background_status)
-        #post_likes = nlikes
-        #date = int(time.time())
-        post_id = abs(hash(str(text_content) + str(user_name) + str(post_background) + str(time.time())))
-        conn.post(text_content, post_id, user_name, post_background, private_key)    
-        
-        self.main_post_content_input.text = ""
-        for x in range (len(self.all_backgrounds)-1):
-            self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
+    def reply(self, user):
+        self.main_post_content_input.text = user + '\n'
 
+    def send_post_press(self, instance):
+        if self.main_post_content_input.text != "":
+            text_content = functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text))
+            conn = self.connection
+            user_name = access_my_info.get_user_name()
+            private_key = access_my_info.get_priv_key()
+            post_background = str(self.background_status)
+            #post_likes = nlikes
+            #date = int(time.time())
+            post_id = abs(hash(str(text_content) + str(user_name) + str(post_background) + str(time.time())))
+            conn.post(text_content, post_id, user_name, post_background, private_key)    
+            
+            self.main_post_content_input.text = ""
+            for x in range (len(self.all_backgrounds)-1):
+                self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
 
     def press_chat_btn(self, instance):
         self.manager.transition = SlideTransition()
@@ -177,8 +180,9 @@ class PostUserScreen (Screen):
         self.manager.current = "profile"
         self.manager.transition.direction = "left"
     
-    def add_screens(self, home_screen, profile_screen, search_screen, other_profile_screen):
+    def add_screens(self, home_screen, profile_screen, search_screen, other_profile_screen, chat_screen):
         self.home_screen = home_screen
         self.profile_screen = profile_screen
         self.search_screen = search_screen
         self.other_profile_screen = other_profile_screen
+        self.chat_screen = chat_screen

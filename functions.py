@@ -82,13 +82,20 @@ class MyButton(Button):
         self.screen = screen
         self.order_number = order_number
         self.background = background
-        self.text = str(change_time(date)) + "               " + "\n" + adapt_text_to_window(content, 30, Window.size[0]) + "\n" + "           - " + user
-        self.color = (1, 0, 1, 1)
+        self.text = "[size=10]" +str(change_time(date)) + "[/size]               [size = 30]" + "\n \n" + adapt_text_to_window(content, 20, Window.size[0]) + "\n \n [/size]" + "         [size=20][b]  - " + user +"[/b]"
+        self.color = (0, 0, 0, 1)
+        self.font_size = 20
         self.size_hint_y = None 
-        self.height = Window.size[1] * 0.9 - Window.size[0] / 5
+        self.height = Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)
         self.orientation = "vertical"
         self.user_name = user
         self.last_clicked = 1
+
+    def on_touch_up(self, touch):
+        if self.collide_point(touch.x, touch.y):
+            print(6)
+            screen = self.screen
+            screen.release_post(self)
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.x, touch.y):
@@ -96,12 +103,15 @@ class MyButton(Button):
             if touch.is_double_tap:
                 screen = self.screen
                 print(1)
-                screen.like_press(self)
+                screen.second_post_press(self)
                 #screen variable of clicks
-                screen.last_clicked *= -1
+                #screen.time_pressed *= -1
             else:
-                Clock.shedule_once(screen.name_press(self), 0,5)
+                print(8)
                 screen = self.screen
+                screen.first_post_press(self)
+                #partial(screen.name_press, self)
+                
                 (print(2))
                 #screen.name_press(self.order_number, self.background, self)
 
@@ -138,15 +148,15 @@ def get_post_image(num, like):
 #def crear botó
 def make_post_btn(screen, user_name, text_content, date, like_self, order_number, background):
     
-    post = BoxLayout(size_hint_y = None, height = Window.size[1] * 0.9 - Window.size[0] / 5, orientation = "vertical")
+    #post = BoxLayout(size_hint_y = None, height = Window.size[1] * 0.9 - Window.size[0] / 5, orientation = "vertical")
     
     main_btn = MyButton(screen=screen, order_number= order_number, background=background, user = user_name, like = like_self, date=date, content = text_content)
-    post.add_widget(main_btn)
+    #post.add_widget(main_btn)
 
     #text = str(change_time(date)) + "               " + "\n" + adapt_text_to_window(text_content, 30, Window.size[0]) + "\n" + "           - " + user_name
     #main_btn.text = text
 
-    return post
+    return main_btn
 
 
 def order_posts_by_timestamp(posts_to_order):

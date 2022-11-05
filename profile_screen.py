@@ -343,8 +343,10 @@ class ProfileScreen (Screen):
     #def press_user_profile_btn(self, instance):
         #pass
 
-    def add_screens(self, home_screen, search_screen, other_profile_screen, following_screen):
+    def add_screens(self, home_screen, search_screen, other_profile_screen, following_screen, chat_screen, post_screen):
         self.home_screen = home_screen
         self.search_screen = search_screen
         self.other_profile_screen = other_profile_screen
         self.following_screen = following_screen
+        self.post_screen = post_screen
+        self.chat_screen = chat_screen

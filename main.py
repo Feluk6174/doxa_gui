@@ -38,6 +38,7 @@ Window.size = (400, 600)
 
 class MyApp (App):
     def build(self):
+        print(1)
 
         #set basis. screen manager and connection
         global connection
@@ -71,10 +72,12 @@ class MyApp (App):
         return sm
 
 
-
+print(00)
 if __name__ == "__main__":
+    print(111)
     #MyApp.run()
     try:
+        print(0)
         MyApp().run()
     except IndexError:
         connection.close()
