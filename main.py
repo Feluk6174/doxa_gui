@@ -28,6 +28,7 @@ from kivy.graphics import BorderImage
 from kivy.lang import Builder
 
 import api
+print("conn")
 connection = api.Connection()
 import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen
 
