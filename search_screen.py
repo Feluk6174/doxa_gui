@@ -271,14 +271,17 @@ class SearchScreen (Screen):
         return self.flag_list
 
     def second_post_press(self, instance):
+        print(self.time_variable)
         self.time_variable = 2
         self.like_press(instance)
 
     def first_post_press(self, instance):
         #self.go_to_user_profile(order_number)
+        print(self.time_variable)
         self.time_variable = 1
         self.post_instance = instance
         Clock.schedule_once(self.clock_def, 1)
+        print(self.time_variable)
         print(7)
     
     def clock_def(self, instance):
@@ -292,6 +295,7 @@ class SearchScreen (Screen):
 
     def release_post(self, instance):
         print(10)
+        print(self.time_variable)
         if self.time_variable == 1:
             self.time_variable = 0
         
@@ -402,7 +406,7 @@ class SearchScreen (Screen):
                         self.post_btn = functions.make_post_btn(self, searched_posts[t]["user_id"], searched_posts[t]["content"], searched_posts[t]["time_posted"], actual_maybe_like, t, searched_posts[t]["background_color"])
                         self.searched_box.add_widget(self.post_btn)
                         self.all_displayed_searched_posts_list.append([searched_posts[t]["id"], self.post_btn, actual_maybe_like, searched_posts[t]["user_id"]])
-                    self.searched_box.height = (Window.size[1] * 0.9 - Window.size[0] / 5) * len(searched_posts)
+                    self.searched_box.height = (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 3.855)) * len(searched_posts)
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
                 else:
                     self.not_found_label = Label(text = "Hashtag not found", size_hint_y = None, height = Window.size[1]/8)

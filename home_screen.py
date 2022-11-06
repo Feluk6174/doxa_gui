@@ -26,6 +26,7 @@ import random
 from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
+import  kivy.core.text.markup
 #import pyperclip
 
 import chat_screen, search_screen, profile_screen, functions, access_my_info, other_user_profile_screen, create_post_screen, following_screen
@@ -55,7 +56,7 @@ class MainScreen (Screen):
 
 
         my_search_screen.refresh_search_screen(0)
-        #my_profile_screen.refresh_profile_screen(0)
+        my_profile_screen.refresh_profile_screen(0)
         my_chat_screen.refresh_chat(0)
         print(32)
 
@@ -82,7 +83,7 @@ class MainScreen (Screen):
         self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)))
         self.main_all_box.add_widget(self.content_box)
         
-        self.posts_grid = GridLayout(cols = 1, size_hint_y = None, spacing = 20)
+        self.posts_grid = GridLayout(cols = 1, size_hint_y = None)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         
         self.posts_grid_scroll = ScrollView()
@@ -92,8 +93,8 @@ class MainScreen (Screen):
         #self.post_btn_test = Button(size_hint_y = None, height = 100, text = "Refresh Posts", on_release = self.get_my_posts)
         #self.posts_grid.add_widget(self.post_btn_test)
 
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = 100)
-        self.posts_grid.add_widget(self.posts_box)
+        #self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = 100)
+        #self.posts_grid.add_widget(self.posts_box)
 
         self.all_posts_i_get = []
         print(34)
@@ -159,8 +160,8 @@ class MainScreen (Screen):
     def get_my_posts(self, instance):
         self.all_posts_i_get = []
         self.posts_users_list = []
-        self.posts_box.clear_widgets()
-        self.posts_grid.remove_widget(self.posts_box)
+        self.posts_grid.clear_widgets()
+        #self.posts_grid.remove_widget(self.posts_box)
 
         all_my_following = access_my_info.get_following()
         print(all_my_following)
@@ -184,9 +185,9 @@ class MainScreen (Screen):
                         print(306)
                         actual_maybe_like = 1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
-            self.posts_box.add_widget(self.post_btn)
+            self.posts_grid.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
-            self.all_posts_i_get.append[my_posts[a]["user_id"]]
+            self.all_posts_i_get.append(my_posts[a]["user_id"])
             print(307)
         print(308)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))

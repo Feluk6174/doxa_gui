@@ -107,17 +107,18 @@ class Connection():
         print(msg)
         self.send(msg)
         num = int(self.recv())
-        print(num)
+        print("a", num)
         self.send('{"type": "RESPONSE", "response": "OK"}')
         if not num == 0: 
             for _ in range(num):
                 posts.append(json.loads(self.recv()))
                 self.send('{"type": "RESPONSE", "response": "OK"}')
             response = self.recv()
+            print("b", 5, response)
             if not response == "OK":
                 if response == "WRONG CHARS":
                     raise WrongCaracters(user_name=user_name)
-
+            print(posts)
             return posts
         response = self.recv()
         if not response == "OK":

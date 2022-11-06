@@ -97,6 +97,7 @@ class FollowingScreen (Screen):
             for x in range (len(following_users)):
                 user_info = conn.get_user(following_users[x])
                 print(user_info)
+                print(user_info)
 
                 self.user_box = BoxLayout(size_hint_y = None, height = Window.size[0]/1.61/2)
                 self.content_grid.add_widget(self.user_box)
@@ -104,7 +105,7 @@ class FollowingScreen (Screen):
                 self.image_grid = functions.build_image(self, user_info["profile_picture"], x, Window.size[0]/1.61/2)
                 self.user_box.add_widget(self.image_grid)
 
-                self.user_name_btn = Button(text = user_info["user_name"], on_release = partial(self.go_to_user_profile_screen, x))
+                self.user_name_btn = Button(text = user_info["user_name"], on_release = self.go_to_user_profile_screen)
                 self.user_box.add_widget(self.user_name_btn)
 
                 self.users_info_list.append([user_info, self.user_box])
@@ -112,17 +113,18 @@ class FollowingScreen (Screen):
     def header_btn_press(self, instance):
         pass
     
-    def go_to_user_profile_screen(self, order_number, instance):
+    def go_to_user_profile_screen(self, instance):
         con = self.connection
         other_user_profile_screen = self.other_profile_screen
-        user = self.users_info_list[order_number][0]["user_name"]
-        other_user_profile_screen.refresh_profile_screen(user)
+        #user = self.users_info_list[order_number][0]["user_name"]
+        other_user_profile_screen.refresh_profile_screen(instance.text)
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
 
     def image_press(self, order_number, instance):
-        self.go_to_user_profile_screen(order_number, instance)
+        #self.go_to_user_profile_screen(order_number, instance)
+        pass
 
     def press_chat_btn(self, instance):
         #chat_screen.create_my_chats

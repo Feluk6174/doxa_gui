@@ -24,6 +24,8 @@ from kivy.uix.screenmanager import FallOutTransition
 from kivy.uix.screenmanager import SlideTransition
 import kivy.utils
 from datetime import datetime
+import  kivy.core.text.markup
+
 
 import access_my_info, home_screen, search_screen, profile_screen, functions
 
@@ -133,10 +135,10 @@ class PostUserScreen (Screen):
                 self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
 
     def reply(self, user):
-        self.main_post_content_input.text = user + '\n'
+        self.main_post_content_input.text = "@" + user + '\n'
 
     def send_post_press(self, instance):
-        if self.main_post_content_input.text != "":
+        if self.main_post_content_input.text != "" and len(self.main_post_content_input.text) < 255:
             text_content = functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text))
             conn = self.connection
             user_name = access_my_info.get_user_name()

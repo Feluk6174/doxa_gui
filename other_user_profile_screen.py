@@ -166,22 +166,24 @@ class OtherProfileScreen (Screen):
         self.create_posts()
         print(10)
 
+    def follow_posts_press(self, instance):
+        self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+
     def create_posts(self):
         print(11)
         conn = self.connection
-        self.posts_list = conn.get_posts(user_name = self.user_id)
+        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted')
         print(124)
         #self.my_posts_list = []
-        self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
+        #self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
 
         print(125)
         self.user_posts_box.clear_widgets()
-        self.user_posts_box.height = len(self.posts_list) * Window.size[0] / 1.61
-
+        self.user_posts_box.height = len(self.posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 3.855))
+        #self.content_grid.remove_widget(self.user_posts_box)
         print(12)
         my_liked_posts_id = access_my_info.get_liked_id()
         self.all_displayed_posts_list = []
-        user_image = self.user_info["profile_picture"]
         for a in range (len(self.posts_list)):
             actual_maybe_like = 0
             try:
@@ -190,11 +192,11 @@ class OtherProfileScreen (Screen):
                         actual_maybe_like = 1
             except KeyError:
                 pass
-            self.post_btn = functions.make_post_btn(self, self.posts_list[a]["user_id"], user_image, self.posts_list[a]["flags"], self.posts_list[a]["content"], self.posts_list[a]["time_posted"], self.posts_list[a]["id"], actual_maybe_like, a)
+            self.post_btn = functions.make_post_btn(self, self.posts_list[a]["user_id"], self.posts_list[a]["content"], self.posts_list[a]["time_posted"], actual_maybe_like, a, self.posts_list[a]["background_color"])
             self.user_posts_box.add_widget(self.post_btn)
-            self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like])
+            self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like, self.posts_list[a]["user_id"]])
 
-        self.user_posts_box.height = len(self.all_displayed_posts_list) * Window.size[0] / 1.61
+        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 3.855))
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         print(13)
 

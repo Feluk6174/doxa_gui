@@ -8,7 +8,7 @@ from kivy.uix.button import ButtonBehavior
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.textinput import TextInput
+#from kivy.uix.textinput import TextInput
 from kivy.uix.image import AsyncImage
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
@@ -26,6 +26,7 @@ import random
 from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
+import unicodedata
 
 import api
 connection = api.Connection()

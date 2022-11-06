@@ -28,6 +28,10 @@ import random
 from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
+import _markupbase
+import unicodedata
+import emoji
+
 
 import access_my_info
 
@@ -78,13 +82,17 @@ def hex_color(hex_num):
 class MyButton(Button):
     def __init__(self, screen, order_number, background, user, like, date, content, **kwargs):
         super(MyButton, self).__init__(**kwargs)
+        self.markup = True
         self.background_normal = get_post_image(background, like)
         self.screen = screen
         self.order_number = order_number
         self.background = background
-        self.text = "[size=10]" +str(change_time(date)) + "[/size]               [size = 30]" + "\n \n" + adapt_text_to_window(content, 20, Window.size[0]) + "\n \n [/size]" + "         [size=20][b]  - " + user +"[/b]"
-        self.color = (0, 0, 0, 1)
+        self.text = "[size=15]" + str(change_time(date)) + "[/size]                                                            " + "\n \n \n" + "[size=20]" + adapt_text_to_window(content, 20, Window.size[0]) + "[/size]" + " \n \n " + "                                [b][size=20]- " + user +"[/b][/size]"
+        #self.text = adapt_text_to_window(content, 30, Window.size[0]) + "\n" + content
         self.font_size = 20
+        self.shorten = True
+        #self.split_str = True
+        self.halign = 'center'
         self.size_hint_y = None 
         self.height = Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)
         self.orientation = "vertical"
