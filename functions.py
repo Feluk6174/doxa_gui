@@ -30,7 +30,7 @@ from kivy.graphics import BorderImage
 from kivy.lang import Builder
 import _markupbase
 import unicodedata
-import emoji
+#import emoji
 
 
 import access_my_info
