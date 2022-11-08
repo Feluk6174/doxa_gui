@@ -88,8 +88,8 @@ class MyButton(Button):
         self.order_number = order_number
         self.background = background
         self.text = "[size=15]" + str(change_time(date)) + "[/size]                                                            " + "\n \n \n" + "[size=20]" + adapt_text_to_window(content, 20, Window.size[0]) + "[/size]" + " \n \n " + "                                [b][size=20]- " + user +"[/b][/size]"
-        #self.text = adapt_text_to_window(content, 30, Window.size[0]) + "\n" + content
-        self.font_size = 20
+        self.color = (0, 0, 0, 1)
+        #self.font_size = 20
         self.shorten = True
         #self.split_str = True
         self.halign = 'center'
@@ -145,13 +145,26 @@ def get_post_image(num, like):
     like = int(like)
     if like == 0:
         if num == 1:
-            return "./images/yellow.jpeg"
+            return "./images/paper_yellow.png"
         elif num == 2:
-            return "./images/purple.jpeg"
+            return "./images/paper_green.png"
         elif num == 3:
-            return "./images/green.jpeg"
+            return "./images/paper_purple.png"
+        elif num == 4:
+            return "./images/paper_pink.png"
+        elif num == 5:
+            return "./images/paper_blue.png"
     elif like == 1:
-        return "./images/pink.jpeg"
+        if num == 1:
+            return "./images/paper_yellow_heart.png"
+        elif num == 2:
+            return "./images/paper_green_heart.png"
+        elif num == 3:
+            return "./images/paper_purple_heart.png"
+        elif num == 4:
+            return "./images/paper_pink_heart.png"
+        elif num == 5:
+            return "./images/paper_blue_heart.png"
 
 #def crear botó
 def make_post_btn(screen, user_name, text_content, date, like_self, order_number, background):
