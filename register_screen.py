@@ -80,11 +80,8 @@ class RegisterScreen (Screen):
         self.title_box.orientation = "horizontal"
         self.main_box.add_widget(self.title_box)
 
-        self.logo = Button (border = (0, 0, 0, 0), size_hint_x = None, width = Window.size[1] / 8, background_normal = 'images/logo.png', background_down = 'images/logo.png')
-        self.title_box.add_widget(self.logo)
-        
-        self.title = Label (text = ("Small brother"))
-        self.title_box.add_widget(self.title)
+        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png')
+        self.main_box.add_widget(self.banner)
 
         #cos de la pantalla. text inputs i boto
         self.username_box = BoxLayout(orientation = 'vertical')
@@ -201,8 +198,8 @@ class RegisterScreen (Screen):
                 self.black_box_1_load = BoxLayout(size_hint_y = None, height = (Window.size[0] * 0.2))
                 self.main_box_load.add_widget(self.black_box_1_load)
 
-                self.logo_load = Button(border = (0, 0, 0, 0), size_hint = (None, None), background_normal = 'images/logo.png', background_down = 'images/logo.png', size = (Window.size[0] * 0.7, Window.size[0] * 0.7), pos_hint = {"center_x":0.5})   
-                self.main_box_load.add_widget(self.logo_load)
+                self.banner_load = Button(border = (0, 0, 0, 0), size_hint = (None, None), background_normal = 'images/banner.png', background_down = 'images/banner.png', size = (Window.size[0] * 0.7, Window.size[0] * 0.7), pos_hint = {"center_x":0.5})   
+                self.main_box_load.add_widget(self.banner_load)
 
                 self.text_load = Label(text = "Creating user...", size_hint = (1, 0.12))
                 self.main_box_load.add_widget(self.text_load)

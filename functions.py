@@ -94,7 +94,7 @@ class MyButton(Button):
         #self.split_str = True
         self.halign = 'center'
         self.size_hint_y = None 
-        self.height = Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)
+        self.height = Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)
         self.orientation = "vertical"
         self.user_name = user
         self.last_clicked = 1

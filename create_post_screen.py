@@ -41,18 +41,8 @@ class PostUserScreen (Screen):
         self.main_all_box = BoxLayout(orientation = "vertical")
         self.add_widget(self.main_all_box)
 
-        self.header_box = BoxLayout (size_hint = (1, 0.1))
-        self.main_all_box.add_widget(self.header_box)
-
-        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.press_home_btn)
-        self.header_box.add_widget(self.logo)
-        
-        self.header_text = Label(text = "Small brother", size_hint = (2, 1))
-        self.header_box.add_widget(self.header_text)
-        
-        self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
-        self.header_box.add_widget(self.header_btn)
-        self.header_btn.bind(on_release = self.header_btn_press)
+        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png')
+        self.main_all_box.add_widget(self.banner)
         
 
         self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
@@ -75,7 +65,7 @@ class PostUserScreen (Screen):
         self.background_grid_scroll.add_widget (self.background_grid)
         self.background_box.add_widget (self.background_grid_scroll)
 
-        self.all_backgrounds = ['images/check_verd.png', 'images/green.jpeg', 'images/yellow.jpeg', 'images/purple.jpeg']
+        self.all_backgrounds = ['images/check_verd.png', 'images/paper_yellow.png', 'images/paper_green.png', 'images/paper_purple.png', 'images/paper_pink.png', 'images/paper_blue.png']
         self.all_background_buttons = []
         self.background_status = 1
         
@@ -99,22 +89,22 @@ class PostUserScreen (Screen):
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
 
-        self.chat_btn = Button (text = ("C"))
+        self.chat_btn = Button (border = (0, 0, 0, 0), background_normal = './images/mentions.png', background_down = './images/mentions.png')
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 
-        self.search_btn = Button (text = ("S"))
+        self.search_btn = Button (border = (0, 0, 0, 0), background_normal = './images/search.png', background_down = './images/search.png')
         self.ground_box.add_widget(self.search_btn)
         self.search_btn.bind(on_release = self.press_search_btn)
 
-        self.home_btn = Button (text = ("H"))
+        self.home_btn = Button (border = (0, 0, 0, 0), background_normal = './images/home.png', background_down = './images/home.png')
         self.ground_box.add_widget(self.home_btn)
         self.home_btn.bind(on_release = self.press_home_btn)
 
-        self.make_posts_label = Label (text = ("Post"))
+        self.make_posts_label = Button (border = (0, 0, 0, 0), background_normal = './images/post_white.png', background_down = './images/post_white.png')
         self.ground_box.add_widget(self.make_posts_label)
 
-        self.user_profile_btn = Button (text = ("U"))
+        self.user_profile_btn = Button (border = (0, 0, 0, 0), background_normal = './images/profile.png', background_down = './images/profile.png')
         self.ground_box.add_widget(self.user_profile_btn)
         self.user_profile_btn.bind(on_release = self.press_user_profile_btn)
 
@@ -135,7 +125,7 @@ class PostUserScreen (Screen):
                 self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
 
     def reply(self, user):
-        self.main_post_content_input.text = "@" + user + '\n'
+        self.main_post_content_input.text = "@" + user + ' \n'
 
     def send_post_press(self, instance):
         if self.main_post_content_input.text != "" and len(self.main_post_content_input.text) < 255:

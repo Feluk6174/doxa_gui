@@ -42,24 +42,12 @@ class ProfileScreen (Screen):
         self.main_all_box = BoxLayout(orientation = "vertical")
         self.add_widget(self.main_all_box)
 
-        self.header_box = BoxLayout (size_hint = (1, 0.1))
-        self.main_all_box.add_widget(self.header_box)
-
-        print(56)
-
-        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.refresh_profile_screen)
-        self.header_box.add_widget(self.logo)
+        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png', on_release = self.refresh_profile_screen)
+        self.main_all_box.add_widget(self.banner)
         
         print(57)
 
-        self.header_text = Label(text = "Small brother", size_hint = (2, 1))
-        self.header_box.add_widget(self.header_text)
         
-        print(58)
-
-        self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
-        self.header_box.add_widget(self.header_btn)
-        self.header_btn.bind(on_release = self.header_btn_press)
         
         print(53)
 
@@ -93,7 +81,9 @@ class ProfileScreen (Screen):
         self.description_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
         self.content_grid.add_widget(self.description_box)
 
-        self.user_description_btn = Button(text = functions.adapt_text_to_window(access_my_info.get_description(), 15, Window.size[0]), size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
+        text = access_my_info.get_description()
+        text = functions.adapt_text_to_window(text, 15, Window.size[0])
+        self.user_description_btn = Button(shorten = True, text=text, size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
@@ -125,23 +115,23 @@ class ProfileScreen (Screen):
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
 
-        self.chat_btn = Button (text = ("C"))
+        self.chat_btn = Button (border = (0, 0, 0, 0), background_normal = './images/mentions.png', background_down = './images/mentions.png')
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 
-        self.search_btn = Button (text = ("S"))
+        self.search_btn = Button (border = (0, 0, 0, 0), background_normal = './images/search.png', background_down = './images/search.png')
         self.ground_box.add_widget(self.search_btn)
         self.search_btn.bind(on_release = self.press_search_btn)
 
-        self.home_btn = Button (text = ("H"))
+        self.home_btn = Button (border = (0, 0, 0, 0), background_normal = './images/home.png', background_down = './images/home.png')
         self.ground_box.add_widget(self.home_btn)
         self.home_btn.bind(on_release = self.press_home_btn)
 
-        self.make_posts_btn = Button (text = ("P"))
+        self.make_posts_btn = Button (border = (0, 0, 0, 0), background_normal = './images/post.png', background_down = './images/post.png')
         self.ground_box.add_widget(self.make_posts_btn)
         self.make_posts_btn.bind(on_release = self.press_make_posts_btn)
 
-        self.user_profile_label = Label (text = ("User"))
+        self.user_profile_label = Button (border = (0, 0, 0, 0), background_normal = './images/profile_white.png', background_down = './images/profile_white.png')
         self.ground_box.add_widget(self.user_profile_label)
 
         print (50)
@@ -242,7 +232,7 @@ class ProfileScreen (Screen):
     def create_my_posts(self):
         print(1111)
         conn = self.connection
-        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_order = 'desc')
+        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_by = "time_posted", sort_order = 'desc')
         print(559)
         self.my_posts_box = BoxLayout(size_hint_y = None, height = len(self.my_posts_list) * Window.size[1] - Window.size[0] * (1/5+1/3.855), orientation = "vertical")
         #self.content_grid.add_widget(self.my_posts_box)
@@ -269,10 +259,7 @@ class ProfileScreen (Screen):
         conn = self.connection
         #with connection or in phone memory
         self.my_liked_list_id = access_my_info.get_liked_id()
-        self.my_liked_list = []
-        for post_id in self.my_liked_list_id:
-            posts_to_include = conn.get_post(post_id)
-            self.my_liked_list.append(posts_to_include)
+        self.my_liked_list = conn.get_posts(self.my_liked_list_id)
         #self.my_liked_posts_list = []
         self.my_liked_posts_list = functions.order_posts_by_timestamp(self.my_liked_list)
 
@@ -283,8 +270,8 @@ class ProfileScreen (Screen):
 
         actual_maybe_like = 1
         for b in range (len(self.my_liked_posts_list)):
-            user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
-            self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["time_posted"])
+            #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
+            self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["background_color"])
             self.favourite_posts_box.add_widget(self.post_btn)
             self.all_liked_displayed_posts_list.append([self.my_liked_posts_list[b]["id"], self.post_btn, actual_maybe_like, self.my_liked_posts_list[b]["user_id"]])
 

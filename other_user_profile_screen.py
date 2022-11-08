@@ -1,5 +1,6 @@
 #import kivy
 from multiprocessing import connection
+from textwrap import shorten
 from kivy.app import App
 from functools import partial
 from kivy.uix.widget import Widget
@@ -41,18 +42,8 @@ class OtherProfileScreen (Screen):
         self.main_all_box = BoxLayout(orientation = "vertical")
         self.add_widget(self.main_all_box)
 
-        self.header_box = BoxLayout (size_hint = (1, 0.1))
-        self.main_all_box.add_widget(self.header_box)
-
-        self.logo = Button (border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/logo.png', background_down = 'images/logo.png', on_release = self.press_home_btn)
-        self.header_box.add_widget(self.logo)
-
-        self.header_text = Label(text = "Small brother", size_hint = (2, 1))
-        self.header_box.add_widget(self.header_text)
-
-        self.header_btn = Button(border = (0, 0, 0, 0), size_hint = (None, None), size = ((Window.size[1] - Window.size[0] / 5) * 0.1, (Window.size[1] - Window.size[0] / 5) * 0.1), background_normal = 'images/settings1.png', background_down = 'images/settings2.png')
-        self.header_box.add_widget(self.header_btn)
-        self.header_btn.bind(on_release = self.header_btn_press)
+        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png')
+        self.main_all_box.add_widget(self.banner)
 
 
         self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
@@ -95,22 +86,22 @@ class OtherProfileScreen (Screen):
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
 
-        self.chat_btn = Button (text = ("C"))
+        self.chat_btn = Button (border = (0, 0, 0, 0), background_normal = './images/mentions.png', background_down = './images/mentions.png')
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 
-        self.search_label = Label (text = ("Search"))
+        self.search_label = Button (border = (0, 0, 0, 0), background_normal = './images/search_white.png', background_down = './images/search_white.png')
         self.ground_box.add_widget(self.search_label)
 
-        self.home_btn = Button (text = ("H"))
+        self.home_btn = Button (border = (0, 0, 0, 0), background_normal = './images/home.png', background_down = './images/home.png')
         self.ground_box.add_widget(self.home_btn)
         self.home_btn.bind(on_release = self.press_home_btn)
 
-        self.make_posts_btn = Button (text = ("P"))
+        self.make_posts_btn = Button (border = (0, 0, 0, 0), background_normal = './images/post.png', background_down = './images/post.png')
         self.ground_box.add_widget(self.make_posts_btn)
         self.make_posts_btn.bind(on_release = self.press_make_posts_btn)
 
-        self.user_profile_btn = Button (text = ("U"))
+        self.user_profile_btn = Button (border = (0, 0, 0, 0), background_normal = './images/profile.png', background_down = './images/profile.png')
         self.ground_box.add_widget(self.user_profile_btn)
         self.user_profile_btn.bind(on_release = self.press_user_profile_btn)
 
@@ -150,7 +141,11 @@ class OtherProfileScreen (Screen):
         #self.user_name_btn.bind(on_release = self.user_name_press)
 
         self.description_box.clear_widgets()
-        self.user_description_btn = Button(text = self.user_info["info"], size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
+        text = self.user_info["info"]
+        print(text)
+        text = functions.adapt_text_to_window(text, 15, Window.size[0])
+        print(text)
+        self.user_description_btn = Button(text = text, size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
