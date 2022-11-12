@@ -108,10 +108,10 @@ class ProfileScreen (Screen):
         self.current_posts = 0
         self.time_variable = 0
 
-        self.favourite_posts_box = BoxLayout()
+        self.zero_favourite_box = BoxLayout()
         self.all_liked_displayed_posts_list = []
 
-        self.my_posts_box = BoxLayout()
+        self.zero_my_box = BoxLayout()
         self.all_my_displayed_posts_list = []
 
         print(51)
@@ -207,7 +207,8 @@ class ProfileScreen (Screen):
 
     def display_my_posts(self):
         self.my_posts_box = self.zero_my_box
-        self.content_grid.remove_widget(self.favourite_posts_box)
+        if self.current_posts != 0:
+            self.content_grid.remove_widget(self.favourite_posts_box)
         self.content_grid.add_widget(self.my_posts_box)
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
@@ -234,7 +235,8 @@ class ProfileScreen (Screen):
 
     def display_liked_posts(self):
         self.favourite_posts_box = self.zero_favourite_box
-        self.content_grid.remove_widget(self.my_posts_box)
+        if self.current_posts != 0:
+            self.content_grid.remove_widget(self.my_posts_box)
         self.content_grid.add_widget(self.favourite_posts_box)
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
@@ -243,7 +245,7 @@ class ProfileScreen (Screen):
         conn = self.connection
         self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_by = "time_posted", sort_order = 'desc')
         print(559)
-        self.zero_my_box = BoxLayout(size_hint_y = None, height = len(self.my_posts_list) * Window.size[1] - Window.size[0] * (1/5+1/5.08), orientation = "vertical")
+        self.zero_my_box = BoxLayout(size_hint_y = None, height = len(self.my_posts_list) * (Window.size[1] - Window.size[0] * (1/5+1/5.08)), orientation = "vertical")
         #self.content_grid.add_widget(self.my_posts_box)
 
         my_liked_posts_id = access_my_info.get_liked_id()
@@ -272,7 +274,7 @@ class ProfileScreen (Screen):
         #self.my_liked_posts_list = []
         self.my_liked_posts_list = functions.order_posts_by_timestamp(self.my_liked_list)
 
-        self.zero_favourite_box = BoxLayout(size_hint_y = None, height = len(self.my_liked_posts_list) * Window.size[1] - Window.size[0] * (1/5+1/5.08), orientation = "vertical")
+        self.zero_favourite_box = BoxLayout(size_hint_y = None, height = len(self.my_liked_posts_list) * (Window.size[1] - Window.size[0] * (1/5+1/5.08)), orientation = "vertical")
         #self.content_grid.add_widget(self.favourite_posts_box)
 
         self.all_liked_displayed_posts_list = []
@@ -281,7 +283,7 @@ class ProfileScreen (Screen):
         for b in range (len(self.my_liked_posts_list)):
             #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
             self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["background_color"])
-            self.favourite_posts_box.add_widget(self.post_btn)
+            self.zero_favourite_box.add_widget(self.post_btn)
             self.all_liked_displayed_posts_list.append([self.my_liked_posts_list[b]["id"], self.post_btn, actual_maybe_like, self.my_liked_posts_list[b]["user_id"]])
 
         #self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
