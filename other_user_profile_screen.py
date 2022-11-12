@@ -74,13 +74,15 @@ class OtherProfileScreen (Screen):
         self.following_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
         self.content_grid.add_widget(self.following_box)
 
-        self.posts_header_btn = Button(border = (0, 0, 0, 0), text = "Posts", size_hint_y = None, height = Window.size[0] / 1.61 / 3)
+        self.posts_header_btn = Button(border = (0, 0, 0, 0), text = "Posts", size_hint_y = None, height = Window.size[0] / 1.61 / 3, on_release = self.create_posts)
         self.content_grid.add_widget(self.posts_header_btn)
 
         #
 
         self.user_posts_box = BoxLayout(size_hint_y = None, height = 0, orientation = "vertical")
         self.content_grid.add_widget(self.user_posts_box)
+
+        self.time_variable = 0
 
 
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
@@ -158,13 +160,13 @@ class OtherProfileScreen (Screen):
         self.user_following_btn.bind(on_release = self.user_following_press)
 
         self.user_posts_box.clear_widgets()
-        self.create_posts()
+        #self.create_posts()
         print(10)
 
     def follow_posts_press(self, instance):
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
-    def create_posts(self):
+    def create_posts(self, instance):
         print(11)
         conn = self.connection
         self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted')
@@ -174,7 +176,7 @@ class OtherProfileScreen (Screen):
 
         print(125)
         self.user_posts_box.clear_widgets()
-        self.user_posts_box.height = len(self.posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 3.855))
+        self.user_posts_box.height = len(self.posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
         #self.content_grid.remove_widget(self.user_posts_box)
         print(12)
         my_liked_posts_id = access_my_info.get_liked_id()
@@ -191,14 +193,14 @@ class OtherProfileScreen (Screen):
             self.user_posts_box.add_widget(self.post_btn)
             self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like, self.posts_list[a]["user_id"]])
 
-        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 3.855))
+        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         print(13)
 
     def image_press(self, order_number, instance):
         pass
 
-    def like_press(self, order_number, instance):
+    def like_press_2(self, order_number, instance):
         #num = int(instance.text)
         num = order_number
         like = (self.all_displayed_posts_list[num][2] + 1) % 2
@@ -211,6 +213,58 @@ class OtherProfileScreen (Screen):
         
         self.all_displayed_posts_list[num][2] = like
     
+    def second_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 2
+        self.like_press(instance)
+
+    def first_post_press(self, instance):
+        #self.go_to_user_profile(order_number)
+        print(self.time_variable)
+        self.time_variable = 1
+        self.post_instance = instance
+        Clock.schedule_once(self.clock_def, 1)
+        print(self.time_variable)
+        print(7)
+    
+    def clock_def(self, instance):
+        print("a")
+        print(self.time_variable)
+        if self.time_variable == 0:
+            self.go_to_screen(self.post_instance)
+        elif self.time_variable == 1:
+            self.reply_post(self.post_instance)
+        self.time_variable = 0
+
+    def release_post(self, instance):
+        print(10)
+        print(self.time_variable)
+        if self.time_variable == 1:
+            self.time_variable = 0
+        
+    def go_to_screen(self, instance):
+        print(11)
+    
+    def reply_post(self, instance):
+        post_screen = self.post_screen
+        post_screen.reply(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "create"
+        self.manager.transition.direction = "left"
+    
+    def like_press(self, instance):
+        print(3)
+        order_number = instance.order_number
+        print(9, order_number)
+        background = instance.background
+        print(77, background)
+        num = self.all_displayed_posts_list[order_number][2]
+        num = (num + 1) % 2
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(self.all_displayed_posts_list[order_number][0], num)
+        self.all_displayed_posts_list[order_number][2] = num
+        
+
     def user_following_press(self, instance):
         foll = (self.following_user + 1) % 2
         if foll == 1:

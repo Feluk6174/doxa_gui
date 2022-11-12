@@ -48,7 +48,7 @@ class PostUserScreen (Screen):
         self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
         self.main_all_box.add_widget(self.content_box)
 
-        self.main_post_content_input = TextInput(multiline = True, size_hint = (1, 4))
+        self.main_post_content_input = TextInput(multiline = True, size_hint = (1, 5))
         self.content_box.add_widget(self.main_post_content_input)
 
         self.background_box = BoxLayout(size_hint = (1, 0.5))

@@ -133,6 +133,7 @@ class Connection():
         response = self.recv()
         if not response == "OK":
             if response == "WRONG CHARS":
+                print(user_name)
                 raise WrongCaracters(user_name=user_name)
         return {}
 
@@ -206,7 +207,7 @@ def check_chars(*args):
 
     arguments = ""
     for argument in args:
-        arguments += argument
+        arguments += str(argument)
 
 
     for i, char in enumerate(invalid_chars):

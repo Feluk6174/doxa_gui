@@ -41,7 +41,7 @@ class ChatScreen (Screen):
         self.main_all_box.add_widget(self.banner)
 
 
-        self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)))
+        self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)))
         self.main_all_box.add_widget(self.content_box)
         
         self.posts_grid = GridLayout(cols = 1, size_hint_y = None, spacing = 20)
@@ -50,6 +50,8 @@ class ChatScreen (Screen):
         self.posts_grid_scroll = ScrollView()
         self.posts_grid_scroll.add_widget (self.posts_grid)
         self.content_box.add_widget (self.posts_grid_scroll)
+
+        self.time_variable = 0
 
         #self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = 100)
         #self.posts_grid.add_widget(self.posts_box)
@@ -102,11 +104,61 @@ class ChatScreen (Screen):
             #self.all_posts_i_get.append[my_posts[a]["user_id"]]
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
     
-    def header_btn_press(self, instance):
-        pass
+    def second_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 2
+        self.like_press(instance)
 
-    #def press_chat_btn(self, instance):
-        #pass
+    def first_post_press(self, instance):
+        #self.go_to_user_profile(order_number)
+        print(self.time_variable)
+        self.time_variable = 1
+        self.post_instance = instance
+        Clock.schedule_once(self.clock_def, 1)
+        print(self.time_variable)
+        print(7)
+    
+    def clock_def(self, instance):
+        print("a")
+        print(self.time_variable)
+        if self.time_variable == 0:
+            self.go_to_screen(self.post_instance)
+        elif self.time_variable == 1:
+            self.reply_post(self.post_instance)
+        self.time_variable = 0
+
+    def release_post(self, instance):
+        print(10)
+        print(self.time_variable)
+        if self.time_variable == 1:
+            self.time_variable = 0
+        
+    def go_to_screen(self, instance):
+        print(11)
+        other_user_profile_screen = self.other_profile_screen
+        other_user_profile_screen.refresh_profile_screen(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "other_profile"
+        self.manager.transition.direction = "left"
+    
+    def reply_post(self, instance):
+        post_screen = self.post_screen
+        post_screen.reply(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "create"
+        self.manager.transition.direction = "left"
+    
+    def like_press(self, instance):
+        print(3)
+        order_number = instance.order_number
+        print(9, order_number)
+        background = instance.background
+        print(77, background)
+        num = self.all_displayed_posts[order_number][2]
+        num = (num + 1) % 2
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(self.all_displayed_posts[order_number][0], num)
+        self.all_displayed_posts[order_number][2] = num
 
     def press_search_btn(self, instance):
         #search_screen = self.search_screen

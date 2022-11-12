@@ -55,9 +55,9 @@ class MainScreen (Screen):
         my_following_screen.add_screens(self, self.profile_screen, self.other_profile_screen, self.chat_screen, self.post_screen)
 
 
-        my_search_screen.refresh_search_screen(0)
-        my_profile_screen.refresh_profile_screen(0)
-        my_chat_screen.refresh_chat(0)
+        #my_search_screen.refresh_search_screen(0)
+        #my_profile_screen.refresh_profile_screen(0)
+        #my_chat_screen.refresh_chat(0)
         print(32)
 
         self.connection = conn
@@ -70,7 +70,7 @@ class MainScreen (Screen):
         
         print (33)
         
-        self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855)))
+        self.content_box = BoxLayout (size_hint = (1, None), height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)))
         self.main_all_box.add_widget(self.content_box)
         
         self.posts_grid = GridLayout(cols = 1, size_hint_y = None)
@@ -89,6 +89,7 @@ class MainScreen (Screen):
         self.all_posts_i_get = []
         print(34)
         self.get_my_posts(0)
+        self.time_variable = 0
 
         print(35)
 
@@ -115,10 +116,7 @@ class MainScreen (Screen):
         self.user_profile_btn.bind(on_release = self.press_user_profile_btn)
 
         print(30)
-        
 
-    def header_btn_press(self, instance):
-        pass
 
     def press_chat_btn(self, instance):
         self.manager.transition = SlideTransition()
@@ -176,8 +174,7 @@ class MainScreen (Screen):
                         actual_maybe_like = 1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
             self.posts_grid.add_widget(self.post_btn)
-            self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
-            self.all_posts_i_get.append(my_posts[a]["user_id"])
+            self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like, my_posts[a]["user_id"]])
             print(307)
         print(308)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
@@ -264,6 +261,50 @@ class MainScreen (Screen):
         instance.background_normal = functions.get_post_image(background, num)
         self.all_posts_i_get[order_number][2] = num
 
+    def second_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 2
+        self.like_press(instance)
+
+    def first_post_press(self, instance):
+        #self.go_to_user_profile(order_number)
+        #print(self.time_variable)
+        self.time_variable = 1
+        self.post_instance = instance
+        Clock.schedule_once(self.clock_def, 1)
+        print(self.time_variable)
+        print(7)
+    
+    def clock_def(self, instance):
+        print("a")
+        print(self.time_variable)
+        if self.time_variable == 0:
+            self.go_to_screen(self.post_instance)
+        elif self.time_variable == 1:
+            self.reply_post(self.post_instance)
+        self.time_variable = 0
+
+    def release_post(self, instance):
+        print(10)
+        print(self.time_variable)
+        if self.time_variable == 1:
+            self.time_variable = 0
+        
+    def go_to_screen(self, instance):
+        print(11)
+        other_user_profile_screen = self.other_profile_screen
+        other_user_profile_screen.refresh_profile_screen(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "other_profile"
+        self.manager.transition.direction = "right"
+    
+    def reply_post(self, instance):
+        post_screen = self.post_screen
+        post_screen.reply(instance.user_name)
+        self.manager.transition = SlideTransition()
+        self.manager.current = "create"
+        self.manager.transition.direction = "left"
+    
     def like_press(self, instance):
         print(3)
         order_number = instance.order_number
@@ -272,38 +313,6 @@ class MainScreen (Screen):
         print(77, background)
         num = self.all_posts_i_get[order_number][2]
         num = (num + 1) % 2
-        if num == 1:
-            instance.background_normal = 'images/pink.jpeg'
-            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 1)
-        elif num == 0:
-            instance.background_normal = background
-            print(background)
-            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], 0)
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], num)
         self.all_posts_i_get[order_number][2] = num
-    
-    def name_press(self, instance):
-        #self.go_to_user_profile(order_number)
-        self.time_variable = 1
-        self.post_instance = instance
-        Clock.schedule_once(self.clock_def, 1)
-        print(7)
-    
-    def clock_def(self, instance):
-        print("a")
-        print(self.time_variable)
-        if self.time_variable == 1:
-            self.go_to_screen(self.post_instance)
-        self.time_variable = 0
-
-    def release_post(self, instance):
-        print(10)
-        self.time_variable = 0
-        
-    def go_to_screen(self, instance):
-        print(11)
-        order_number = instance.order_number
-        other_user_profile_screen = self.other_profile_screen
-        other_user_profile_screen.refresh_profile_screen(instance.user_name)
-        self.manager.transition = SlideTransition()
-        self.manager.current = "other_profile"
-        self.manager.transition.direction = "right"

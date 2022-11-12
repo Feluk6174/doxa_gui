@@ -72,6 +72,9 @@ class SearchScreen (Screen):
         #current: 1 = new, 2 = search
         self.current_posts = 0
         self.time_variable = 0 
+        
+        self.all_displayed_new_posts_list = []
+        self.new_posts_box=BoxLayout()
 
         #self.new_posts_header_press(0)
         self.new_posts_header_display_btn = Button(text = "New")
