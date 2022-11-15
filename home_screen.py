@@ -161,7 +161,7 @@ class MainScreen (Screen):
             my_posts = []
         #include_background_color=str(1)
         print(my_posts)
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855) * (len(my_posts))))
+        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08) * (len(my_posts))))
         self.posts_grid.add_widget(self.posts_box)
         print(38)
         for a in range(len(my_posts)):
