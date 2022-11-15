@@ -155,7 +155,10 @@ class MainScreen (Screen):
         print(all_my_following)
         my_liked_posts = access_my_info.get_liked_id()
         print(302)
-        my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following)
+        if not all_my_following == []:
+            my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc")
+        else:
+            my_posts = []
         #include_background_color=str(1)
         print(my_posts)
         self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 3.855) * (len(my_posts))))
