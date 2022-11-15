@@ -75,10 +75,6 @@ class RegisterScreen (Screen):
         self.main_box.orientation = "vertical"
         self.add_widget(self.main_box)
 
-        #titel
-        self.title_box = BoxLayout(size_hint=(1, None), size_hint_y = None, height = Window.size[1] / 8)
-        self.title_box.orientation = "horizontal"
-        self.main_box.add_widget(self.title_box)
 
         self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png')
         self.main_box.add_widget(self.banner)
