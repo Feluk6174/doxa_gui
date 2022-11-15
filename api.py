@@ -147,8 +147,10 @@ class Connection():
 
     def get_user(self, user_name:str):
         msg = "{"+f'"type": "ACTION", "action": "GET USER", "user_name": "{user_name}"'+"}"
+        print(msg)
         self.send(msg)
         response = self.recv()
+        print(response)
         try:
             return json.loads(response)
         except json.decoder.JSONDecodeError:
@@ -190,6 +192,7 @@ class Connection():
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
             temp = json.loads(self.connection.recv(1024).decode("utf-8"))
+            print(temp)
             temp = temp["response"]
             if not temp == "OK":
                 print("S2" + str(temp))
