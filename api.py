@@ -95,7 +95,7 @@ class Connection():
         #return format: {'id': 'str(23)', 'user_id': 'str(16)', 'content': 'str(255)', 'background_color': 'str(10)', 'time_posted': int}
         posts = []
         if user_name == "" or user_name == []:
-            f_user_name = '"None"'
+            f_user_name = '"No_posts_1"'
         elif type(user_name) == str:
             f_user_name = f'"{user_name}"'
         elif type(user_name) == list:
@@ -109,7 +109,7 @@ class Connection():
         print(user_name, f_user_name)
 
         if id == "" or id == []:
-            f_id = '"None"'
+            f_id = '"0"'
         elif type(id) == str:
             id = f'"{user_name}"'
         elif type(id) == list:
