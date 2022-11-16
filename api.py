@@ -91,7 +91,7 @@ class Connection():
                 if response == "WRONG CHARS":
                     raise WrongCaracters(user_name=user_name)
 
-    def get_posts(self, sort_by:str = None, sort_order:str = None, user_name:Union[str, list] = None, hashtag:str = None, exclude_background_color:str = None, include_background_color:str = None, num:int = None, id:Union[str, list] = None):
+    def get_posts(self, sort_by:str = None, sort_order:str = None, user_name:Union[str, list] = None, hashtag:str = None, exclude_background_color:str = None, include_background_color:str = None, num:int = "10", id:Union[str, list] = None):
         #return format: {'id': 'str(23)', 'user_id': 'str(16)', 'content': 'str(255)', 'background_color': 'str(10)', 'time_posted': int}
         posts = []
         if user_name == "" or user_name == []:
@@ -106,8 +106,6 @@ class Connection():
         else:
             f_user_name = '"None"'
 
-        print(user_name, f_user_name)
-
         if id == "" or id == []:
             f_id = '"0"'
         elif type(id) == str:
@@ -119,8 +117,6 @@ class Connection():
             f_id = f_id[:-1] +'"'
         else:
             f_id = '"None"'
-
-        print(id, f_id)
 
         msg = "{"+f'"type": "ACTION", "action": "GET POSTS", "user_name": {f_user_name}, "hashtag": "{hashtag}", "include_background_color": "{include_background_color}", "exclude_background_color":"{exclude_background_color}", "sort_by": "{sort_by}", "sort_order": "{sort_order}", "num": "{num}", "id": {f_id}'+"}"
         print(msg)
@@ -150,7 +146,7 @@ class Connection():
         print(msg)
         self.send(msg)
         response = self.recv()
-        print(response)
+
         try:
             return json.loads(response)
         except json.decoder.JSONDecodeError:
@@ -192,7 +188,6 @@ class Connection():
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
             temp = json.loads(self.connection.recv(1024).decode("utf-8"))
-            print(temp)
             temp = temp["response"]
             if not temp == "OK":
                 print("S2" + str(temp))
