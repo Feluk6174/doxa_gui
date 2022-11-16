@@ -9,12 +9,12 @@ def gen_key(passphrase):
     encrypted_key = key.export_key(passphrase=passphrase, pkcs=8,
                                   protection="scryptAndAES128-CBC")
 
-    with open("rsa_key.bin", "wb") as f:
+    with open("./rsa_key.bin", "wb") as f:
         f.write(encrypted_key)
 
 
 def get_keys(passphrase):
-    with open("rsa_key.bin", "rb") as f:
+    with open("./rsa_key.bin", "rb") as f:
         encoded_key = f.read()
         key = RSA.import_key(encoded_key, passphrase=passphrase)
         pub_key = key.publickey()
@@ -77,7 +77,7 @@ def verify(pub_key, signature, *args):
 
 def login(priv_key:str, password:str):
     priv_key = reconstruct_key(priv_key)
-    with open("rsa_key.bin", "w") as f:
+    with open("./rsa_key.bin", "w") as f:
         f.write(priv_key)
     try:
         get_keys(password)
