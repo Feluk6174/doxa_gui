@@ -123,6 +123,9 @@ class RegisterScreen (Screen):
         self.image_button = Button(text = "Make your profile image", on_press = self.to_image_making)
         self.main_box.add_widget(self.image_button)
 
+        self.advanced_options_button = Button( size_hint = (1, 0.5), text = "Advanced options", on_release = self.advanced_options)
+        self.main_box.add_widget(self.advanced_options_button)
+
         self.register_btn = Button(size_hint = (1, 1), text = "Register")
         self.main_box.add_widget(self.register_btn)
         self.register_btn.bind(on_release = self.register)
@@ -142,6 +145,10 @@ class RegisterScreen (Screen):
         self.following_box.add_widget(self.following_text_input)"""
 
         
+    def advanced_options(self, instance):
+        self.manager.transition = FallOutTransition()
+        self.manager.current = "advanced"
+
     #creem o modifiquem la imatge de perfil 
     def to_image_making(self, instance):
         self.manager.transition = FallOutTransition()
@@ -177,6 +184,7 @@ class RegisterScreen (Screen):
                 self.image_button.text = "MAKE YOUR PROFILE IMAGE!"
                 self.register_btn.text = "Register. Sorry, try again"
             elif self.password_check == True and self.color_check == True and self.password_text_input.text == self.repeat_password_text_input.text:
+                auth.gen_aes_key()
 
                 #guardar la informacio
                 self.username_text = self.username_text_input.text

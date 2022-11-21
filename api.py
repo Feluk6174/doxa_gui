@@ -34,6 +34,13 @@ class Connection():
                 raise DatabaseError(msg)
 
     def post(self, content:str, post_id:str, user_name:str, background_color:str, priv_key):
+        with open("advanced_settings.json", "r") as f:
+            advanced_options = json.loads(f.read())
+        if advanced_options["encryption"]:
+            if len(content) > 159:
+                content = content[:159:]
+            content = auth.encrypt(content)
+
         time_posted = int(time.time())
         signature = auth.sign(priv_key, content, post_id, user_name, background_color, time_posted).decode("utf-8")
         msg = "{"+f'"type": "ACTION", "action": "POST", "post_id": "{post_id}", "user_name": "{user_name}", "content": "{content}", "background_color": "{background_color}", "time": {time_posted}, "signature": "{signature}"'+"}"
@@ -125,13 +132,23 @@ class Connection():
         print(num)
         self.send('{"type": "RESPONSE", "response": "OK"}')
         if not num == 0: 
-            for _ in range(num):
-                posts.append(json.loads(self.recv()))
-                self.send('{"type": "RESPONSE", "response": "OK"}')
-            response = self.recv()
-            if not response == "OK":
-                if response == "WRONG CHARS":
-                    raise WrongCaracters(user_name=user_name)
+            with open("user_keys.json", "r") as f:
+                keys = json.loads(f.read())
+                for _ in range(num):
+                    post = json.loads(self.recv())
+                    print(post)
+                    try:
+                        print(post)
+                        post["content"] = auth.decrypt(post["content"], keys[post["user_id"]].encode("utf-8"))
+                    except KeyError:
+                        print(post)
+                        #raise IndentationError
+                    posts.append(post)
+                    self.send('{"type": "RESPONSE", "response": "OK"}')
+                response = self.recv()
+                if not response == "OK":
+                    if response == "WRONG CHARS":
+                        raise WrongCaracters(user_name=user_name)
 
             return posts
         response = self.recv()

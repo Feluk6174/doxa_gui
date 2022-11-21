@@ -31,12 +31,10 @@ import unicodedata
 import api
 print("conn")
 connection = api.Connection()
-import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen
+import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key
 
 #optional. errase when doing apk
-#Window.size = (400, 600)
-
-
+Window.size = (400, 600)
 
 class MyApp (App):
     def build(self):
@@ -52,6 +50,7 @@ class MyApp (App):
             sm.add_widget(register_screen.RegisterScreen(connection, sm, name = "register"))
             sm.add_widget(user_image_register_screen.ImageScreen(name = "image_register"))
             sm.add_widget(log_in_screen.LogInScreen(connection, sm, name = "log_in"))
+            sm.add_widget(advanced_settings_screen.AdvancedSettings(sm, name="advanced"))
         elif check_info == True:
             check_register = register_screen.check_my_user_exists(connection)
             if check_register == False:
@@ -71,6 +70,13 @@ class MyApp (App):
             sm.add_widget(user_image_screen.ImageScreen(my_profile_screen, connection, name = "image"))
             sm.add_widget(other_profile_screen)
             sm.add_widget(follow_screen)
+            sm.add_widget(add_encrypted.AddEncrypted(sm, name = "add_encrypted"))
+            try:
+                f = open("aes_key.bin", "r")
+                f.close()
+                sm.add_widget(show_crypto_key.ShowCryptoKey(sm, name = "show_key"))
+            except FileNotFoundError:
+                pass
         return sm
 
 

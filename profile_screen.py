@@ -89,9 +89,23 @@ class ProfileScreen (Screen):
 
         print(55)
 
-        self.user_following_btn = Button(text = "Following", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
+        self.user_following_btn = Button(text = "Following", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 10)
         self.content_grid.add_widget(self.user_following_btn)
         self.user_following_btn.bind(on_release = self.user_following_press)
+        
+        self.following_box = BoxLayout(orientation = "horizontal", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 10)
+        self.content_grid.add_widget(self.following_box)
+
+        self.add_encrypted = Button(text = "Add encryption", size_hint = (1, 1), on_release = self.add_encrypted_func)
+        self.following_box.add_widget(self.add_encrypted)
+
+        try:
+            f = open("aes_key.bin", "r")
+            f.close()
+            self.show_cryto_key = Button(text = "Show key", size_hint = (1, 1), on_release = self.show_key)
+            self.following_box.add_widget(self.show_cryto_key)
+        except FileNotFoundError:
+            pass
 
         self.user_posts_header_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.content_grid.add_widget(self.user_posts_header_box)
@@ -143,6 +157,13 @@ class ProfileScreen (Screen):
 
         print (50)
 
+    def add_encrypted_func(self, instance):
+        self.manager.transition = FallOutTransition()
+        self.manager.current = "add_encrypted"
+
+    def show_key(self, instance):
+        self.manager.transition = FallOutTransition()
+        self.manager.current = "show_key"
 
     def user_description_press(self, instance):
         self.text_description = functions.adapt_text_to_server(self.user_description_btn.text)

@@ -130,3 +130,6 @@ dmypy.json
 
 rsa_key.bin
 my_info.json
+
+*.bin
+*.json
