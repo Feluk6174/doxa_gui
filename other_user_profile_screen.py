@@ -162,6 +162,7 @@ class OtherProfileScreen (Screen):
         self.user_posts_box.clear_widgets()
         #self.create_posts()
         print(10)
+        self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
     def follow_posts_press(self, instance):
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))

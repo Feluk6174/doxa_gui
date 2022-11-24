@@ -227,9 +227,9 @@ class ProfileScreen (Screen):
         self.current_posts = 1
 
     def display_my_posts(self):
-        self.my_posts_box = self.zero_my_box
-        if self.current_posts != 0:
-            self.content_grid.remove_widget(self.favourite_posts_box)
+        self.my_posts_box = BoxLayout(orientation='vertical', size_hint_y=None, height = len(self.all_my_displayed_posts_list) * (Window.size[1]-Window.size[0]*(1/5 + 1/5.08)))
+        for post in self.all_my_displayed_posts_list:
+            self.my_posts_box.add_widget(post[1])
         self.content_grid.add_widget(self.my_posts_box)
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
@@ -255,9 +255,9 @@ class ProfileScreen (Screen):
         self.current_posts = 2
 
     def display_liked_posts(self):
-        self.favourite_posts_box = self.zero_favourite_box
-        if self.current_posts != 0:
-            self.content_grid.remove_widget(self.my_posts_box)
+        self.favourite_posts_box = BoxLayout(orientation='vertical', size_hint_y=None, height = len(self.all_liked_displayed_posts_list) * (Window.size[1]-Window.size[0]*(1/5 + 1/5.08)))
+        for post in self.all_liked_displayed_posts_list:
+            self.favourite_posts_box.add_widget(post[1])
         self.content_grid.add_widget(self.favourite_posts_box)
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 

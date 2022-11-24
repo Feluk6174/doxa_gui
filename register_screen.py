@@ -169,22 +169,23 @@ class RegisterScreen (Screen):
             self.username_text_input.text = ""
             self.register_btn.text = "Register. Sorry, try again"
         elif self.other_users == False:
-            self.password_check = self.check_password()
+            #self.password_check = self.check_password()
             self.image_str = user_image_register_screen.get_my_image()
-            self.color_check = self.check_image()
+            #self.color_check = self.check_image()
+            """
             if self.password_check == False:
                 self.password_btn.text = "Password incorrect:"
                 self.password_text_input.text = ""
                 self.register_btn.text = "Register. Sorry, try again"
-            elif self.password_text_input.text != self.repeat_password_text_input.text:
-                self.repeat_password_btn.text = "Repeat password incorrect"
-                self.repeat_password_text_input.text = ""
-                self.register_btn.text = "Register. Sorry, try again"
             elif self.color_check == False:
                 self.image_button.text = "MAKE YOUR PROFILE IMAGE!"
                 self.register_btn.text = "Register. Sorry, try again"
-            elif self.password_check == True and self.color_check == True and self.password_text_input.text == self.repeat_password_text_input.text:
-                auth.gen_aes_key()
+                """
+            if self.password_text_input.text != self.repeat_password_text_input.text:
+                self.repeat_password_btn.text = "Repeat password incorrect"
+                self.repeat_password_text_input.text = ""
+                self.register_btn.text = "Register. Sorry, try again"
+            elif self.password_text_input.text == self.repeat_password_text_input.text:
 
                 #guardar la informacio
                 self.username_text = self.username_text_input.text
@@ -205,10 +206,11 @@ class RegisterScreen (Screen):
                 self.banner_load = Button(border = (0, 0, 0, 0), size_hint = (None, None), background_normal = 'images/banner.png', background_down = 'images/banner.png', size = (Window.size[0] * 0.7, Window.size[0] * 0.7), pos_hint = {"center_x":0.5})   
                 self.main_box_load.add_widget(self.banner_load)
 
-                self.text_load = Label(text = "Creating user...", size_hint = (1, 0.12))
+                self.text_load = Button(text = "Creating user...", size_hint = (1, 0.12))
                 self.main_box_load.add_widget(self.text_load)
 
                 #Clock.shedule_once()
+                auth.gen_aes_key()
                 self.create_user()
 
 
