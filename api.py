@@ -204,6 +204,7 @@ class Connection():
             msg_part = msg[512*i:512*i+512].replace("\"", '\\"')
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
+            print(temp)
             temp = json.loads(self.connection.recv(1024).decode("utf-8"))
             temp = temp["response"]
             if not temp == "OK":

@@ -47,11 +47,24 @@ class MyApp (App):
         #look if user created and if it is registered. if it does not, make it
         check_info = register_screen.check_my_info_exists()
         if check_info == False:
+            f = open("user_keys.json", "w")
+            f.write("{}")
+            f.close()
+            f = open("advanced_settings.json", "w")
+            f.write(json.dumps({"tor": False, "encryption": False}))
+            f.close()
             sm.add_widget(register_screen.RegisterScreen(connection, sm, name = "register"))
             sm.add_widget(user_image_register_screen.ImageScreen(name = "image_register"))
             sm.add_widget(log_in_screen.LogInScreen(connection, sm, name = "log_in"))
             sm.add_widget(advanced_settings_screen.AdvancedSettings(sm, name="advanced"))
         elif check_info == True:
+            try:
+                f = open("user_keys.json", "r")
+                f.close()
+            except FileNotFoundError:
+                f = open("user_keys.json", "w")
+                f.write("{}")
+                f.close()
             check_register = register_screen.check_my_user_exists(connection)
             if check_register == False:
                 register_screen.register(connection)
@@ -77,6 +90,8 @@ class MyApp (App):
                 sm.add_widget(show_crypto_key.ShowCryptoKey(sm, name = "show_key"))
             except FileNotFoundError:
                 pass
+            
+                
         return sm
 
 
