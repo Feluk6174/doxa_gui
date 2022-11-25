@@ -281,7 +281,7 @@ class ProfileScreen (Screen):
                 pass
             print(560)
             self.post_btn = functions.make_post_btn(self, self.my_posts_list[a]["user_id"], self.my_posts_list[a]["content"], self.my_posts_list[a]["time_posted"], actual_maybe_like, a, self.my_posts_list[a]["background_color"])
-            self.zero_my_box.add_widget(self.post_btn)
+            #self.zero_my_box.add_widget(self.post_btn)
             self.all_my_displayed_posts_list.append([self.my_posts_list[a]["id"], self.post_btn, actual_maybe_like, self.my_posts_list[a]["user_id"]])
         print(561)
         #self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
@@ -304,7 +304,7 @@ class ProfileScreen (Screen):
         for b in range (len(self.my_liked_posts_list)):
             #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
             self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["background_color"])
-            self.zero_favourite_box.add_widget(self.post_btn)
+            #self.zero_favourite_box.add_widget(self.post_btn)
             self.all_liked_displayed_posts_list.append([self.my_liked_posts_list[b]["id"], self.post_btn, actual_maybe_like, self.my_liked_posts_list[b]["user_id"]])
 
         #self.content_grid.bind(minimum_height=self.content_grid.setter('height'))

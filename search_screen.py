@@ -80,10 +80,11 @@ class SearchScreen (Screen):
         
         self.search_header_display_btn = Button (text = "Search")
         self.display_header_box.add_widget(self.search_header_display_btn)
+        self.search_header_display_btn.bind(on_release = self.search_header_press)
 
         self.new_posts_header_display_btn = Button(text = "New")
         self.display_header_box.add_widget(self.new_posts_header_display_btn)
-        self.new_posts_header_display_btn.bind(on_release = self.new_posts_header_press)
+        self.search_header_press(0)
 
 
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
@@ -156,7 +157,7 @@ class SearchScreen (Screen):
         self.content_in_scroll_box.add_widget(self.searched_box)
 
 
-        self.content_in_scroll_box.height = Window.size[1] / 8 + Window.size[1] * 3 / 24 + Window.size[1] * 3 / 30
+        self.content_in_scroll_box.height = Window.size[1] / 8 + Window.size[1] * 3 / 30 + Window.size[1] / 12
         # +(Window.size[1] - Window.size[0] / 5) * 0.9 / 12
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         self.current_posts = 2
@@ -212,16 +213,17 @@ class SearchScreen (Screen):
             self.new_posts_box.add_widget(self.post_btn)
             self.all_displayed_new_posts_list.append([self.all_newest_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_newest_posts_info[t]["user_id"]])
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+        self.new_posts_header_press(0)
         self.search_header_press(0)
 
     #def display_newest_posts(self):
     #    self.content_in_scroll_box.add_widget(self.new_posts_box)
 
     def refresh_search_screen(self, instance):
-        if self.current_posts == 0 or self.current_posts == 2:
+        if self.current_posts == 2:
             self.new_posts_refresh(0)
         
-        elif self.current_posts == 1:
+        elif self.current_posts == 1 or self.current_posts == 0:
             self.search_header_press(0)
             self.new_posts_refresh(0)
 
