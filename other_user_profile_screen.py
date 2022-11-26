@@ -46,7 +46,7 @@ class OtherProfileScreen (Screen):
         self.main_all_box.add_widget(self.banner)
 
 
-        self.content_box = BoxLayout (size_hint = (1, 0.9), orientation = "vertical")
+        self.content_box = BoxLayout (size_hint = (1, 1), orientation = "vertical")
         self.main_all_box.add_widget(self.content_box)
 
         self.content_grid = GridLayout(cols = 1, size_hint_y = None)
@@ -56,25 +56,25 @@ class OtherProfileScreen (Screen):
         self.content_grid_scroll.add_widget (self.content_grid)
         self.content_box.add_widget (self.content_grid_scroll)
 
-        self.user_image_name_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
+        self.user_image_name_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.content_grid.add_widget(self.user_image_name_box)
 
-        self.user_image_box = BoxLayout(size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
+        self.user_image_box = BoxLayout(size_hint_x = None, width = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.user_image_name_box.add_widget(self.user_image_box)
 
         self.user_name_box =BoxLayout()
         self.user_image_name_box.add_widget(self.user_name_box)
         #
 
-        self.description_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
+        self.description_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) * 2 / 5)
         self.content_grid.add_widget(self.description_box)
 
         #
 
-        self.following_box = BoxLayout(size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 0.9 / 5)
+        self.following_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.content_grid.add_widget(self.following_box)
 
-        self.posts_header_btn = Button(border = (0, 0, 0, 0), text = "Posts", size_hint_y = None, height = Window.size[0] / 1.61 / 3, on_release = self.create_posts)
+        self.posts_header_btn = Button(border = (0, 0, 0, 0), text = "Posts", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5, on_release = self.create_posts)
         self.content_grid.add_widget(self.posts_header_btn)
 
         #
@@ -134,7 +134,7 @@ class OtherProfileScreen (Screen):
         print(2, self.following_user)
 
         self.user_image_box.clear_widgets()
-        self.user_image_grid = functions.build_image(self, self.user_info["profile_picture"],-1, (Window.size[1]  - Window.size[0] / 5) * 0.9 / 5)
+        self.user_image_grid = functions.build_image(self, self.user_info["profile_picture"],-1, (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.user_image_box.add_widget(self.user_image_grid)
 
         self.user_name_box.clear_widgets()
@@ -147,7 +147,7 @@ class OtherProfileScreen (Screen):
         print(text)
         text = functions.adapt_text_to_window(text, 15, Window.size[0])
         print(text)
-        self.user_description_btn = Button(text = text, size_hint_y = None, height = (Window.size[1] - Window.size[0] / 5) * 2 * 0.9 / 5)
+        self.user_description_btn = Button(text = text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) * 2 / 5)
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
@@ -160,8 +160,10 @@ class OtherProfileScreen (Screen):
         self.user_following_btn.bind(on_release = self.user_following_press)
 
         self.user_posts_box.clear_widgets()
+        self.content_grid.remove_widget(self.user_posts_box)
         #self.create_posts()
         print(10)
+        self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
     def follow_posts_press(self, instance):
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
@@ -169,14 +171,16 @@ class OtherProfileScreen (Screen):
     def create_posts(self, instance):
         print(11)
         conn = self.connection
-        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted')
+        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted', sort_order = 'desc')
         print(124)
         #self.my_posts_list = []
         #self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
 
         print(125)
-        self.user_posts_box.clear_widgets()
-        self.user_posts_box.height = len(self.posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+        #self.user_posts_box.clear_widgets()
+        self.user_posts_box = BoxLayout(size_hint_y = None, height = 0, orientation = "vertical")
+        #self.user_posts_box.height = len(self.posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+        self.content_grid.add_widget(self.user_posts_box)
         #self.content_grid.remove_widget(self.user_posts_box)
         print(12)
         my_liked_posts_id = access_my_info.get_liked_id()
