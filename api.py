@@ -1,3 +1,4 @@
+import binascii
 import json
 import auth
 import time
@@ -140,9 +141,8 @@ class Connection():
                     try:
                         print(post)
                         post["content"] = auth.decrypt(post["content"], keys[post["user_id"]].encode("utf-8"))
-                    except KeyError:
-                        print(post)
-                        #raise IndentationError
+                    except (KeyError, binascii.Error, ValueError):
+                        pass
                     posts.append(post)
                     self.send('{"type": "RESPONSE", "response": "OK"}')
                 response = self.recv()
