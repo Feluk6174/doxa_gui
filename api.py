@@ -5,12 +5,13 @@ import time
 import socket
 from Crypto.Hash import SHA256
 from typing import Union
+import random
 
 
 class Connection():
     def __init__(self):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connection.connect(("195.181.244.246", 30003))
+        self.connection.connect(("195.181.244.246", random.randint(30002, 30003)))
 
         msg = '{"type": "CLIENT"}'
         self.connection.send(msg.encode("utf-8"))
