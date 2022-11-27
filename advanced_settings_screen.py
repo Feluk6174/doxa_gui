@@ -29,7 +29,7 @@ class AdvancedSettings (Screen):
         self.main_all_box.add_widget(self.tor_buton)
         
 
-        self.tor_text = Label(size_hint = (1, 0.1), text = functions.adapt_text_to_window("Enabeling tor will improve your anonimity but will make the app a lo slower. This setting is not reversable. Currently not implemented.", 15, Window.size[1]))
+        self.tor_text = Label(size_hint = (1, 0.1), text = functions.adapt_text_to_window("Enabeling tor will improve your anonimity but will make the app a lo slower. This setting is not reversable. Currently not implemented.", 15, Window.size[0]))
         self.main_all_box.add_widget(self.tor_text)
 
         self.encrypt_buton = Button (border = (0, 0, 0, 0), size_hint = (1, 0.1), text = "Encrypt:"+str(self.advanced_settings["encryption"]), on_release = self.togle_encryption)
