@@ -35,7 +35,7 @@ class AdvancedSettings (Screen):
         self.encrypt_buton = Button (border = (0, 0, 0, 0), size_hint = (1, 0.1), text = "Encrypt:"+str(self.advanced_settings["encryption"]), on_release = self.togle_encryption)
         self.main_all_box.add_widget(self.encrypt_buton)
 
-        self.tor_text = Label(size_hint = (1, 0.1), text = functions.adapt_text_to_window("Enabeling this will make encrypt evey post you post, perople will have to enter your decrypt key manualy to see the contents. This setting is not reversable.", 15, Window.size[1]))
+        self.tor_text = Label(size_hint = (1, 0.1), text = functions.adapt_text_to_window("Enabeling this will make encrypt evey post you post, perople will have to enter your decrypt key manualy to see the contents. This setting is not reversable.", 15, Window.size[0]))
         self.main_all_box.add_widget(self.tor_text)
 
         self.done_buton = Button (border = (0, 0, 0, 0), size_hint = (1, 0.1), text = "Done", on_release = self.done)
