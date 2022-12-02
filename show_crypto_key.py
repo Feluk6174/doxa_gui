@@ -26,7 +26,7 @@ class ShowCryptoKey (Screen):
         self.key_textbox = TextInput(text = key, size_hint = (1, 1))
         self.main_all_box.add_widget(self.key_textbox)
 
-        self.scroll_view = Label(size_hint = (1, 4), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        self.scroll_view = Button(size_hint = (1, 4), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_all_box.add_widget(self.scroll_view)
 
         self.done_button = Button(size_hint = (1, 1), text = "Done", on_release = self.done, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
