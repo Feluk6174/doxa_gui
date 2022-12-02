@@ -74,7 +74,7 @@ class OtherProfileScreen (Screen):
         self.following_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.content_grid.add_widget(self.following_box)
 
-        self.posts_header_btn = Button(border = (0, 0, 0, 0), text = "Posts", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5, on_release = self.create_posts)
+        self.posts_header_btn = Button(text = "Posts", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5, on_release = self.create_posts, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.content_grid.add_widget(self.posts_header_btn)
 
         #
@@ -138,7 +138,7 @@ class OtherProfileScreen (Screen):
         self.user_image_box.add_widget(self.user_image_grid)
 
         self.user_name_box.clear_widgets()
-        self.user_name_btn = Button(text = self.user_id)
+        self.user_name_btn = Button(text = self.user_id, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.user_name_box.add_widget(self.user_name_btn)
         #self.user_name_btn.bind(on_release = self.user_name_press)
 
@@ -147,14 +147,14 @@ class OtherProfileScreen (Screen):
         print(text)
         text = functions.adapt_text_to_window(text, 15, Window.size[0])
         print(text)
-        self.user_description_btn = Button(text = text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) * 2 / 5)
+        self.user_description_btn = Button(text = text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) * 2 / 5, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
         if self.following_user == 0:
-            self.user_following_btn = Button(text = "Follow")
+            self.user_following_btn = Button(text = "Follow", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         elif self.following_user == 1:
-            self.user_following_btn = Button(text = "Unfollow")
+            self.user_following_btn = Button(text = "Unfollow", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.following_box.clear_widgets()
         self.following_box.add_widget(self.user_following_btn)
         self.user_following_btn.bind(on_release = self.user_following_press)

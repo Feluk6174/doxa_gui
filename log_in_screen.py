@@ -28,7 +28,7 @@ from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
 
-import user_image_register_screen, auth, home_screen, search_screen, chat_screen, create_post_screen, profile_screen, user_image_screen, access_my_info, other_user_profile_screen, following_screen, functions
+import user_image_register_screen, auth, home_screen, search_screen, chat_screen, create_post_screen, profile_screen, user_image_screen, access_my_info, other_user_profile_screen, following_screen, functions, show_crypto_key, add_encrypted
 
 
 #gotta change this!!!!!!!!!!!!!
@@ -53,8 +53,8 @@ class LogInScreen (Screen):
         self.title_box = BoxLayout(orientation = "vertical")
         self.main_box.add_widget(self.title_box)
         
-        self.title = Label (text = ("Small brother"), size_hint=(1, None), height = Window.size[1] / 8)
-        self.title_box.add_widget(self.title)
+        self.banner = Button (size_hint=(1, None), height = Window.size[1] / 8, border = (0, 0, 0, 0), background_normal = "./images/logo.png", background_down = "./images/logo.png")
+        self.title_box.add_widget(self.banner)
 
         #cos de la pantalla. text inputs i boto
         self.username_box = BoxLayout(orientation = 'vertical', size_hint=(1, None), height = Window.size[1] / 8)
@@ -133,6 +133,7 @@ class LogInScreen (Screen):
         create_post_scrn = create_post_screen.PostUserScreen(con, name = "create")
         follow_screen = following_screen.FollowingScreen(con, name = "following")
         self.manager.add_widget(home_screen.MainScreen(con, my_profile_screen, my_search_screen, my_chat_screen, create_post_scrn, other_profile_screen, follow_screen, name = "main"))
+        self.manager.add_widget(add_encrypted.AddEncrypted(name = "add_encrypted"))
         self.manager.add_widget(my_chat_screen)
         self.manager.add_widget(my_search_screen)
         self.manager.add_widget(create_post_scrn)
@@ -140,6 +141,12 @@ class LogInScreen (Screen):
         self.manager.add_widget(user_image_screen.ImageScreen(my_profile_screen, con, name = "image"))
         self.manager.add_widget(other_profile_screen)
         self.manager.add_widget(follow_screen)
+        try:
+            f = open("aes_key.bin", "r")
+            f.close()
+            self.manager.add_widget(show_crypto_key.ShowCryptoKey(name = "show_key"))
+        except FileNotFoundError:
+            pass
         self.manager.transition = FallOutTransition()
         self.manager.current = "main"
     

@@ -28,7 +28,7 @@ from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
 
-import user_image_register_screen, auth, home_screen, search_screen, chat_screen, create_post_screen, profile_screen, user_image_screen, access_my_info, other_user_profile_screen, following_screen, functions
+import user_image_register_screen, auth, home_screen, search_screen, chat_screen, create_post_screen, profile_screen, user_image_screen, access_my_info, other_user_profile_screen, following_screen, functions, add_encrypted, show_crypto_key
 
 
 def check_my_info_exists():
@@ -83,7 +83,7 @@ class RegisterScreen (Screen):
         self.username_box = BoxLayout(orientation = 'vertical')
         self.main_box.add_widget(self.username_box)
 
-        self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0))
+        self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.username_box.add_widget(self.username_btn)
 
         self.username_text_input = TextInput(multiline = False)
@@ -93,7 +93,7 @@ class RegisterScreen (Screen):
         self.password_box = BoxLayout(orientation = 'vertical')
         self.main_box.add_widget(self.password_box)
 
-        self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0))
+        self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.password_box.add_widget(self.password_btn)
 
         self.password_text_input = TextInput(multiline = False, password = True)
@@ -103,7 +103,7 @@ class RegisterScreen (Screen):
         self.repeat_password_box = BoxLayout(orientation = 'vertical')
         self.main_box.add_widget(self.repeat_password_box)
 
-        self.repeat_password_btn = Button(text = "Repeat password:", border = (0, 0, 0, 0))
+        self.repeat_password_btn = Button(text = "Repeat password:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.repeat_password_box.add_widget(self.repeat_password_btn)
         
         self.repeat_password_text_input = TextInput(multiline = False, password = True)
@@ -113,24 +113,24 @@ class RegisterScreen (Screen):
         self.description_box = BoxLayout(orientation = 'vertical', size_hint_y = 2)
         self.main_box.add_widget(self.description_box)
 
-        self.description_btn = Button(text = "Description:", border = (0, 0, 0, 0))
+        self.description_btn = Button(text = "Description:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.description_btn)
         
         self.description_text_input = TextInput(multiline = False, size_hint_y = 3)
         #self.description_text_input.bind(keyboard_on_key_down = self.description_text_input_background_image_f)
         self.description_box.add_widget(self.description_text_input)
         
-        self.image_button = Button(text = "Make your profile image", on_press = self.to_image_making)
+        self.image_button = Button(text = "Make your profile image", on_press = self.to_image_making, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_box.add_widget(self.image_button)
 
-        self.advanced_options_button = Button( size_hint = (1, 0.5), text = "Advanced options", on_release = self.advanced_options)
+        self.advanced_options_button = Button( size_hint = (1, 0.5), text = "Advanced options", on_release = self.advanced_options, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_box.add_widget(self.advanced_options_button)
 
-        self.register_btn = Button(size_hint = (1, 1), text = "Register")
+        self.register_btn = Button(size_hint = (1, 1), text = "Register", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_box.add_widget(self.register_btn)
         self.register_btn.bind(on_release = self.register)
         
-        self.log_in_btn = Button(size_hint_y = 0.666666, text = "Log In", border = (0, 0, 0, 0), on_release = self.log_in_press)
+        self.log_in_btn = Button(size_hint_y = 0.666666, text = "Log In", on_release = self.log_in_press, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_box.add_widget(self.log_in_btn)
 
         """
@@ -232,6 +232,7 @@ class RegisterScreen (Screen):
         other_profile_screen = other_user_profile_screen.OtherProfileScreen(con, name = "other_profile")
         create_post_scrn = create_post_screen.PostUserScreen(con, name = "create")
         follow_screen = following_screen.FollowingScreen(con, name = "following")
+        self.manager.add_widget(add_encrypted.AddEncrypted(name = "add_encrypted"))
         self.manager.add_widget(home_screen.MainScreen(con, my_profile_screen, my_search_screen, my_chat_screen, create_post_scrn, other_profile_screen, follow_screen, name = "main"))
         self.manager.add_widget(my_chat_screen)
         self.manager.add_widget(my_search_screen)
@@ -240,6 +241,12 @@ class RegisterScreen (Screen):
         self.manager.add_widget(user_image_screen.ImageScreen(my_profile_screen, con, name = "image"))
         self.manager.add_widget(other_profile_screen)
         self.manager.add_widget(follow_screen)
+        try:
+            f = open("aes_key.bin", "r")
+            f.close()
+            self.manager.add_widget(show_crypto_key.ShowCryptoKey(name = "show_key"))
+        except FileNotFoundError:
+            pass
         self.manager.transition = FallOutTransition()
         self.manager.current = "main"
     

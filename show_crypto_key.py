@@ -8,7 +8,7 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import FallOutTransition
 
 class ShowCryptoKey (Screen):
-    def __init__(self, sm, **kwargs):
+    def __init__(self, **kwargs):
         super(ShowCryptoKey, self).__init__(**kwargs)
 
         self.main_all_box = BoxLayout(orientation = "vertical")
@@ -20,16 +20,16 @@ class ShowCryptoKey (Screen):
         with open("aes_key.bin", "r") as f:
             key = f.read()
 
-        self.key_label = Label(text = "key: "+key, size_hint = (1, 1))
+        self.key_label = Button(text = "key: "+key, size_hint = (1, 1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_all_box.add_widget(self.key_label)
 
         self.key_textbox = TextInput(text = key, size_hint = (1, 1))
         self.main_all_box.add_widget(self.key_textbox)
 
-        self.scroll_view = Label(size_hint = (1, 4))
+        self.scroll_view = Label(size_hint = (1, 4), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_all_box.add_widget(self.scroll_view)
 
-        self.done_button = Button(border = (0, 0, 0, 0), size_hint = (1, 1), text = "Done", on_release = self.done)
+        self.done_button = Button(size_hint = (1, 1), text = "Done", on_release = self.done, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_all_box.add_widget(self.done_button)
 
 

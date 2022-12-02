@@ -11,7 +11,7 @@ import random
 class Connection():
     def __init__(self):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connection.connect(("195.181.244.246", random.randint(30002, 30003)))
+        self.connection.connect(("195.181.244.246", random.randint(30002, 30002)))
 
         msg = '{"type": "CLIENT"}'
         self.connection.send(msg.encode("utf-8"))
@@ -206,7 +206,9 @@ class Connection():
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
             print(temp)
-            temp = json.loads(self.connection.recv(1024).decode("utf-8"))
+            temp = self.connection.recv(1024).decode("utf-8")
+            print("kek", temp)
+            temp = json.loads(temp)
             temp = temp["response"]
             if not temp == "OK":
                 print("S2" + str(temp))

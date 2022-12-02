@@ -95,7 +95,7 @@ class FollowingScreen (Screen):
                 self.image_grid = functions.build_image(self, user_info["profile_picture"], x, Window.size[0]/1.61/2)
                 self.user_box.add_widget(self.image_grid)
 
-                self.user_name_btn = Button(text = user_info["user_name"], on_release = self.go_to_user_profile_screen)
+                self.user_name_btn = Button(text = user_info["user_name"], on_release = self.go_to_user_profile_screen, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
                 self.user_box.add_widget(self.user_name_btn)
 
                 self.users_info_list.append([user_info, self.user_box])

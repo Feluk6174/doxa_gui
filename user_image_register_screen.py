@@ -69,7 +69,7 @@ class ImageScreen (Screen):
         self.second_big_box = BoxLayout()
         self.main_box.add_widget(self.second_big_box)
 
-        self.return_to_back_btn = Button(text = "Done", on_release = self.go_back)
+        self.return_to_back_btn = Button(text = "Done", on_release = self.go_back, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.second_big_box.add_widget(self.return_to_back_btn)
 
 

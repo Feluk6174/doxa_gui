@@ -161,7 +161,7 @@ class MainScreen (Screen):
             my_posts = []
         #include_background_color=str(1)
         print(my_posts)
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08) * (len(my_posts))))
+        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts)))
         self.posts_grid.add_widget(self.posts_box)
         print(38)
         for a in range(len(my_posts)):
@@ -176,7 +176,7 @@ class MainScreen (Screen):
                         print(306)
                         actual_maybe_like = 1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
-            self.posts_grid.add_widget(self.post_btn)
+            self.posts_box.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like, my_posts[a]["user_id"]])
             print(307)
         print(308)

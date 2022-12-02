@@ -72,7 +72,7 @@ class ProfileScreen (Screen):
         self.user_image_grid = functions.build_image(self, access_my_info.get_profile_image(), -1, (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.user_image_box.add_widget(self.user_image_grid)
 
-        self.user_name_btn = Button(text = access_my_info.get_user_name())
+        self.user_name_btn = Button(text = access_my_info.get_user_name(), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.user_image_name_box.add_widget(self.user_name_btn)
         #self.user_name_btn.bind(on_release = self.user_name_press)
 
@@ -83,26 +83,26 @@ class ProfileScreen (Screen):
 
         text = access_my_info.get_description()
         text = functions.adapt_text_to_window(text, 14, Window.size[0])
-        self.user_description_btn = Button(halign = 'center', text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2)
+        self.user_description_btn = Button(halign = 'center', font_size = 14, text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
         print(55)
 
-        self.user_following_btn = Button(text = "Following", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 10)
+        self.user_following_btn = Button(text = "Following", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 10, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.content_grid.add_widget(self.user_following_btn)
         self.user_following_btn.bind(on_release = self.user_following_press)
         
         self.following_box = BoxLayout(orientation = "horizontal", size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 10)
         self.content_grid.add_widget(self.following_box)
 
-        self.add_encrypted = Button(text = "Add encryption", size_hint = (1, 1), on_release = self.add_encrypted_func)
+        self.add_encrypted = Button(text = "Add encryption", size_hint = (1, 1), on_release = self.add_encrypted_func, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.following_box.add_widget(self.add_encrypted)
 
         try:
             f = open("aes_key.bin", "r")
             f.close()
-            self.show_cryto_key = Button(text = "Show key", size_hint = (1, 1), on_release = self.show_key)
+            self.show_cryto_key = Button(text = "Show key", size_hint = (1, 1), on_release = self.show_key, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
             self.following_box.add_widget(self.show_cryto_key)
         except FileNotFoundError:
             pass
@@ -110,10 +110,10 @@ class ProfileScreen (Screen):
         self.user_posts_header_box = BoxLayout(size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5)
         self.content_grid.add_widget(self.user_posts_header_box)
 
-        self.user_posts_btn = Button(text = "My Posts", on_release = self.user_posts_press)
+        self.user_posts_btn = Button(text = "My Posts", on_release = self.user_posts_press, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.user_posts_header_box.add_widget(self.user_posts_btn)
         
-        self.favourite_posts_btn = Button (text = "Favourites")
+        self.favourite_posts_btn = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.user_posts_header_box.add_widget(self.favourite_posts_btn)
         self.favourite_posts_btn.bind(on_release = self.user_favourites_press)
 
@@ -179,7 +179,7 @@ class ProfileScreen (Screen):
 
         functions.change_my_description(self.text_description)
 
-        self.user_description_btn = Button(text = self.text_description, on_release = self.user_description_press)
+        self.user_description_btn = Button(text = self.text_description, on_release = self.user_description_press, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.user_description_btn)
 
     def user_following_press(self, instance):
@@ -199,7 +199,7 @@ class ProfileScreen (Screen):
         if self.current_posts != 1:
             self.user_posts_press(0)
         elif self.current_posts == 1:
-            self.like_press(0)
+            self.user_favourites_press(0)
             
 
     def user_posts_press(self, instance):
@@ -210,21 +210,23 @@ class ProfileScreen (Screen):
         if self.current_posts == 2:
             self.favourite_posts_box.clear_widgets()
             self.content_grid.remove_widget(self.favourite_posts_box)
-
-        self.user_posts_header_box.clear_widgets()
-
-        self.user_posts_label = Label(text = "My Posts")
-        self.user_posts_header_box.add_widget(self.user_posts_label)
         
-        self.favourite_posts_btn = Button (text = "Favourites")
-        self.user_posts_header_box.add_widget(self.favourite_posts_btn)
-        self.favourite_posts_btn.bind(on_release = self.user_favourites_press)
+        if self.current_posts !=1:
+
+            self.user_posts_header_box.clear_widgets()
+
+            self.user_posts_label = Button(text = "My Posts", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.user_posts_header_box.add_widget(self.user_posts_label)
+            
+            self.favourite_posts_btn = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.user_posts_header_box.add_widget(self.favourite_posts_btn)
+            self.favourite_posts_btn.bind(on_release = self.user_favourites_press)
 
 
-        #my posts
-        self.display_my_posts()
+            #my posts
+            self.display_my_posts()
 
-        self.current_posts = 1
+            self.current_posts = 1
 
     def display_my_posts(self):
         self.my_posts_box = BoxLayout(orientation='vertical', size_hint_y=None, height = len(self.all_my_displayed_posts_list) * (Window.size[1]-Window.size[0]*(1/5 + 1/5.08)))
@@ -239,20 +241,21 @@ class ProfileScreen (Screen):
             self.my_posts_box.clear_widgets()
             self.content_grid.remove_widget(self.my_posts_box)
 
-        self.user_posts_header_box.clear_widgets()
+        if self.current_posts != 2:
+            self.user_posts_header_box.clear_widgets()
 
-        self.user_posts_btn = Button(text = "My Posts")
-        self.user_posts_header_box.add_widget(self.user_posts_btn)
-        self.user_posts_btn.bind(on_release = self.user_posts_press)
+            self.user_posts_btn = Button(text = "My Posts", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.user_posts_header_box.add_widget(self.user_posts_btn)
+            self.user_posts_btn.bind(on_release = self.user_posts_press)
 
-        self.favourite_posts_label = Label (text = "Favourites")
-        self.user_posts_header_box.add_widget(self.favourite_posts_label)
+            self.favourite_posts_label = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.user_posts_header_box.add_widget(self.favourite_posts_label)
 
 
-        #favourite posts
-        self.display_liked_posts()
+            #favourite posts
+            self.display_liked_posts()
 
-        self.current_posts = 2
+            self.current_posts = 2
 
     def display_liked_posts(self):
         self.favourite_posts_box = BoxLayout(orientation='vertical', size_hint_y=None, height = len(self.all_liked_displayed_posts_list) * (Window.size[1]-Window.size[0]*(1/5 + 1/5.08)))

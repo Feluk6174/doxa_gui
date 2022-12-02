@@ -74,10 +74,13 @@ class PostUserScreen (Screen):
             self.all_background_buttons.append(self.background_btn)
             self.background_grid.add_widget(self.background_btn)
         
+        self.nothing_btn = Button(size_hint_x = None, width = (Window.size[1] - Window.size[0] / 5) * 0.9 * (1 - 5/12), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        self.background_grid.add_widget(self.nothing_btn)
+
         self.main_post_content_input.background_normal = self.all_backgrounds[1]
         self.main_post_content_input.background_active = self.all_backgrounds[1]
 
-        self.send_post_btn = Button (text = "Publish", size_hint = (1, 1))
+        self.send_post_btn = Button (text = "Publish", size_hint = (1, 1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.content_box.add_widget(self.send_post_btn)
         self.send_post_btn.bind(on_press = self.send_post_press)
 

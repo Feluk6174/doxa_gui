@@ -83,11 +83,11 @@ class MyApp (App):
             sm.add_widget(user_image_screen.ImageScreen(my_profile_screen, connection, name = "image"))
             sm.add_widget(other_profile_screen)
             sm.add_widget(follow_screen)
-            sm.add_widget(add_encrypted.AddEncrypted(sm, name = "add_encrypted"))
+            sm.add_widget(add_encrypted.AddEncrypted(name = "add_encrypted"))
             try:
                 f = open("aes_key.bin", "r")
                 f.close()
-                sm.add_widget(show_crypto_key.ShowCryptoKey(sm, name = "show_key"))
+                sm.add_widget(show_crypto_key.ShowCryptoKey(name = "show_key"))
             except FileNotFoundError:
                 pass
             
