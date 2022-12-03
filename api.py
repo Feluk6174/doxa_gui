@@ -6,6 +6,7 @@ import socket
 from Crypto.Hash import SHA256
 from typing import Union
 import random
+import threading
 
 
 class Connection():
@@ -17,6 +18,11 @@ class Connection():
         self.connection.send(msg.encode("utf-8"))
         if self.connection.recv(1024).decode("utf-8") == "OK":
             print("[ESTABLISHED CONNECTION]")
+
+        self.response_queue = []
+
+        thread = threading.Thread(target=self.recv_queue)
+        thread.start()
 
     def register_user(self, user_name:str, public_key, key_path:str, profile_picture:str, info:str):
         time_registered = int(time.time())
@@ -196,7 +202,7 @@ class Connection():
         send_msg = "{"+f'"type": "NUM", "num": {num}, "id": "{msg_id}"'+"}"
         temp = self.connection.send(send_msg.encode("utf-8"))
 
-        temp = json.loads(self.connection.recv(1024).decode("utf-8"))
+        temp = json.loads(self.recv_from_queue())
         temp = temp["response"]
         if not temp == "OK":
             print("S1" + str(temp))
@@ -206,7 +212,7 @@ class Connection():
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
             print(temp)
-            temp = self.connection.recv(1024).decode("utf-8")
+            temp = self.recv_from_queue()
             print("kek", temp)
             temp = json.loads(temp)
             temp = temp["response"]
@@ -215,17 +221,34 @@ class Connection():
 
 
     def recv(self):
-        data = json.loads(self.connection.recv(1024).decode("utf-8"))
+        data = json.loads(self.recv_from_queue())
         num = data["num"]
         msg_id = data["id"]
         response = "{"+f'"type": "CONN RESPONSE", "response": "OK", "id": "{msg_id}"'+"}"
         self.connection.send(response.encode("utf-8"))
         msg = ""
         for i in range(num):
-            msg += json.loads(self.connection.recv(1024).decode("utf-8"))["content"]
+            msg += json.loads(self.recv_from_queue())["content"]
             self.connection.send(response.encode("utf-8"))
 
         return msg
+
+    def recv_queue(self):
+        while True:
+            temp = self.connection.recv(1024).decode("utf-8")
+            temp = "}\0{".join(temp.split("}{")).split("\0")
+
+            for msg in temp:
+                self.response_queue.append(msg)
+
+    def recv_from_queue(self):
+        while True:
+            if not len(self.response_queue) == 0:
+                temp = self.response_queue[0]
+                self.response_queue.pop(0)
+                return temp
+
+
 
 
 
@@ -241,6 +264,8 @@ def check_chars(*args):
         if char in arguments:
             return False, char
     return True, None
+
+
 
 
 class UserAlreadyExists(Exception):
