@@ -169,7 +169,7 @@ class ProfileScreen (Screen):
         self.text_description = functions.adapt_text_to_server(self.user_description_btn.text)
         self.description_box.clear_widgets()
 
-        self.user_description_input = TextInput(text = self.text_description, multiline = False, on_text_validate = self.change_description)
+        self.user_description_input = TextInput(text = self.text_description, multiline = False, on_text_validate = self.change_description, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
         self.description_box.add_widget(self.user_description_input)
 
     def change_description(self, instance):
@@ -215,7 +215,7 @@ class ProfileScreen (Screen):
 
             self.user_posts_header_box.clear_widgets()
 
-            self.user_posts_label = Button(text = "My Posts", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.user_posts_label = Button(text = "My Posts", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
             self.user_posts_header_box.add_widget(self.user_posts_label)
             
             self.favourite_posts_btn = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
@@ -248,7 +248,7 @@ class ProfileScreen (Screen):
             self.user_posts_header_box.add_widget(self.user_posts_btn)
             self.user_posts_btn.bind(on_release = self.user_posts_press)
 
-            self.favourite_posts_label = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.favourite_posts_label = Button (text = "Favourites", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
             self.user_posts_header_box.add_widget(self.favourite_posts_label)
 
 

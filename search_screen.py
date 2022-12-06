@@ -123,7 +123,7 @@ class SearchScreen (Screen):
 
             #self.sort_list = [0, 0]
 
-            self.search_header_display_label = Button (text = "Search", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.search_header_display_label = Button (text = "Search", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
             self.display_header_box.add_widget(self.search_header_display_label)
 
             self.new_posts_header_display_btn = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
@@ -136,7 +136,7 @@ class SearchScreen (Screen):
             self.search_input_box = BoxLayout(orientation = "horizontal", size_hint_y = None, height = Window.size[1] / 15)
             self.content_in_scroll_box.add_widget(self.search_input_box)
 
-            self.search_input = TextInput(multiline = False)
+            self.search_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
             self.search_input_box.add_widget(self.search_input)
             #self.search_user_input.bind(on_text_validate = self.search_user_def)
 
@@ -180,7 +180,7 @@ class SearchScreen (Screen):
             self.display_header_box.add_widget(self.search_header_display_btn)
             self.search_header_display_btn.bind(on_release = self.search_header_press)
 
-            self.new_posts_header_display_label = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.new_posts_header_display_label = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
             self.display_header_box.add_widget(self.new_posts_header_display_label)
 
 
@@ -330,7 +330,8 @@ class SearchScreen (Screen):
         conn = self.connection
 
         self.search_btn_box.clear_widgets()
-        self.search_label_no_press = Button(background_normal = "./images/brick_search.png", background_down = "./images/brick_search.png")
+        ###########"./images/brick_search_dark.png"
+        self.search_label_no_press = Button(background_normal = "./images/brick_search_dark.png", background_down = "./images/brick_search_dark.png", border = (0, 0, 0, 0))
         self.search_btn_box.add_widget(self.search_label_no_press)
         #self.searched_box.clear_widgets()
         if self.search_input.text != "":
@@ -338,7 +339,8 @@ class SearchScreen (Screen):
                 print(1)
                 searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_input.text), sort_by = "time_posted", sort_order = "desc")
                 #exclude_flags = self.get_filter_flags()
-                if searched_posts != ():
+                print(0, searched_posts)
+                if searched_posts != {} and searched_posts != ():
                     self.all_displayed_searched_posts_list = []
                     my_liked_posts_id = access_my_info.get_liked_id()
                     for t in range(len(searched_posts)):
@@ -355,7 +357,8 @@ class SearchScreen (Screen):
                     self.searched_box.height = (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) * len(searched_posts)
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
                 else:
-                    self.not_found_label = Button(text = "Hashtag not found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+                    print(88)
+                    self.not_found_label = Button(text = "Hashtag not found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
                     self.searched_box.add_widget(self.not_found_label)
                     self.searched_box.height = Window.size[1]/8
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
@@ -377,12 +380,12 @@ class SearchScreen (Screen):
                     self.searched_box.height = Window.size[1]/6
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
                 else:
-                    self.not_found_label = Button(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+                    self.not_found_label = Button(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
                     self.searched_box.add_widget(self.not_found_label)
                     self.searched_box.height = Window.size[1]/8
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
             else:
-                self.not_found_label = Button(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+                self.not_found_label = Button(text = "Nothing found", size_hint_y = None, height = Window.size[1]/8, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
                 self.searched_box.add_widget(self.not_found_label)
                 self.searched_box.height = Window.size[1]/8
                 self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height

@@ -53,7 +53,7 @@ class LogInScreen (Screen):
         self.title_box = BoxLayout(orientation = "vertical")
         self.main_box.add_widget(self.title_box)
         
-        self.banner = Button (size_hint=(1, None), height = Window.size[1] / 8, border = (0, 0, 0, 0), background_normal = "./images/logo.png", background_down = "./images/logo.png")
+        self.banner = Button (size_hint=(1, None), height = Window.size[1] / 8, border = (0, 0, 0, 0), background_normal = "./images/banner.png", background_down = "./images/banner.png")
         self.title_box.add_widget(self.banner)
 
         #cos de la pantalla. text inputs i boto
@@ -63,7 +63,7 @@ class LogInScreen (Screen):
         self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0))
         self.username_box.add_widget(self.username_btn)
 
-        self.username_text_input = TextInput(multiline = False)
+        self.username_text_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
         #self.username_text_input.bind(keyboard_on_key_down = self.username_text_input_background_image_f)
         self.username_box.add_widget(self.username_text_input)
 
@@ -73,7 +73,7 @@ class LogInScreen (Screen):
         self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0))
         self.password_box.add_widget(self.password_btn)
 
-        self.password_text_input = TextInput(multiline = False, password = True)
+        self.password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
         #self.password_text_input.bind(keyboard_on_key_down = self.password_text_input_background_image_f)
         self.password_box.add_widget(self.password_text_input)
         
