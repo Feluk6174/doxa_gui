@@ -169,7 +169,7 @@ class ProfileScreen (Screen):
         self.text_description = functions.adapt_text_to_server(self.user_description_btn.text)
         self.description_box.clear_widgets()
 
-        self.user_description_input = TextInput(text = self.text_description, multiline = False, on_text_validate = self.change_description, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+        self.user_description_input = TextInput(text = self.text_description, multiline = False, on_text_validate = self.change_description, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
         self.description_box.add_widget(self.user_description_input)
 
     def change_description(self, instance):

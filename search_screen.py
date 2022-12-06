@@ -136,7 +136,7 @@ class SearchScreen (Screen):
             self.search_input_box = BoxLayout(orientation = "horizontal", size_hint_y = None, height = Window.size[1] / 15)
             self.content_in_scroll_box.add_widget(self.search_input_box)
 
-            self.search_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+            self.search_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
             self.search_input_box.add_widget(self.search_input)
             #self.search_user_input.bind(on_text_validate = self.search_user_def)
 

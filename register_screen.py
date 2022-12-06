@@ -86,7 +86,7 @@ class RegisterScreen (Screen):
         self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.username_box.add_widget(self.username_btn)
 
-        self.username_text_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+        self.username_text_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
         #self.username_text_input.bind(keyboard_on_key_down = self.username_text_input_background_image_f)
         self.username_box.add_widget(self.username_text_input)
 
@@ -96,7 +96,7 @@ class RegisterScreen (Screen):
         self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.password_box.add_widget(self.password_btn)
 
-        self.password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+        self.password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
         #self.password_text_input.bind(keyboard_on_key_down = self.password_text_input_background_image_f)
         self.password_box.add_widget(self.password_text_input)
 
@@ -106,7 +106,7 @@ class RegisterScreen (Screen):
         self.repeat_password_btn = Button(text = "Repeat password:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.repeat_password_box.add_widget(self.repeat_password_btn)
         
-        self.repeat_password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+        self.repeat_password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
         #self.repeat_password_text_input.bind(keyboard_on_key_down = self.repeat_password_text_input_background_image_f)
         self.repeat_password_box.add_widget(self.repeat_password_text_input)
         
@@ -116,7 +116,7 @@ class RegisterScreen (Screen):
         self.description_btn = Button(text = "Description:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.description_btn)
         
-        self.description_text_input = TextInput(multiline = False, size_hint_y = 3, background_normal = './images/paper_base.png', background_disabled_normal = './images/paper_base.png')
+        self.description_text_input = TextInput(multiline = False, size_hint_y = 3, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
         #self.description_text_input.bind(keyboard_on_key_down = self.description_text_input_background_image_f)
         self.description_box.add_widget(self.description_text_input)
         
