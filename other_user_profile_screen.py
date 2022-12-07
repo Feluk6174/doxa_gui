@@ -1,5 +1,5 @@
 #import kivy
-from multiprocessing import connection
+
 from textwrap import shorten
 from kivy.app import App
 from functools import partial

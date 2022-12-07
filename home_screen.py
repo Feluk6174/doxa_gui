@@ -34,7 +34,7 @@ import chat_screen, search_screen, profile_screen, functions, access_my_info, ot
 import api
 
 class MainScreen (Screen):
-    def __init__(self, conn:api.Connection, my_profile_screen:profile_screen.ProfileScreen, my_search_screen:search_screen.SearchScreen, my_chat_screen:chat_screen.ChatScreen, my_post_screen:create_post_screen.PostUserScreen, my_other_profile_screen:other_user_profile_screen.OtherProfileScreen, my_following_screen:following_screen.FollowingScreen, **kwargs):
+    def __init__(self, conn, my_profile_screen:profile_screen.ProfileScreen, my_search_screen:search_screen.SearchScreen, my_chat_screen:chat_screen.ChatScreen, my_post_screen:create_post_screen.PostUserScreen, my_other_profile_screen:other_user_profile_screen.OtherProfileScreen, my_following_screen:following_screen.FollowingScreen, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         print(3)
 

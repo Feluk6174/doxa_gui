@@ -9,6 +9,8 @@ import random
 import threading
 
 
+print("api", __name__)
+
 class Connection():
     def __init__(self):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,7 +19,7 @@ class Connection():
         msg = '{"type": "CLIENT"}'
         self.connection.send(msg.encode("utf-8"))
         if self.connection.recv(1024).decode("utf-8") == "OK":
-            print("[ESTABLISHED CONNECTION]")
+            print("[ESTABLISHED CONNECTION]", __name__)
 
         self.response_queue = []
 
@@ -234,12 +236,17 @@ class Connection():
         return msg
 
     def recv_queue(self):
-        while True:
+        self.run = True
+        while self.run:
+            print(random.randint(1, 10000))
             temp = self.connection.recv(1024).decode("utf-8")
             temp = "}\0{".join(temp.split("}{")).split("\0")
 
             for msg in temp:
                 self.response_queue.append(msg)
+        else:
+            print(1)
+        print("closed thread")
 
     def recv_from_queue(self):
         while True:

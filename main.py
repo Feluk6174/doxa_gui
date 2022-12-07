@@ -31,7 +31,9 @@ import unicodedata
 import api
 print("conn")
 connection = api.Connection()
-import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key
+import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info
+
+access_my_info.set_connection(connection)
 
 #optional. errase when doing apk
 Window.size = (400, 600)
@@ -90,9 +92,14 @@ class MyApp (App):
                 sm.add_widget(show_crypto_key.ShowCryptoKey(name = "show_key"))
             except FileNotFoundError:
                 pass
-            
                 
         return sm
+    
+    def on_stop(self):
+        print("closing")
+        global connection
+        connection.close()
+        return super().on_stop()
 
 
 print(00)

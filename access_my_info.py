@@ -28,7 +28,10 @@ from kivy.graphics import BorderImage
 from kivy.lang import Builder
 
 import auth
-from main import connection
+connection = None
+
+def set_connection(conn):
+    connection = conn
 
 def change_my_image(col_str):
     my_user_info = open_my_user_info()
