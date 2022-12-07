@@ -82,7 +82,7 @@ class ProfileScreen (Screen):
 
         text = access_my_info.get_description()
         text = functions.adapt_text_to_window(text, 14, Window.size[0])
-        self.user_description_btn = Button(halign = 'center', font_size = 14, text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        self.user_description_btn = Button(halign = 'center', text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
@@ -178,7 +178,7 @@ class ProfileScreen (Screen):
 
         functions.change_my_description(self.text_description)
 
-        self.user_description_btn = Button(text = self.text_description, on_release = self.user_description_press, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        self.user_description_btn = Button(text = self.text_description, on_release = self.user_description_press, halign = "center", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.description_box.add_widget(self.user_description_btn)
 
     def user_following_press(self, instance):

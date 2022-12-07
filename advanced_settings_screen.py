@@ -29,13 +29,13 @@ class AdvancedSettings (Screen):
         self.main_all_box.add_widget(self.tor_buton)
         
 
-        self.tor_text = Button(size_hint = (1, 0.1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png", text = "Enabeling tor will improve your anonimity \n but will make the app a lo slower. \n This setting is not reversable. \n Currently not implemented.")
+        self.tor_text = Button(size_hint = (1, 0.1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png", text = "Enabeling tor will improve your anonimity \n but will make the app a lo slower. \n This setting is not reversable. \n Currently not implemented.")
         self.main_all_box.add_widget(self.tor_text)
 
         self.encrypt_buton = Button (size_hint = (1, 0.1), text = "Encrypt:"+str(self.advanced_settings["encryption"]), on_release = self.togle_encryption, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.main_all_box.add_widget(self.encrypt_buton)
 
-        self.tor_text = Button(size_hint = (1, 0.1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png", text = "Enabeling this will make encrypt evey post you post, \n perople will have to enter your decrypt key manualy to see the contents. \n This setting is not reversable.")
+        self.tor_text = Button(size_hint = (1, 0.1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png", text = "Enabeling this will make encrypt evey post you post, \n perople will have to enter your decrypt key manualy to see the contents. \n This setting is not reversable.")
         self.main_all_box.add_widget(self.tor_text)
 
         self.done_buton = Button (size_hint = (1, 0.1), text = "Done", on_release = self.done, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
