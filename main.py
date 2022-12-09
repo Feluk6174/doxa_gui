@@ -36,7 +36,7 @@ import register_screen, user_image_register_screen, profile_screen, home_screen,
 access_my_info.set_connection(connection)
 
 #optional. errase when doing apk
-Window.size = (400, 600)
+Window.size = (400, 720)
 
 class MyApp (App):
     def build(self):
