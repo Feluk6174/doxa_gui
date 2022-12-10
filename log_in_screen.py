@@ -60,7 +60,7 @@ class LogInScreen (Screen):
         self.username_box = BoxLayout(orientation = 'vertical', size_hint=(1, None), height = Window.size[1] / 8)
         self.main_box.add_widget(self.username_box)
 
-        self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0))
+        self.username_btn = Button(text = "Username:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = './images/brick.png', background_down = './images/brick.png')
         self.username_box.add_widget(self.username_btn)
 
         self.username_text_input = TextInput(multiline = False, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
@@ -70,7 +70,7 @@ class LogInScreen (Screen):
         self.password_box = BoxLayout(orientation = 'vertical', size_hint=(1, None), height = Window.size[1] / 8)
         self.main_box.add_widget(self.password_box)
 
-        self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0))
+        self.password_btn = Button(text = "Password:", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = './images/brick.png', background_down = './images/brick.png')
         self.password_box.add_widget(self.password_btn)
 
         self.password_text_input = TextInput(multiline = False, password = True, background_normal = './images/paper_base.png', background_active = './images/paper_base.png')
@@ -88,10 +88,10 @@ class LogInScreen (Screen):
         self.logo_box.add_widget(self.logo)
 
         #buttons
-        self.log_in_btn = Button(text = "Log In", border = (0, 0, 0, 0), on_release = self.log_in_press, size_hint=(1, None), height = Window.size[1] / 8)
+        self.log_in_btn = Button(text = "Log In", border = (0, 0, 0, 0), on_release = self.log_in_press, size_hint=(1, None), height = Window.size[1] / 8, color = (0, 0, 0, 1), background_normal = './images/brick.png', background_down = './images/brick.png')
         self.main_box.add_widget(self.log_in_btn)
 
-        self.register_btn = Button(text = "To register, no account yet", size_hint=(1, None), height = Window.size[1] / 10)
+        self.register_btn = Button(text = "To register, no account yet", size_hint=(1, None), height = Window.size[1] / 10, color = (0, 0, 0, 1), background_normal = './images/brick.png', background_down = './images/brick.png')
         self.main_box.add_widget(self.register_btn)
         self.register_btn.bind(on_release = self.register)
 
