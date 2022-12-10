@@ -242,6 +242,9 @@ class Connection():
             temp = self.connection.recv(1024).decode("utf-8")
             temp = "}\0{".join(temp.split("}{")).split("\0")
 
+            if "stop" in temp:
+                break
+
             for msg in temp:
                 self.response_queue.append(msg)
         else:
