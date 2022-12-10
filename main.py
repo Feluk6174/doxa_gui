@@ -98,6 +98,7 @@ class MyApp (App):
     def on_stop(self):
         print("closing")
         global connection
+        connection.send('{"type": "ACTION", "action": "SEND", "msg": "stop"}')
         connection.close()
         return super().on_stop()
 
