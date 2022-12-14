@@ -30,6 +30,7 @@ from kivy.graphics import BorderImage
 from kivy.lang import Builder
 import _markupbase
 import unicodedata
+from kivy.metrics import dp, sp
 #import emoji
 
 
@@ -217,6 +218,10 @@ def adapt_text_to_server(text:str):
     return text
 
 def adapt_text_to_window(text:str, text_size, window_size):
+    dpi = Window.dpi
+    print("dpi_ ", dpi)
+    print("txt_size_ ", text_size)
+    print("wind_size_ ", window_size)
     text_to_cut_lenght = len(text)
     letters_per_line = int(window_size / text_size)
     jump_done = 0
