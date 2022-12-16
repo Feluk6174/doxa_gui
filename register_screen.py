@@ -210,7 +210,10 @@ class RegisterScreen (Screen):
                 self.main_box_load.add_widget(self.text_load)
 
                 #Clock.shedule_once()
-                auth.gen_aes_key()
+                with open("advanced_settings.json") as f:
+                    settings = json.loads(f.read())
+                if settings["encryption"]:
+                    auth.gen_aes_key()
                 self.create_user()
 
 
