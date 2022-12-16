@@ -174,7 +174,7 @@ class ProfileScreen (Screen):
         self.description_box.add_widget(self.user_description_input)
 
     def change_description(self, instance):
-        self.text_description = functions.adapt_text_to_window(functions.filter_chars(self.user_description_input.text), 14, Window.size[0])
+        self.text_description = functions.adapt_text_to_window(functions.filter_chars(self.user_description_input.text), sp(15), Window.size[0])
         self.connection.change_info(access_my_info.get_user_name(), functions.filter_chars(self.user_description_input.text), access_my_info.get_priv_key())
         self.description_box.clear_widgets()
 
