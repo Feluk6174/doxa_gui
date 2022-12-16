@@ -49,7 +49,7 @@ class Connection():
         if advanced_options["encryption"]:
             if len(content) > 159:
                 content = content[:159:]
-            content = auth.encrypt(content)
+            content = "[e] " + auth.encrypt(content)
 
         time_posted = int(time.time())
         signature = auth.sign(priv_key, content, post_id, user_name, background_color, time_posted).decode("utf-8")
@@ -149,9 +149,13 @@ class Connection():
                     print(post)
                     try:
                         print(post)
-                        post["content"] = auth.decrypt(post["content"], keys[post["user_id"]].encode("utf-8"))
+                        if post["content"][:3:] == "[e]":
+                            post["content"] = auth.decrypt(post["content"][4::], keys[post["user_id"]].encode("utf-8"))
+                        else:
+                            post["content"] = auth.decrypt(post["content"], keys[post["user_id"]].encode("utf-8"))
                     except (KeyError, binascii.Error, ValueError):
-                        pass
+                        if post["content"][:3:] == "[e]":
+                            post["content"] = "[ENCRYPTED]"
                     posts.append(post)
                     self.send('{"type": "RESPONSE", "response": "OK"}')
                 response = self.recv()
