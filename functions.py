@@ -88,7 +88,7 @@ class MyButton(Button):
         self.screen = screen
         self.order_number = order_number
         self.background = background
-        self.text = f"[size={int(Window.size[0]/25)}]" + str(change_time(date)) + "[/size]                                        " + "\n \n \n" + f"[size={int(Window.size[0]/25)}]" + adapt_text_to_window(content, int(Window.size[0]/20), Window.size[0]) + "[/size]" + " \n \n " + f"                          [b][size={int(Window.size[0]/20)}]- " + user +"[/b][/size]"
+        self.text = f"[size={int(Window.size[0]/25)}]" + str(change_time(date)) + "[/size]                                        " + "\n \n \n" + f"[size={int(Window.size[0]/20)}]" + adapt_text_to_window(content, int(Window.size[0]/20), Window.size[0]) + "[/size]" + " \n \n " + f"                          [b][size={int(Window.size[0]/20)}]- " + user +"[/b][/size]"
         self.color = (0, 0, 0, 1)
         #self.font_size = 20
         self.shorten = True
