@@ -23,6 +23,7 @@ from kivy.uix.screenmanager import FallOutTransition
 from kivy.uix.screenmanager import SlideTransition
 import kivy.utils
 from datetime import datetime
+from kivy.metrics import sp
 #import pyperclip
 
 import access_my_info, functions, search_screen, home_screen, chat_screen
@@ -81,8 +82,9 @@ class ProfileScreen (Screen):
         self.content_grid.add_widget(self.description_box)
 
         text = access_my_info.get_description()
-        text = functions.adapt_text_to_window(text, 15, Window.size[0])
-        self.user_description_btn = Button(text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        text = functions.adapt_text_to_window(text, sp(15), Window.size[0])
+        self.user_description_btn = Button(halign = 'center', text=text, size_hint_y = None, height = (Window.size[1]  - Window.size[0]*(1 / 5 + 1/5.08)) / 5 * 2, border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        print(1, self.user_description_btn.font_size)
         self.description_box.add_widget(self.user_description_btn)
         self.user_description_btn.bind(on_release = self.user_description_press)
 
