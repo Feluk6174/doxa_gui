@@ -92,9 +92,15 @@ class MyApp (App):
                 sm.add_widget(show_crypto_key.ShowCryptoKey(name = "show_key"))
             except FileNotFoundError:
                 pass
-                
+        
+        Window.bind(on_keyboard = self.go_back)
         return sm
     
+    def go_back(self, key, scancode, codepoint, modifier, none):
+        print(99)
+        if key == 27:
+            return True
+
     def on_stop(self):
         print("closing")
         global connection

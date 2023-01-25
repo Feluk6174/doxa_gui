@@ -6,7 +6,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.button import ButtonBehavior
 from kivy.uix.label import Label
-from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import AsyncImage
@@ -27,6 +26,7 @@ import random
 from datetime import datetime
 from kivy.graphics import BorderImage
 from kivy.lang import Builder
+from kivy.uix.image import Image
 
 import user_image_register_screen, auth, home_screen, search_screen, chat_screen, create_post_screen, profile_screen, user_image_screen, access_my_info, other_user_profile_screen, following_screen, functions, add_encrypted, show_crypto_key
 
@@ -203,22 +203,22 @@ class RegisterScreen (Screen):
                 self.black_box_1_load = BoxLayout(size_hint_y = None, height = (Window.size[0] * 0.2))
                 self.main_box_load.add_widget(self.black_box_1_load)
 
-                self.banner_load = Button(border = (0, 0, 0, 0), size_hint = (None, None), background_normal = 'images/banner.png', background_down = 'images/banner.png', size = (Window.size[0] * 0.7, Window.size[0] * 0.7), pos_hint = {"center_x":0.5})   
+                self.banner_load = Button(border = (0, 0, 0, 0), size_hint = (None, None), background_normal = 'images/logo.png', background_down = 'images/logo.png', size = (Window.size[0] * 0.7, Window.size[0] * 0.7), pos_hint = {"center_x":0.5})   
+                #self.banner_load = Image(source="images/gif.gif", anim_delay=1, anim_loop=0, mipmap= True, allow_stretch= True, size_hint = (0, 0), size = (100, 100))
                 self.main_box_load.add_widget(self.banner_load)
 
-                self.text_load = Button(text = "Creating user...", size_hint = (1, 0.12))
+                self.text_load = Button(text = "Creating user...", size_hint = (1, 0.12), background_color = (0, 0, 0, 1))
                 self.main_box_load.add_widget(self.text_load)
 
-                #Clock.shedule_once()
                 with open("advanced_settings.json") as f:
                     settings = json.loads(f.read())
                 if settings["encryption"]:
                     auth.gen_aes_key()
-                self.create_user()
+                Clock.schedule_once(self.create_user)
 
 
     #creating user keys and starting session
-    def create_user(self):
+    def create_user(self, dt):
         #create public and private key
         auth.gen_key(self.username_text + self.password_text)
         

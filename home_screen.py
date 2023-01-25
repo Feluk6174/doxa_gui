@@ -65,7 +65,7 @@ class MainScreen (Screen):
         self.main_all_box = BoxLayout(orientation = "vertical")
         self.add_widget(self.main_all_box)
 
-        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png', on_release = self.get_my_posts)
+        self.banner = Button (border = (0, 0, 0, 0), size_hint = (1, None), height = Window.size[0] / 5.08, background_normal = 'images/banner.png', background_down = 'images/banner.png', on_release = self.banner_press)
         self.main_all_box.add_widget(self.banner)
         
         print (33)
@@ -76,7 +76,7 @@ class MainScreen (Screen):
         self.posts_grid = GridLayout(cols = 1, size_hint_y = None)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         
-        self.posts_grid_scroll = ScrollView()
+        self.posts_grid_scroll = ScrollView(on_scroll_stop = self.scroll_def)
         self.posts_grid_scroll.add_widget (self.posts_grid)
         self.content_box.add_widget (self.posts_grid_scroll)
 
@@ -90,6 +90,8 @@ class MainScreen (Screen):
         print(34)
         self.get_my_posts(0)
         self.time_variable = 0
+        self.thinking = 0
+        self.post_num = 0
 
         print(35)
 
@@ -145,6 +147,11 @@ class MainScreen (Screen):
         self.manager.current = "profile"
         self.manager.transition.direction = "left"
 
+    def banner_press(self, instance):
+        self.thinking = 1
+        self.think()
+        Clock.schedule_once(self.get_my_posts)
+
     def get_my_posts(self, instance):
         self.all_posts_i_get = []
         self.posts_users_list = []
@@ -164,6 +171,7 @@ class MainScreen (Screen):
         self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts)))
         self.posts_grid.add_widget(self.posts_box)
         print(38)
+        self.post_num = len(my_posts)
         for a in range(len(my_posts)):
             #user_info = connection.get_user(all_test_posts[a]["user_id"])
             #print(user_info)
@@ -179,9 +187,51 @@ class MainScreen (Screen):
             self.posts_box.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like, my_posts[a]["user_id"]])
             print(307)
-        print(308)
-        self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
+            print(308)
+            self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         print(39)
+
+        self.thinking = 0
+        self.think()
+
+    def scroll_def(self, something, some2):
+        if self.posts_grid_scroll.scroll_y == 0:
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(self.get_new_posts)
+    
+    def get_new_posts(self, instance):
+        self.new_posts_i_get = []
+        self.posts_users_list = []
+
+        all_my_following = access_my_info.get_following()
+        my_liked_posts = access_my_info.get_liked_id()
+        print(302)
+        if not all_my_following == []:
+            my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc", num = self.post_num + 1)
+        else:
+            my_posts = []
+        #include_background_color=str(1)
+        print(my_posts)
+        if len(my_posts) > self.post_num:
+            self.posts_box.height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts))
+            print(38)
+            actual_maybe_like = 0
+            for liked in my_liked_posts:
+                    if liked == my_posts[-1]["id"]:
+                        print(306)
+                        actual_maybe_like = 1
+            self.post_btn = functions.make_post_btn(self, my_posts[-1]["user_id"], my_posts[-1]["content"], my_posts[-1]["time_posted"], actual_maybe_like, self.post_num, my_posts[-1]["background_color"])
+            self.posts_box.add_widget(self.post_btn)
+            self.all_posts_i_get.append([my_posts[-1]["id"], self.post_btn, actual_maybe_like, my_posts[-1]["user_id"]])
+            print(308)
+            self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
+            self.post_num = len(my_posts)
+            print(self.post_num)
+
+        self.thinking = 0
+        self.think()
+
 
     """
     def get_new_follower_posts(self, connection):
@@ -221,15 +271,35 @@ class MainScreen (Screen):
         print(308)
         return
         """
+
+    def think(self):
+        print(88)
+        if self.thinking == 1:
+            self.banner.background_normal = "images/logo.png"
+        elif self.thinking == 0:
+            self.banner.background_normal = "images/banner.png"
+        #Clock.schedule_once(self.wait)
+
+    """
     def name_press_2(self, order_number, background, instance):
         #self.go_to_user_profile(order_number)
+        self.thinking = 1
+        self.think()
+
+        Clock.schedule_once(partial(self.name_press, order_number, background, instance), 0.01)        
+
+    def name_press(self, order_number, background, instance, dt):
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(self.posts_users_list[order_number])
+
+        self.thinking = 0
+        self.think()
+
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
 
-    """
+    
     def go_to_user_profile(self, order_number):
         con = self.connection
         other_user_profile_screen = self.other_profile_screen
@@ -282,7 +352,9 @@ class MainScreen (Screen):
         print("a")
         print(self.time_variable)
         if self.time_variable == 0:
-            self.go_to_screen(self.post_instance)
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
         elif self.time_variable == 1:
             self.reply_post(self.post_instance)
         self.time_variable = 0
@@ -293,10 +365,14 @@ class MainScreen (Screen):
         if self.time_variable == 1:
             self.time_variable = 0
         
-    def go_to_screen(self, instance):
+    def go_to_screen(self, instance, dt):
         print(11)
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.user_name)
+
+        self.thinking = 0
+        self.think()
+
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
