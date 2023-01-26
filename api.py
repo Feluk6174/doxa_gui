@@ -108,7 +108,7 @@ class Connection():
                 if response == "WRONG CHARS":
                     raise WrongCaracters(user_name=user_name)
 
-    def get_posts(self, sort_by:str = None, sort_order:str = None, user_name:Union[str, list] = None, hashtag:str = None, exclude_background_color:str = None, include_background_color:str = None, num:int = "10", id:Union[str, list] = None):
+    def get_posts(self, sort_by:str = None, sort_order:str = None, user_name:Union[str, list] = None, hashtag:str = None, exclude_background_color:str = None, include_background_color:str = None, num:int = 10, offset:int = 0, id:Union[str, list] = None):
         #return format: {'id': 'str(23)', 'user_id': 'str(16)', 'content': 'str(255)', 'background_color': 'str(10)', 'time_posted': int}
         posts = []
         if user_name == "" or user_name == []:
@@ -135,20 +135,17 @@ class Connection():
         else:
             f_id = '"None"'
 
-        msg = "{"+f'"type": "ACTION", "action": "GET POSTS", "user_name": {f_user_name}, "hashtag": "{hashtag}", "include_background_color": "{include_background_color}", "exclude_background_color":"{exclude_background_color}", "sort_by": "{sort_by}", "sort_order": "{sort_order}", "num": "{num}", "id": {f_id}'+"}"
+        msg = "{"+f'"type": "ACTION", "action": "GET POSTS", "user_name": {f_user_name}, "hashtag": "{hashtag}", "include_background_color": "{include_background_color}", "exclude_background_color":"{exclude_background_color}", "sort_by": "{sort_by}", "sort_order": "{sort_order}", "num": "{num}", "offset": "{offset}", "id": {f_id}'+"}"
         print(msg)
         self.send(msg)
         num = int(self.recv())
-        print(num)
         self.send('{"type": "RESPONSE", "response": "OK"}')
         if not num == 0: 
             with open("user_keys.json", "r") as f:
                 keys = json.loads(f.read())
                 for _ in range(num):
                     post = json.loads(self.recv())
-                    print(post)
                     try:
-                        print(post)
                         if post["content"][:3:] == "[e]":
                             post["content"] = auth.decrypt(post["content"][4::], keys[post["user_id"]].encode("utf-8"))
                         else:
@@ -167,13 +164,11 @@ class Connection():
         response = self.recv()
         if not response == "OK":
             if response == "WRONG CHARS":
-                print(user_name)
                 raise WrongCaracters(user_name=user_name)
         return {}
 
     def get_user(self, user_name:str):
         msg = "{"+f'"type": "ACTION", "action": "GET USER", "user_name": "{user_name}"'+"}"
-        print(msg)
         self.send(msg)
         response = self.recv()
 
@@ -217,9 +212,7 @@ class Connection():
             msg_part = msg[512*i:512*i+512].replace("\"", '\\"')
             send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
             self.connection.send(send_msg.encode("utf-8"))
-            print(temp)
             temp = self.recv_from_queue()
-            print("kek", temp)
             temp = json.loads(temp)
             temp = temp["response"]
             if not temp == "OK":
@@ -242,7 +235,6 @@ class Connection():
     def recv_queue(self):
         self.run = True
         while self.run:
-            print(random.randint(1, 10000))
             temp = self.connection.recv(1024).decode("utf-8")
             temp = "}\0{".join(temp.split("}{")).split("\0")
 
@@ -252,7 +244,7 @@ class Connection():
             for msg in temp:
                 self.response_queue.append(msg)
         else:
-            print(1)
+            print("self.run=false")
         print("closed thread")
 
     def recv_from_queue(self):
