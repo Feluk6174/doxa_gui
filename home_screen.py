@@ -76,7 +76,8 @@ class MainScreen (Screen):
         self.posts_grid = GridLayout(cols = 1, size_hint_y = None)
         self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         
-        self.posts_grid_scroll = ScrollView(on_scroll_stop = self.scroll_def)
+        self.posts_grid_scroll = ScrollView()
+        #on_touch_stop()
         self.posts_grid_scroll.add_widget (self.posts_grid)
         self.content_box.add_widget (self.posts_grid_scroll)
 
@@ -88,10 +89,11 @@ class MainScreen (Screen):
 
         self.all_posts_i_get = []
         print(34)
+        self.post_num = 0
         self.get_my_posts(0)
         self.time_variable = 0
         self.thinking = 0
-        self.post_num = 0
+        
 
         print(35)
 
@@ -168,11 +170,13 @@ class MainScreen (Screen):
             my_posts = []
         #include_background_color=str(1)
         print(my_posts)
-        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts)))
+        self.posts_box = BoxLayout(orientation = "vertical", size_hint_y = None, height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts)) + Window.size[1]/10)
         self.posts_grid.add_widget(self.posts_box)
         print(38)
-        self.post_num = len(my_posts)
+        self.post_num = 0
         for a in range(len(my_posts)):
+            self.post_num = self.post_num + 1
+            print("num", self.post_num)
             #user_info = connection.get_user(all_test_posts[a]["user_id"])
             #print(user_info)
             print(304)
@@ -191,30 +195,35 @@ class MainScreen (Screen):
             self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         print(39)
 
+        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/logo.png", background_down = "images/logo.png", on_release = self.next_post)
+        self.posts_box.add_widget(self.next_post_btn)
+
         self.thinking = 0
         self.think()
 
-    def scroll_def(self, something, some2):
-        if self.posts_grid_scroll.scroll_y == 0:
-            self.thinking = 1
-            self.think()
-            Clock.schedule_once(self.get_new_posts)
+    def next_post(self, instance):
+        self.thinking = 1
+        self.think()
+        Clock.schedule_once(self.get_new_posts)
     
     def get_new_posts(self, instance):
         self.new_posts_i_get = []
         self.posts_users_list = []
 
+        self.posts_box.remove_widget(self.next_post_btn)
+
         all_my_following = access_my_info.get_following()
         my_liked_posts = access_my_info.get_liked_id()
         print(302)
         if not all_my_following == []:
-            my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc", num = self.post_num + 1)
+            my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc", num = 1, offset = self.post_num)
         else:
             my_posts = []
         #include_background_color=str(1)
         print(my_posts)
-        if len(my_posts) > self.post_num:
-            self.posts_box.height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (len(my_posts))
+        print(len(my_posts))
+        if my_posts != []:
+            self.posts_box.height = (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08)) * (self.post_num + 1) + Window.size[1]/10
             print(38)
             actual_maybe_like = 0
             for liked in my_liked_posts:
@@ -226,8 +235,11 @@ class MainScreen (Screen):
             self.all_posts_i_get.append([my_posts[-1]["id"], self.post_btn, actual_maybe_like, my_posts[-1]["user_id"]])
             print(308)
             self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
-            self.post_num = len(my_posts)
-            print(self.post_num)
+            self.post_num = self.post_num + 1
+            print("num", self.post_num)
+
+        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/logo.png", background_down = "images/logo.png", on_release = self.next_post)
+        self.posts_box.add_widget(self.next_post_btn)
 
         self.thinking = 0
         self.think()

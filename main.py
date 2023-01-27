@@ -96,9 +96,10 @@ class MyApp (App):
         Window.bind(on_keyboard = self.go_back)
         return sm
     
-    def go_back(self, key, scancode, codepoint, modifier, none):
+    def go_back(self, window, key, *args):
         print(99)
         if key == 27:
+            print(100)
             return True
 
     def on_stop(self):
