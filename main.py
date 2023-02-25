@@ -120,17 +120,6 @@ if __name__ == "__main__":
     except IndexError:
         connection.close()
 
-#change description api def
 #text_input a alçada de teclat
-#improve buttons to other screens
-#alarm symbol in chat button on ground box of other screens
-
-#functions clicking posts
-
-#flags
-#chat subjects: art, programation, videogames, philosophy, politic, sport, books
-
-
-#textbox with background text
-#writing box
+##alarm symbol in chat button on ground box of other screens
 

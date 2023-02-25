@@ -184,10 +184,11 @@ class SearchScreen (Screen):
             self.display_header_box.add_widget(self.new_posts_header_display_label)
 
 
-            self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1]  - Window.size[0] * ( 1 / 5 + 1 / 5.08))
+            self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1] - Window.size[0] * ( 1 / 5 + 1 / 5.08)) + Window.size[1] / 10
 
             #new posts
             self.content_in_scroll_box.add_widget(self.new_posts_box)
+
 
             self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
             self.current_posts = 1
@@ -219,6 +220,10 @@ class SearchScreen (Screen):
             self.post_btn = functions.make_post_btn(self, self.all_newest_posts_info[t]["user_id"], self.all_newest_posts_info[t]["content"], self.all_newest_posts_info[t]["time_posted"], actual_maybe_like, t, self.all_newest_posts_info[t]["background_color"])
             self.new_posts_box.add_widget(self.post_btn)
             self.all_displayed_new_posts_list.append([self.all_newest_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_newest_posts_info[t]["user_id"]])
+        
+        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+        self.new_posts_box.add_widget(self.next_post_btn)
+
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         self.new_posts_header_press(0)
         self.search_header_press(0)
@@ -226,13 +231,95 @@ class SearchScreen (Screen):
     #def display_newest_posts(self):
     #    self.content_in_scroll_box.add_widget(self.new_posts_box)
 
+    def next_post(self, instance):
+        if self.current_posts == 1:
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(self.next_post_new)
+        if self.current_posts == 2:
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(self.next_post_search)
+    
+    def next_post_new(self, dt):
+        connection = self.connection
+        self.all_newest_posts_info = connection.get_posts(sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
+
+        print(self.all_newest_posts_info)
+        if self.all_newest_posts_info != []:
+            self.all_newest_posts_info = self.all_newest_posts_info[0]
+            self.new_posts_box.remove_widget(self.next_post_btn)
+            my_liked_posts_id = access_my_info.get_liked_id()
+            actual_maybe_like = 0
+            try:
+                for liked in my_liked_posts_id:
+                    if liked == self.all_newest_posts_info["id"]:
+                        actual_maybe_like = 1
+            except KeyError:
+                pass
+            self.post_btn = functions.make_post_btn(self, self.all_newest_posts_info["user_id"], self.all_newest_posts_info["content"], self.all_newest_posts_info["time_posted"], actual_maybe_like, len(self.all_displayed_new_posts_list), self.all_newest_posts_info["background_color"])
+            self.new_posts_box.add_widget(self.post_btn)
+            self.all_displayed_new_posts_list.append([self.all_newest_posts_info["id"], self.post_btn, actual_maybe_like, self.all_newest_posts_info["user_id"]])
+            
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+            self.new_posts_box.add_widget(self.next_post_btn)
+        
+            self.new_posts_box.height = self.new_posts_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+            self.content_in_scroll_box.height = self.content_in_scroll_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+            self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+        
+        self.thinking = 0
+        self.think()
+
+
+    def next_post_search(self, dt):
+        conn = self.connection
+        searched_posts = conn.get_posts(hashtag = self.search_content, sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_searched_posts_list))
+        #exclude_flags = self.get_filter_flags()
+        print(0, searched_posts)
+        if searched_posts != {}:
+            my_liked_posts_id = access_my_info.get_liked_id()
+            self.searched_box.remove_widget(self.next_post_btn)
+            actual_maybe_like = 0
+            try:
+                for liked in my_liked_posts_id:
+                    if liked == searched_posts["id"]:
+                        actual_maybe_like = 1
+            except KeyError:
+                pass
+            self.post_btn = functions.make_post_btn(self, searched_posts["user_id"], searched_posts["content"], searched_posts["time_posted"], actual_maybe_like, len(self.all_displayed_searched_posts_list), searched_posts["background_color"])
+            self.searched_box.add_widget(self.post_btn)
+            self.all_displayed_searched_posts_list.append([searched_posts["id"], self.post_btn, actual_maybe_like, searched_posts["user_id"]])
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+            self.searched_box.add_widget(self.next_post_btn)
+            self.searched_box.height = self.searched_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) 
+            self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
+
+        self.thinking = 0
+        self.think()
+
+    def think(self):
+        print(88)
+        if self.thinking == 1:
+            self.banner.background_normal = "images/banner_loading.png"
+        elif self.thinking == 0:
+            self.banner.background_normal = "images/banner.png"
+
     def refresh_search_screen(self, instance):
+        self.thinking = 1
+        self.think()
+        Clock.schedule_once(self.refresh_search_screen_2)
+
+    def refresh_search_screen_2(self, dt):
         if self.current_posts == 2:
             self.new_posts_refresh(0)
         
         elif self.current_posts == 1 or self.current_posts == 0:
             self.search_header_press(0)
             self.new_posts_refresh(0)
+        
+        self.thinking = 0
+        self.think()
 
     def second_post_press(self, instance):
         print(self.time_variable)
@@ -252,7 +339,9 @@ class SearchScreen (Screen):
         print("a")
         print(self.time_variable)
         if self.time_variable == 0:
-            self.go_to_screen(self.post_instance)
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
         elif self.time_variable == 1:
             self.reply_post(self.post_instance)
         self.time_variable = 0
@@ -263,10 +352,14 @@ class SearchScreen (Screen):
         if self.time_variable == 1:
             self.time_variable = 0
         
-    def go_to_screen(self, instance):
+    def go_to_screen(self, instance, dt):
         print(11)
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.user_name)
+        
+        self.thinking = 0
+        self.think()
+
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
@@ -325,19 +418,24 @@ class SearchScreen (Screen):
 
     def image_press(self, order_number, instance):
         pass
-
+    
     def search_def(self, instance):
+        self.thinking = 1
+        self.think()
+        Clock.schedule_once(self.search_def_2)
+
+    def search_def_2(self, dt):
         conn = self.connection
 
         self.search_btn_box.clear_widgets()
-        ###########"./images/brick_search_dark.png"
         self.search_label_no_press = Button(background_normal = "./images/brick_search_dark.png", background_down = "./images/brick_search_dark.png", border = (0, 0, 0, 0))
         self.search_btn_box.add_widget(self.search_label_no_press)
         #self.searched_box.clear_widgets()
         if self.search_input.text != "":
             if self.search_input.text[0] == "#":
                 print(1)
-                searched_posts = conn.get_posts(hashtag = functions.filter_chars(self.search_input.text), sort_by = "time_posted", sort_order = "desc")
+                self.search_content = functions.filter_chars(self.search_input.text)
+                searched_posts = conn.get_posts(hashtag = self.search_content, sort_by = "time_posted", sort_order = "desc")
                 #exclude_flags = self.get_filter_flags()
                 print(0, searched_posts)
                 if searched_posts != {} and searched_posts != ():
@@ -354,7 +452,9 @@ class SearchScreen (Screen):
                         self.post_btn = functions.make_post_btn(self, searched_posts[t]["user_id"], searched_posts[t]["content"], searched_posts[t]["time_posted"], actual_maybe_like, t, searched_posts[t]["background_color"])
                         self.searched_box.add_widget(self.post_btn)
                         self.all_displayed_searched_posts_list.append([searched_posts[t]["id"], self.post_btn, actual_maybe_like, searched_posts[t]["user_id"]])
-                    self.searched_box.height = (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) * len(searched_posts)
+                    self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+                    self.searched_box.add_widget(self.next_post_btn)
+                    self.searched_box.height = (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) * len(searched_posts) + Window.size[1] / 10
                     self.content_in_scroll_box.height = self.content_in_scroll_box.height + self.searched_box.height
                 else:
                     print(88)
@@ -392,7 +492,8 @@ class SearchScreen (Screen):
 
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
-    
+        self.thinking = 0
+        self.think()
 
 
     def press_chat_btn(self, instance):

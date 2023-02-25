@@ -84,6 +84,8 @@ class OtherProfileScreen (Screen):
         self.content_grid.add_widget(self.user_posts_box)
 
         self.time_variable = 0
+        self.thinking = 0
+        self.posts_are_displayed = 0
 
 
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
@@ -123,6 +125,7 @@ class OtherProfileScreen (Screen):
         con = self.connection
         self.user_id = user_id
         self.user_info = con.get_user(self.user_id)
+        self.posts_are_displayed = 0
         print("--")
         print(self.user_info)
         print("--")
@@ -166,10 +169,23 @@ class OtherProfileScreen (Screen):
         print(10)
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
+    def think(self):
+        print(88)
+        if self.thinking == 1:
+            self.banner.background_normal = "images/banner_loading.png"
+        elif self.thinking == 0:
+            self.banner.background_normal = "images/banner.png"
+
     def follow_posts_press(self, instance):
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
 
     def create_posts(self, instance):
+        if self.posts_are_displayed == 0:
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(self.create_posts_2)
+
+    def create_posts_2(self, dt):
         print(11)
         conn = self.connection
         self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted', sort_order = 'desc')
@@ -198,9 +214,58 @@ class OtherProfileScreen (Screen):
             self.user_posts_box.add_widget(self.post_btn)
             self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like, self.posts_list[a]["user_id"]])
 
-        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.create_new_posts, text = "Next")
+        self.user_posts_box.add_widget(self.next_post_btn)
+
+        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) + Window.size[1]/10
         self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         print(13)
+        
+        self.posts_are_displayed = 1
+
+        self.thinking = 0
+        self.think()
+    
+    def create_new_posts(self, instance):
+        self.thinking = 1
+        self.think()
+        Clock.schedule_once(self.create_new_posts_2)
+    
+    def create_new_posts_2(self, dt):
+        print(11)
+        conn = self.connection
+        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted', sort_order = 'desc', num = 1, offset = len(self.all_displayed_posts_list))
+        print(124)
+        #self.my_posts_list = []
+        #self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
+
+        if self.posts_list != []:
+            self.posts_list = self.posts_list[0]
+            self.user_posts_box.remove_widget(self.next_post_btn)
+            print(125)
+            #self.user_posts_box.clear_widgets()
+            print(12)
+            my_liked_posts_id = access_my_info.get_liked_id()
+            actual_maybe_like = 0
+            try:
+                for liked_id in my_liked_posts_id:
+                    if liked_id == self.posts_list["id"]:
+                        actual_maybe_like = 1
+            except KeyError:
+                pass
+            self.post_btn = functions.make_post_btn(self, self.posts_list["user_id"], self.posts_list["content"], self.posts_list["time_posted"], actual_maybe_like, len(self.all_displayed_posts_list), self.posts_list["background_color"])
+            self.user_posts_box.add_widget(self.post_btn)
+            self.all_displayed_posts_list.append([self.posts_list["id"], self.post_btn, actual_maybe_like, self.posts_list["user_id"]])
+
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.create_new_posts, text = "Next")
+            self.user_posts_box.add_widget(self.next_post_btn)
+
+            self.user_posts_box.height = self.user_posts_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+            self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+            print(13)
+
+        self.thinking = 0
+        self.think()
 
     def image_press(self, order_number, instance):
         pass

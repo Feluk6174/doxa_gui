@@ -96,11 +96,18 @@ class ImageScreen (Screen):
         self.actual_on_press_change_btn = self.change_color_btn
     
     def go_back(self, instance):
+        self.return_to_back_btn.text = "Thinking"
+        Clock.schedule_once(self.go_back_2)
+
+    def go_back_2(self, dt):
         color_str = ""
         for a in range (len(self.color_list)):
             color_str = color_str + self.color_list[a]
         global my_colors_from_screen 
         my_colors_from_screen= color_str
+
+        self.return_to_back_btn.text = "Done"
+
         self.manager.transition = FallOutTransition()
         self.manager.current = "register"
 

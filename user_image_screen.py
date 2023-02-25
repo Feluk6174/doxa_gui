@@ -93,6 +93,10 @@ class ImageScreen (Screen):
         self.actual_on_press_change_btn = self.change_color_btn
     
     def go_back(self, instance):
+        self.return_to_back_btn.text = "Thinking"
+        Clock.schedule_once(self.go_back_2)
+
+    def go_back_2(self, dt):
         conn = self.connection
         color_str = ""
         for a in range (len(self.color_number_list)):
@@ -100,6 +104,8 @@ class ImageScreen (Screen):
         
         functions.change_my_profile_image(color_str)
         conn.change_profile_picture(access_my_info.get_user_name(), color_str, access_my_info.get_priv_key())
+
+        self.return_to_back_btn.text = "Done"
 
         prof_screen = self.profile_screen
         prof_screen.user_image_box.clear_widgets()

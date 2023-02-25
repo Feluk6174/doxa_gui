@@ -64,6 +64,8 @@ class PostUserScreen (Screen):
         self.background_grid_scroll.add_widget (self.background_grid)
         self.background_box.add_widget (self.background_grid_scroll)
 
+        self.thinking = 0
+
         self.all_backgrounds = ['images/check_verd.png', 'images/paper_yellow.png', 'images/paper_green.png', 'images/paper_purple.png', 'images/paper_pink.png', 'images/paper_blue.png']
         self.all_background_buttons = []
         self.background_status = 1
@@ -81,7 +83,7 @@ class PostUserScreen (Screen):
 
         self.send_post_btn = Button (text = "Publish", size_hint = (1, 1), border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.content_box.add_widget(self.send_post_btn)
-        self.send_post_btn.bind(on_press = self.send_post_press)
+        self.send_post_btn.bind(on_press = self.post_press)
 
         #self.last = Button (text = "All your posts", size_hint = (1, 0.67))
         #self.grid.add_widget(self.last)
@@ -128,8 +130,19 @@ class PostUserScreen (Screen):
 
     def reply(self, user):
         self.main_post_content_input.text = "@" + user + ' \n'
+    
+    def post_press(self, instance):
+        self.send_post_btn.text = "Thinking"
+        Clock.schedule_once(self.send_post_press)
+    
+    def think(self):
+        print(88)
+        if self.thinking == 1:
+            self.banner.background_normal = "images/banner_loading.png"
+        elif self.thinking == 0:
+            self.banner.background_normal = "images/banner.png"
 
-    def send_post_press(self, instance):
+    def send_post_press(self, dt):
         if self.main_post_content_input.text != "" and len(self.main_post_content_input.text) < 255:
             text_content = functions.adapt_text_to_server(functions.filter_chars(self.main_post_content_input.text))
             conn = self.connection
@@ -144,6 +157,8 @@ class PostUserScreen (Screen):
             self.main_post_content_input.text = ""
             for x in range (len(self.all_backgrounds)-1):
                 self.all_background_buttons[x].background_normal = self.all_backgrounds[x+1]
+
+        self.send_post_btn.text = "Publish"
 
     def press_chat_btn(self, instance):
         self.manager.transition = SlideTransition()

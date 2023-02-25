@@ -58,6 +58,9 @@ class AddEncrypted (Screen):
 
             with open("user_keys.json", "w") as f:
                 f.write(json.dumps(keys))
+        
+        self.user_name_textinput.text = ""
+        self.key_textinput.text = ""
 
     def remove(self, instance):
         print(self.user_name_textinput.text, self.key_textinput.text)
@@ -73,7 +76,13 @@ class AddEncrypted (Screen):
         except FileNotFoundError:
             with open("user_keys.json", "w") as f:
                 f.write("{}")
+        
+        self.user_name_textinput.text = ""
+        self.key_textinput.text = ""
 
     def done(self, instance):
+        self.user_name_textinput.text = ""
+        self.key_textinput.text = ""
+        
         self.manager.transition = FallOutTransition()
         self.manager.current = "profile"
