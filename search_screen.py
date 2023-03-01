@@ -95,8 +95,8 @@ class SearchScreen (Screen):
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 
-        self.search_label = Button (border = (0, 0, 0, 0), background_normal = './images/search_white.png', background_down = './images/search_white.png')
-        self.ground_box.add_widget(self.search_label)
+        self.search_bn = Button (border = (0, 0, 0, 0), background_normal = './images/search_white.png', background_down = './images/search_white.png', on_release = self.refresh_search_screen)
+        self.ground_box.add_widget(self.search_bn)
 
         self.home_btn = Button (border = (0, 0, 0, 0), background_normal = './images/home.png', background_down = './images/home.png')
         self.ground_box.add_widget(self.home_btn)
@@ -195,7 +195,7 @@ class SearchScreen (Screen):
 
     def new_posts_refresh(self, instance):
         connection = self.connection
-        self.all_newest_posts_info = connection.get_posts(sort_by = "time_posted", sort_order = "desc", num = 10)
+        self.all_newest_posts_info = connection.get_posts(sort_by = "time_posted", sort_order = "desc", num = 5)
         #include_background_color = str(1)
 
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)

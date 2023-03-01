@@ -107,8 +107,8 @@ class MainScreen (Screen):
         self.ground_box.add_widget(self.search_btn)
         self.search_btn.bind(on_release = self.press_search_btn)
 
-        self.home_label = Button (border = (0, 0, 0, 0), background_normal = './images/home_white.png', background_down = './images/home_white.png')
-        self.ground_box.add_widget(self.home_label)
+        self.home_bn = Button (border = (0, 0, 0, 0), background_normal = './images/home_white.png', background_down = './images/home_white.png', on_release = self.banner_press)
+        self.ground_box.add_widget(self.home_bn)
 
         self.make_posts_btn = Button (border = (0, 0, 0, 0), background_normal = './images/post.png', background_down = './images/post.png')
         self.ground_box.add_widget(self.make_posts_btn)
@@ -218,7 +218,7 @@ class MainScreen (Screen):
         #include_background_color=str(1)
         print(my_posts)
         print(len(my_posts))
-        if my_posts != []:
+        if my_posts != [] and my_posts != {}:
             self.posts_box.height = self.posts_box.height + (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08))
             print(38)
             actual_maybe_like = 0

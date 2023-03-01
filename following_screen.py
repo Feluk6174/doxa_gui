@@ -60,7 +60,7 @@ class FollowingScreen (Screen):
         self.ground_box.add_widget(self.chat_btn)
         self.chat_btn.bind(on_release = self.press_chat_btn)
 
-        self.search_btn = Button (border = (0, 0, 0, 0), background_normal = './images/search_white.png', background_down = './images/search_white.png')
+        self.search_btn = Button (border = (0, 0, 0, 0), background_normal = './images/search_white.png', background_down = './images/search_white.png', on_release = self.press_search_btn)
         self.ground_box.add_widget(self.search_btn)
 
         self.home_btn = Button (border = (0, 0, 0, 0), background_normal = './images/home.png', background_down = './images/home.png')
@@ -121,10 +121,12 @@ class FollowingScreen (Screen):
         self.manager.current = "chat"
         self.manager.transition.direction = "right"
 
-    #def press_search_btn(self, instance):
-        #self.manager.transition = SlideTransition()
-        #self.manager.current = "search"
-        #self.manager.transition.direction = "right"
+    def press_search_btn(self, instance):
+        #search_screen = self.search_screen
+        #search_screen.refresh_search_screen()
+        self.manager.transition = SlideTransition()
+        self.manager.current = "search"
+        self.manager.transition.direction = "right"
 
     def press_home_btn(self, instance):
         #home_screen.get_my_posts(0)

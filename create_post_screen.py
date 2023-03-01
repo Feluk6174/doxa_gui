@@ -105,8 +105,8 @@ class PostUserScreen (Screen):
         self.ground_box.add_widget(self.home_btn)
         self.home_btn.bind(on_release = self.press_home_btn)
 
-        self.make_posts_label = Button (border = (0, 0, 0, 0), background_normal = './images/post_white.png', background_down = './images/post_white.png')
-        self.ground_box.add_widget(self.make_posts_label)
+        self.make_posts_bn = Button (border = (0, 0, 0, 0), background_normal = './images/post_white.png', background_down = './images/post_white.png', on_release = self.delete_text)
+        self.ground_box.add_widget(self.make_posts_bn)
 
         self.user_profile_btn = Button (border = (0, 0, 0, 0), background_normal = './images/profile.png', background_down = './images/profile.png')
         self.ground_box.add_widget(self.user_profile_btn)
@@ -160,7 +160,10 @@ class PostUserScreen (Screen):
 
         self.send_post_btn.text = "Publish"
 
-    def press_chat_btn(self, instance):
+    def delete_text (self, instance):
+        self.main_post_content_input.text = ""
+
+    def press_chat_btn(self, instance):  
         self.manager.transition = SlideTransition()
         self.manager.current = "chat"
         self.manager.transition.direction = "right"

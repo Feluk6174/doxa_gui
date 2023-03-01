@@ -154,8 +154,8 @@ class ProfileScreen (Screen):
         self.ground_box.add_widget(self.make_posts_btn)
         self.make_posts_btn.bind(on_release = self.press_make_posts_btn)
 
-        self.user_profile_label = Button (border = (0, 0, 0, 0), background_normal = './images/profile_white.png', background_down = './images/profile_white.png')
-        self.ground_box.add_widget(self.user_profile_label)
+        self.user_profile_bn = Button (border = (0, 0, 0, 0), background_normal = './images/profile_white.png', background_down = './images/profile_white.png', on_release = self.refresh_profile_screen)
+        self.ground_box.add_widget(self.user_profile_bn)
 
         print (50)
     

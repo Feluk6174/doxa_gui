@@ -60,8 +60,8 @@ class ChatScreen (Screen):
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
 
-        self.chat_label = Button (border = (0, 0, 0, 0), background_normal = './images/mentions_white.png', background_down = './images/mentions_white.png')
-        self.ground_box.add_widget(self.chat_label)
+        self.chat_bn = Button (border = (0, 0, 0, 0), background_normal = './images/mentions_white.png', background_down = './images/mentions_white.png', on_release = self.refresh_chat_previous)
+        self.ground_box.add_widget(self.chat_bn)
 
         self.search_btn = Button (border = (0, 0, 0, 0), background_normal = './images/search.png', background_down = './images/search.png')
         self.ground_box.add_widget(self.search_btn)
