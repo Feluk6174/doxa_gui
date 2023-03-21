@@ -30,7 +30,7 @@ import unicodedata
 
 import api
 print("conn")
-connection = api.Connection()
+connection = api.Connection(host="104.196.175.223", port=30003)
 import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info
 
 access_my_info.set_connection(connection)
