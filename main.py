@@ -30,11 +30,16 @@ import unicodedata
 
 import api
 print("conn")
-connection = api.Connection(host="34.175.220.44", port=30003)
-import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info
+import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info, error_screens
 import recomendation
+try:
+    connection = api.Connection(host="34.175.220.44", port=30003)
+    access_my_info.set_connection(connection)
+    error = False
+except OSError:
+    error = True
 
-access_my_info.set_connection(connection)
+
 
 #optional. errase when doing apk
 Window.size = (400, 720)
@@ -46,10 +51,14 @@ class MyApp (App):
         #set basis. screen manager and connection
         global connection
         sm = ScreenManager()
+        if not error:
+            check_info = register_screen.check_my_info_exists()
+        if error:
+            sm.add_widget(error_screens.ConnectionErrorScreen(name="connection_error"))
 
         #look if user created and if it is registered. if it does not, make it
-        check_info = register_screen.check_my_info_exists()
-        if check_info == False:
+        
+        elif check_info == False:
             f = open("user_keys.json", "w")
             f.write("{}")
             f.close()

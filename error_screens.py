@@ -1,5 +1,5 @@
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import ScreenManager, Screen
 import kivy.uix.screenmanager
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -10,8 +10,11 @@ import random
 
 #import string_sum
 
-class TestApp(App):
-    
+def run(error:str):
+    if error == "connection_error":
+        ErrorApp.run()
+
+class ErrorApp(App):
     def build(self):
         sm = ScreenManager()
 
@@ -19,7 +22,7 @@ class TestApp(App):
         
         return sm
 
-class ConnectionErrorScreen(kivy.uix.screenmanager.Screen):
+class ConnectionErrorScreen(Screen):
     def __init__(self, **kwargs):
         super(ConnectionErrorScreen, self).__init__(**kwargs)
         self.main_all_box = BoxLayout(orientation = "vertical")
@@ -33,7 +36,7 @@ Connection couldn't be found.
 Try these out:
     - Check your internet connection
     - Update your app
-If these do not work contect the developers
+If these do not work, contact the developers.
         """
 
         self.button = Button (border = (0, 0, 0, 0), size_hint = (1, 1), background_normal = 'images/paper_pink.png', background_down = 'images/paper_pink.png', text=text)
@@ -43,4 +46,4 @@ If these do not work contect the developers
         
 
 if __name__ == '__main__':
-    TestApp().run()
+    ErrorApp().run()
