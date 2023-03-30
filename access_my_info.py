@@ -121,7 +121,7 @@ def get_liked():
     user_liked_id = get_liked_id
     user_liked = []
     for post in user_liked_id:
-        actual_liked = connection.get_post(post)
+        actual_liked = connection.get_posts(id=post)
         user_liked.append(actual_liked)
     return user_liked
 

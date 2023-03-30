@@ -30,8 +30,9 @@ import unicodedata
 
 import api
 print("conn")
-connection = api.Connection(host="104.196.175.223", port=30003)
+connection = api.Connection(host="34.175.220.44", port=30003)
 import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info
+import recomendation
 
 access_my_info.set_connection(connection)
 
@@ -70,6 +71,9 @@ class MyApp (App):
             check_register = register_screen.check_my_user_exists(connection)
             if check_register == False:
                 register_screen.register(connection)
+            #Update recomendation algorithm position
+            recomendation.start()
+
             #make screens of app
             my_profile_screen = profile_screen.ProfileScreen(connection, name = "profile")
             my_search_screen = search_screen.SearchScreen(connection, name = "search")

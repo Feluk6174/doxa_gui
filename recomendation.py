@@ -1,6 +1,9 @@
 import api
 import math
 import json
+import threading
+
+import access_my_info
 
 def get_pos(connection:api.Connection, users:list[str]):
     user_info = connection.get_users(users)
@@ -8,7 +11,11 @@ def get_pos(connection:api.Connection, users:list[str]):
 
 def get_user_names(connection:api.Connection, posts:list[str]):
     post_info = connection.get_posts(id=posts)
-    return post_info, [post["user_id"] for post in post_info]
+    print(post_info)
+    try:
+        return post_info, [post["user_id"] for post in post_info]
+    except KeyError:
+        return post_info, []
 
 def get_own_pos(connection:api.Connection, user_name:str):
     user_info = connection.get_user(user_name)
@@ -91,7 +98,7 @@ def update_pos(connection:api.Connection, likes:list[str], dislikes:list[str], f
     following_vectors = calc_positive_vectors(own_pos, following_pos)
 
     avg_module = average_module(likes_vectors, dislikes_vectors, following_vectors)
-    vector = add_vectors(likes_vectors, dislikes_vectors, following_vectors)
+    vector = add_vectors(following_vectors, likes_vectors, dislikes_vectors)
     print(2, vector, avg_module)
     final_vector = calculate_final(vector, avg_module)
     print(3, final_vector)
@@ -99,6 +106,19 @@ def update_pos(connection:api.Connection, likes:list[str], dislikes:list[str], f
 
     connection.update_pos(own_user_name, pos, priv_key)
     print(pos)
+
+def get_calc_info():
+    return access_my_info.get_user_name(), access_my_info.get_following(), access_my_info.get_liked_id(), [], access_my_info.get_priv_key()
+
+def recomendation_thread():
+    connection = api.Connection("34.175.220.44", 30003)
+    user_name, following, liked, disliked, priv_key = get_calc_info()
+    update_pos(connection, liked, disliked, following, user_name, priv_key)
+    connection.close()
+
+def start():
+    thread = threading.Thread(target=recomendation_thread)
+    thread.start()
 
 if __name__ == "__main__":
     import auth
