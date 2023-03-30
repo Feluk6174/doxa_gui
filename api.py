@@ -230,6 +230,7 @@ class Connection():
         return [{}]
 
     def close(self):
+        self.connection.send(b'{"type": "ACTION", "action": "SEND", "msg": "stop"}')
         self.connection.close()
 
     def get_post(self, post_id:str):
