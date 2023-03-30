@@ -341,16 +341,21 @@ class MainScreen (Screen):
         self.all_posts_i_get[order_number][2] = num
 
     def second_post_press(self, instance):
-        print(self.time_variable)
+        print("b", self.time_variable)
         self.time_variable = 2
-        self.like_press(instance)
+        print("c", self.time_variable)
+        
+    
+    def third_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 3
 
     def first_post_press(self, instance):
         #self.go_to_user_profile(order_number)
         #print(self.time_variable)
         self.time_variable = 1
         self.post_instance = instance
-        Clock.schedule_once(self.clock_def, 1)
+        Clock.schedule_once(self.clock_def, 0.5)
         print(self.time_variable)
         print(7)
     
@@ -358,19 +363,24 @@ class MainScreen (Screen):
         print("a")
         print(self.time_variable)
         if self.time_variable == 0:
-            self.thinking = 1
-            self.think()
-            Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
+            pass
+            #self.thinking = 1
+            #self.think()
+            #Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
         elif self.time_variable == 1:
             self.reply_post(self.post_instance)
+        elif self.time_variable == 2:
+            self.like_press(self.post_instance)
+        elif self.time_variable == 3:
+            self.dislike_press(self.post_instance)
         self.time_variable = 0
 
     def release_post(self, instance):
         print(10)
-        print(self.time_variable)
+        print("d", self.time_variable)
         if self.time_variable == 1:
             self.time_variable = 0
-        
+
     def go_to_screen(self, instance, dt):
         print(11)
         other_user_profile_screen = self.other_profile_screen
@@ -397,7 +407,22 @@ class MainScreen (Screen):
         background = instance.background
         print(77, background)
         num = self.all_posts_i_get[order_number][2]
-        num = (num + 1) % 2
+        if num == 1:
+            num = 0
+        else:
+            num = 1
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], num)
+        self.all_posts_i_get[order_number][2] = num
+    
+    def dislike_press(self, instance):
+        order_number = instance.order_number
+        background = instance.background
+        num = self.all_posts_i_get[order_number][2]
+        if num == -1:
+            num = 0
+        elif num > -1:
+            num = -1
         instance.background_normal = functions.get_post_image(background, num)
         access_my_info.add_or_remove_liked_post(self.all_posts_i_get[order_number][0], num)
         self.all_posts_i_get[order_number][2] = num

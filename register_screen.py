@@ -266,6 +266,8 @@ class RegisterScreen (Screen):
         dictionary["semi_basic_info"]["description"] = self.description_text
         dictionary["semi_basic_info"]["user_following"] = ["doxa"]
         dictionary["semi_basic_info"]["liked_posts_id"] = []
+        dictionary["semi_basic_info"]["disliked_posts_id"] = []
+        dictionary["semi_basic_info"]["group"] = 0
         my_info_file = open("my_info.json", "w")
         my_info_file.write(json.dumps(dictionary))
         my_info_file.close

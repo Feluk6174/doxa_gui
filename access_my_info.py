@@ -62,9 +62,27 @@ def add_or_remove_following(id, foll):
 def add_or_remove_liked_post(post_id, like):
     my_user_info = open_my_user_info()
     if like == 0:
-        my_user_info["semi_basic_info"]["liked_posts_id"].remove(post_id)
+        try:
+            my_user_info["semi_basic_info"]["liked_posts_id"].remove(post_id)
+        except ValueError:
+            pass
+        try:
+            my_user_info["semi_basic_info"]["disliked_posts_id"].remove(post_id)
+        except ValueError:
+            pass
     elif like == 1:
         my_user_info["semi_basic_info"]["liked_posts_id"].append(post_id)
+        try:
+            my_user_info["semi_basic_info"]["disliked_posts_id"].remove(post_id)
+        except ValueError:
+            pass
+    elif like == -1:
+        my_user_info["semi_basic_info"]["disliked_posts_id"].append(post_id)
+        try:
+            my_user_info["semi_basic_info"]["liked_posts_id"].remove(post_id)
+        except ValueError:
+            pass
+
     file_my = open("my_info.json", "w")
     file_my.write(json.dumps(my_user_info))
     file_my.close()
@@ -77,6 +95,10 @@ def open_my_user_info():
         my_user_info = ""
     return my_user_info
 
+def get_group():
+    my_user_info = open_my_user_info()
+    group = my_user_info["semi_basic_info"]["group"]
+    return group
 
 def get_user_name():
     my_user_info = open_my_user_info()

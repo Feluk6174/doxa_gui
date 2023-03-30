@@ -115,6 +115,12 @@ class MyButton(Button):
                 screen.second_post_press(self)
                 #screen variable of clicks
                 #screen.time_pressed *= -1
+            elif touch.is_triple_tap:
+                screen = self.screen
+                print(2)
+                screen.third_post_press(self)
+                #screen variable of clicks
+                #screen.time_pressed *= -1
             else:
                 print(8)
                 screen = self.screen
@@ -166,6 +172,18 @@ def get_post_image(num, like):
             return "./images/paper_pink_heart.png"
         elif num == 5:
             return "./images/paper_blue_heart.png"
+    elif like == -1:
+        if num == 1:
+            return "./images/paper_yellow_noheart.png"
+        elif num == 2:
+            return "./images/paper_green_noheart.png"
+        elif num == 3:
+            return "./images/paper_purple_noheart.png"
+        elif num == 4:
+            return "./images/paper_pink_noheart.png"
+        elif num == 5:
+            return "./images/paper_blue_noheart.png"
+        
 
 #def crear botó
 def make_post_btn(screen, user_name, text_content, date, like_self, order_number, background):

@@ -85,6 +85,11 @@ class SearchScreen (Screen):
 
         self.new_posts_header_display_btn = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
         self.display_header_box.add_widget(self.new_posts_header_display_btn)
+
+        self.recommended_header_display_btn = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+        self.display_header_box.add_widget(self.recommended_header_display_btn)
+        self.recommended_header_display_btn.bind(on_release = self.recommended_header_press)
+
         self.search_header_press(0)
 
 
@@ -117,7 +122,10 @@ class SearchScreen (Screen):
         if self.current_posts == 1:
             self.content_in_scroll_box.clear_widgets()
         
-        if self.current_posts !=2:
+        if self.current_posts == 3:
+            self.content_in_scroll_box.clear_widgets()
+        
+        else:
 
             self.display_header_box.clear_widgets()
 
@@ -129,6 +137,10 @@ class SearchScreen (Screen):
             self.new_posts_header_display_btn = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
             self.display_header_box.add_widget(self.new_posts_header_display_btn)
             self.new_posts_header_display_btn.bind(on_release = self.new_posts_header_press)
+
+            self.recommended_header_display_btn = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.display_header_box.add_widget(self.recommended_header_display_btn)
+            self.recommended_header_display_btn.bind(on_release = self.recommended_header_press)
 
             self.search_header_btn = Button(size_hint_y = None, height = Window.size[1] / 15 / 2, text = "Search @user or #hashtag: ", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
             self.content_in_scroll_box.add_widget(self.search_header_btn)
@@ -171,7 +183,10 @@ class SearchScreen (Screen):
         if self.current_posts == 2:
             self.content_in_scroll_box.clear_widgets()
         
-        if self.current_posts != 1:
+        if self.current_posts == 3:
+            self.content_in_scroll_box.clear_widgets()
+
+        else:
 
             self.display_header_box.clear_widgets()
 
@@ -182,6 +197,10 @@ class SearchScreen (Screen):
 
             self.new_posts_header_display_label = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
             self.display_header_box.add_widget(self.new_posts_header_display_label)
+
+            self.recommended_header_display_btn = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.display_header_box.add_widget(self.recommended_header_display_btn)
+            self.recommended_header_display_btn.bind(on_release = self.recommended_header_press)
 
 
             self.content_in_scroll_box.height = len(self.all_displayed_new_posts_list) * (Window.size[1] - Window.size[0] * ( 1 / 5 + 1 / 5.08)) + Window.size[1] / 10
@@ -231,6 +250,71 @@ class SearchScreen (Screen):
     #def display_newest_posts(self):
     #    self.content_in_scroll_box.add_widget(self.new_posts_box)
 
+    def recommended_header_press(self, instance):
+        if self.current_posts == 2:
+            self.content_in_scroll_box.clear_widgets()
+        
+        elif self.current_posts == 1:
+            self.content_in_scroll_box.clear_widgets()
+
+            self.display_header_box.clear_widgets()
+        
+        else:
+
+            self.search_header_display_btn = Button (text = "Search", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.display_header_box.add_widget(self.search_header_display_btn)
+            self.search_header_display_btn.bind(on_release = self.search_header_press)
+
+            self.new_posts_header_display_btn = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
+            self.display_header_box.add_widget(self.new_posts_header_display_label)
+            self.new_posts_header_display_btn.bind(on_release = self.new_posts_header_press)
+
+            self.recommended_header_display_btn = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
+            self.display_header_box.add_widget(self.recommended_header_display_btn)
+
+
+            self.content_in_scroll_box.height = len(self.all_displayed_recommended_posts_list) * (Window.size[1] - Window.size[0] * ( 1 / 5 + 1 / 5.08)) + Window.size[1] / 10
+
+            #new posts
+            self.content_in_scroll_box.add_widget(self.recommended_posts_box)
+
+
+            self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+            self.current_posts = 3
+
+    def recommended_posts_refresh(self, instance):
+        connection = self.connection
+        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(), sort_by = "time_posted", sort_order = "desc", num = 5)
+        #include_background_color = str(1)
+
+        #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
+        #print(self.all_newest_posts_info)
+        #create a list with users searched. in next def we get info from list
+
+        self.recommended_posts_box = BoxLayout(orientation = 'vertical')
+        #self.content_in_scroll_box.add_widget(self.new_posts_box)
+
+        self.all_displayed_recommended_posts_list = []
+
+        my_liked_posts_id = access_my_info.get_liked_id()
+        for t in range(len(self.all_recommended_posts_info)):
+            actual_maybe_like = 0
+            try:
+                for liked in my_liked_posts_id:
+                    if liked == self.all_newest_posts_info[t]["id"]:
+                        actual_maybe_like = 1
+            except KeyError:
+                pass
+            print(self.all_newest_posts_info[t]["background_color"])
+            self.post_btn = functions.make_post_btn(self, self.all_recommended_posts_info[t]["user_id"], self.all_recommended_posts_info[t]["content"], self.all_recommended_posts_info[t]["time_posted"], actual_maybe_like, t, self.all_recommended_posts_info[t]["background_color"])
+            self.recommended_posts_box.add_widget(self.post_btn)
+            self.all_displayed_recommended_posts_list.append([self.all_recommended_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_recommended_posts_info[t]["user_id"]])
+        
+        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+        self.recommended_posts_box.add_widget(self.next_post_btn)
+
+        self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+
     def next_post(self, instance):
         if self.current_posts == 1:
             self.thinking = 1
@@ -240,6 +324,10 @@ class SearchScreen (Screen):
             self.thinking = 1
             self.think()
             Clock.schedule_once(self.next_post_search)
+        if self.current_posts == 3:
+            self.thinking = 1
+            self.think()
+            Clock.schedule_once(self.next_post_recommended)
     
     def next_post_new(self, dt):
         connection = self.connection
@@ -271,6 +359,35 @@ class SearchScreen (Screen):
         self.thinking = 0
         self.think()
 
+    def next_post_recommended(self, dt):
+        connection = self.connection
+        self.all_new_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(), sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
+
+        print(self.all_new_recommended_posts_info)
+        if self.all_new_recommended_posts_info != []:
+            self.all_new_recommended_posts_info = self.all_new_recommended_posts_info[0]
+            self.recommended_posts_box.remove_widget(self.next_post_btn)
+            my_liked_posts_id = access_my_info.get_liked_id()
+            actual_maybe_like = 0
+            try:
+                for liked in my_liked_posts_id:
+                    if liked == self.all_newest_posts_info["id"]:
+                        actual_maybe_like = 1
+            except KeyError:
+                pass
+            self.post_btn = functions.make_post_btn(self, self.all_new_recommended_posts_info["user_id"], self.all_new_recommended_posts_info["content"], self.all_new_recommended_posts_info["time_posted"], actual_maybe_like, len(self.all_new_recommended_posts_info), self.all_new_recommended_posts_info["background_color"])
+            self.recommended_posts_box.add_widget(self.post_btn)
+            self.all_displayed_recommended_posts_list.append([self.all_new_recommended_posts_info["id"], self.post_btn, actual_maybe_like, self.all_new_recommended_posts_info["user_id"]])
+            
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+            self.recommended_posts_box.add_widget(self.next_post_btn)
+    
+            self.recommended_posts_box.height = self.recommended_posts_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+            self.content_in_scroll_box.height = self.content_in_scroll_box.height + (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08))
+            self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
+        
+        self.thinking = 0
+        self.think()
 
     def next_post_search(self, dt):
         conn = self.connection
@@ -312,6 +429,7 @@ class SearchScreen (Screen):
 
     def refresh_search_screen_2(self, dt):
         if self.current_posts == 2:
+            self.recommended_posts_refresh(0)
             self.new_posts_refresh(0)
         
         elif self.current_posts == 1 or self.current_posts == 0:
