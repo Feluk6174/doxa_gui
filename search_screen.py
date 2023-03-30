@@ -254,12 +254,13 @@ class SearchScreen (Screen):
         if self.current_posts == 2:
             self.content_in_scroll_box.clear_widgets()
         
-        elif self.current_posts == 1:
+        if self.current_posts == 1:
             self.content_in_scroll_box.clear_widgets()
-
-            self.display_header_box.clear_widgets()
         
         else:
+
+            self.display_header_box.clear_widgets()
+
 
             self.search_header_display_btn = Button (text = "Search", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
             self.display_header_box.add_widget(self.search_header_display_btn)
@@ -269,8 +270,8 @@ class SearchScreen (Screen):
             self.display_header_box.add_widget(self.new_posts_header_display_label)
             self.new_posts_header_display_btn.bind(on_release = self.new_posts_header_press)
 
-            self.recommended_header_display_btn = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
-            self.display_header_box.add_widget(self.recommended_header_display_btn)
+            self.recommended_header_display_label = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
+            self.display_header_box.add_widget(self.recommended_header_display_label)
 
 
             self.content_in_scroll_box.height = len(self.all_displayed_recommended_posts_list) * (Window.size[1] - Window.size[0] * ( 1 / 5 + 1 / 5.08)) + Window.size[1] / 10
@@ -284,7 +285,7 @@ class SearchScreen (Screen):
 
     def recommended_posts_refresh(self, instance):
         connection = self.connection
-        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(), sort_by = "time_posted", sort_order = "desc", num = 5)
+        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), sort_by = "time_posted", sort_order = "desc", num = 5)
         #include_background_color = str(1)
 
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
@@ -361,7 +362,7 @@ class SearchScreen (Screen):
 
     def next_post_recommended(self, dt):
         connection = self.connection
-        self.all_new_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(), sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
+        self.all_new_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
 
         print(self.all_new_recommended_posts_info)
         if self.all_new_recommended_posts_info != []:
@@ -438,18 +439,21 @@ class SearchScreen (Screen):
         
         self.thinking = 0
         self.think()
+    
+    def third_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 3
 
     def second_post_press(self, instance):
         print(self.time_variable)
         self.time_variable = 2
-        self.like_press(instance)
 
     def first_post_press(self, instance):
         #self.go_to_user_profile(order_number)
         print(self.time_variable)
         self.time_variable = 1
         self.post_instance = instance
-        Clock.schedule_once(self.clock_def, 1)
+        Clock.schedule_once(self.clock_def, 0.5)
         print(self.time_variable)
         print(7)
     
@@ -457,11 +461,13 @@ class SearchScreen (Screen):
         print("a")
         print(self.time_variable)
         if self.time_variable == 0:
-            self.thinking = 1
-            self.think()
-            Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
+            pass
         elif self.time_variable == 1:
             self.reply_post(self.post_instance)
+        elif self.time_variable == 2:
+            self.like_press(self.post_instance)
+        elif self.time_variable == 3:
+            self.dislike_press(self.post_instance)
         self.time_variable = 0
 
     def release_post(self, instance):
@@ -496,19 +502,39 @@ class SearchScreen (Screen):
         background = instance.background
         print(77, background)
         if self.current_posts == 1:
-            num = self.all_displayed_new_posts_list[order_number][2]
-            num = (num + 1) % 2
-            instance.background_normal = functions.get_post_image(background, num)
-            access_my_info.add_or_remove_liked_post(self.all_displayed_new_posts_list[order_number][0], num)
-            self.all_displayed_new_posts_list[order_number][2] = num
+            display = self.all_displayed_new_posts_list
         elif self.current_posts == 2:
-            num = self.all_displayed_searched_posts_list[order_number][2]
-            num = (num + 1) % 2
-            instance.background_normal = functions.get_post_image(background, num)
-            access_my_info.add_or_remove_liked_post(self.all_displayed_searched_posts_list[order_number][0], num)
-            self.all_displayed_searched_posts_list[order_number][2] = num
-        
+            display = self.all_displayed_searched_posts_list
+        elif self.current_posts == 3:
+            display = self.all_displayed_recommended_posts_list
+
+        num = display[order_number][2]
+        if num == 1:
+            num = 0
+        else:
+            num = 1
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(display[order_number][0], num)
+        display[order_number][2] = num
     
+    def dislike_press(self, instance):
+        order_number = instance.order_number
+        background = instance.background
+        if self.current_posts == 2:
+            display = self.all_displayed_new_posts_list
+        elif self.current_posts == 1:
+            display = self.all_displayed_searched_posts_list
+        elif self.current_posts == 3:
+            display = self.all_displayed_recommended_posts_list
+        num = display[order_number][2]
+        if num == -1:
+            num = 0
+        elif num > -1:
+            num = -1
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(display[order_number][0], num)
+        display[order_number][2] = num
+
     def name_press_user(self, instance):
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.text)

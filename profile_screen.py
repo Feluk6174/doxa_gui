@@ -441,14 +441,17 @@ class ProfileScreen (Screen):
     def second_post_press(self, instance):
         print(self.time_variable)
         self.time_variable = 2
-        self.like_press(instance)
+    
+    def third_post_press(self, instance):
+        print(self.time_variable)
+        self.time_variable = 3
 
     def first_post_press(self, instance):
         #self.go_to_user_profile(order_number)
         print(self.time_variable)
         self.time_variable = 1
         self.post_instance = instance
-        Clock.schedule_once(self.clock_def, 1)
+        Clock.schedule_once(self.clock_def, 0.5)
         print(self.time_variable)
         print(7)
     
@@ -456,11 +459,13 @@ class ProfileScreen (Screen):
         print("a")
         print(self.time_variable)
         if self.time_variable == 0:
-            self.thinking = 1
-            self.think()
-            Clock.schedule_once(partial(self.go_to_screen, self.post_instance))
+            pass
         elif self.time_variable == 1:
             self.reply_post(self.post_instance)
+        elif self.time_variable == 2:
+            self.like_press(self.post_instance)
+        elif self.time_variable == 3:
+            self.dislike_press(self.post_instance)
         self.time_variable = 0
 
     def release_post(self, instance):
@@ -496,16 +501,38 @@ class ProfileScreen (Screen):
         print(77, background)
         if self.current_posts == 1:
             num = self.all_my_displayed_posts_list[order_number][2]
-            num = (num + 1) % 2
+            if num == 1:
+                num = 0
+            else:
+                num = 1
             instance.background_normal = functions.get_post_image(background, num)
             access_my_info.add_or_remove_liked_post(self.all_my_displayed_posts_list[order_number][0], num)
             self.all_my_displayed_posts_list[order_number][2] = num
         elif self.current_posts == 2:
             num = self.all_liked_displayed_posts_list[order_number][2]
-            num = (num + 1) % 2
+            if num == 1:
+                num = 0
+            else:
+                num = 1
             instance.background_normal = functions.get_post_image(background, num)
             access_my_info.add_or_remove_liked_post(self.all_liked_displayed_posts_list[order_number][0], num)
             self.all_liked_displayed_posts_list[order_number][2] = num
+    
+    def dislike_press(self, instance):
+        order_number = instance.order_number
+        background = instance.background
+        if self.current_posts == 2:
+            display = self.all_liked_displayed_posts_list
+        elif self.current_posts == 1:
+            display = self.all_my_displayed_posts_list
+        num = display[order_number][2]
+        if num == -1:
+            num = 0
+        elif num > -1:
+            num = -1
+        instance.background_normal = functions.get_post_image(background, num)
+        access_my_info.add_or_remove_liked_post(display[order_number][0], num)
+        display[order_number][2] = num
 
     def press_chat_btn(self, instance):
         self.manager.transition = SlideTransition()

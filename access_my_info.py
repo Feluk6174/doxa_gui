@@ -95,10 +95,9 @@ def open_my_user_info():
         my_user_info = ""
     return my_user_info
 
-def get_group():
-    my_user_info = open_my_user_info()
-    group = my_user_info["semi_basic_info"]["group"]
-    return group
+def get_group(connection, user_name:str):
+    user_info = connection.get_user(user_name)
+    return user_info["grup"]
 
 def get_user_name():
     my_user_info = open_my_user_info()
@@ -140,7 +139,7 @@ def get_following():
     return user_following
 
 def get_liked():
-    user_liked_id = get_liked_id
+    user_liked_id = get_liked_id()
     user_liked = []
     for post in user_liked_id:
         actual_liked = connection.get_posts(id=post)
@@ -151,3 +150,8 @@ def get_liked_id():
     my_user_info = open_my_user_info()
     user_liked_id = my_user_info["semi_basic_info"]["liked_posts_id"]
     return user_liked_id
+
+def get_disliked_id():
+    my_user_info = open_my_user_info()
+    user_disliked_id = my_user_info["semi_basic_info"]["disliked_posts_id"]
+    return user_disliked_id

@@ -108,7 +108,7 @@ def update_pos(connection:api.Connection, likes:list[str], dislikes:list[str], f
     print(pos)
 
 def get_calc_info():
-    return access_my_info.get_user_name(), access_my_info.get_following(), access_my_info.get_liked_id(), [], access_my_info.get_priv_key()
+    return access_my_info.get_user_name(), access_my_info.get_following(), access_my_info.get_liked_id(), access_my_info.get_disliked_id(), access_my_info.get_priv_key()
 
 def recomendation_thread():
     connection = api.Connection("34.175.220.44", 30003)
