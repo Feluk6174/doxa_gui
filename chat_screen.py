@@ -143,7 +143,7 @@ class ChatScreen (Screen):
         #include_background_color=str(1)
         print(my_posts)
         print(len(my_posts))
-        if my_posts != {}:
+        if my_posts != {} and my_posts != [{}]:
             print(38)
             actual_maybe_like = 0
             for liked in my_liked_id:

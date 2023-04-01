@@ -75,7 +75,9 @@ class SearchScreen (Screen):
         self.time_variable = 0 
         
         self.all_displayed_new_posts_list = []
-        self.new_posts_box=BoxLayout()
+        self.all_displayed_recommended_posts_list = []
+        self.new_posts_box = BoxLayout()
+        self.recommended_posts_box = BoxLayout()
 
         #self.new_posts_header_press(0)
         
@@ -125,7 +127,7 @@ class SearchScreen (Screen):
         if self.current_posts == 3:
             self.content_in_scroll_box.clear_widgets()
         
-        else:
+        if self.current_posts != 2:
 
             self.display_header_box.clear_widgets()
 
@@ -186,7 +188,7 @@ class SearchScreen (Screen):
         if self.current_posts == 3:
             self.content_in_scroll_box.clear_widgets()
 
-        else:
+        if self.current_posts != 1:
 
             self.display_header_box.clear_widgets()
 
@@ -257,7 +259,7 @@ class SearchScreen (Screen):
         if self.current_posts == 1:
             self.content_in_scroll_box.clear_widgets()
         
-        else:
+        if self.current_posts != 3:
 
             self.display_header_box.clear_widgets()
 
@@ -267,7 +269,7 @@ class SearchScreen (Screen):
             self.search_header_display_btn.bind(on_release = self.search_header_press)
 
             self.new_posts_header_display_btn = Button(text = "New", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick.png", background_down = "./images/brick.png")
-            self.display_header_box.add_widget(self.new_posts_header_display_label)
+            self.display_header_box.add_widget(self.new_posts_header_display_btn)
             self.new_posts_header_display_btn.bind(on_release = self.new_posts_header_press)
 
             self.recommended_header_display_label = Button (text = "For You", border = (0, 0, 0, 0), color = (0, 0, 0, 1), background_normal = "./images/brick_dark.png", background_down = "./images/brick_dark.png")
@@ -285,7 +287,7 @@ class SearchScreen (Screen):
 
     def recommended_posts_refresh(self, instance):
         connection = self.connection
-        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), sort_by = "time_posted", sort_order = "desc", num = 5)
+        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), num = 5)
         #include_background_color = str(1)
 
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
@@ -435,6 +437,7 @@ class SearchScreen (Screen):
         
         elif self.current_posts == 1 or self.current_posts == 0:
             self.search_header_press(0)
+            self.recommended_posts_refresh(0)
             self.new_posts_refresh(0)
         
         self.thinking = 0
