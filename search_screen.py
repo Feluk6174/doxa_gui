@@ -287,7 +287,7 @@ class SearchScreen (Screen):
 
     def recommended_posts_refresh(self, instance):
         connection = self.connection
-        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), num = 5)
+        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()))
         #include_background_color = str(1)
 
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
@@ -304,7 +304,7 @@ class SearchScreen (Screen):
             actual_maybe_like = 0
             try:
                 for liked in my_liked_posts_id:
-                    if liked == self.all_newest_posts_info[t]["id"]:
+                    if liked == self.all_recommended_posts_info[t]["id"]:
                         actual_maybe_like = 1
             except KeyError:
                 pass
@@ -539,8 +539,17 @@ class SearchScreen (Screen):
         display[order_number][2] = num
 
     def name_press_user(self, instance):
+        self.thinking = 1
+        self.think()
+        self.name_press_user_2(instance)
+    
+    def name_press_user_2(self, instance):
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.text)
+        
+        self.thinking = 0
+        self.think()
+
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"

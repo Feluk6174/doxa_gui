@@ -98,7 +98,7 @@ class ChatScreen (Screen):
         con = self.connection
         self.all_displayed_posts = []
         user = access_my_info.get_user_name()
-        my_posts = con.get_posts(hashtag = "@" + user, sort_by = 'time_posted', sort_order = 'desc')
+        my_posts = con.get_posts(hashtag = "@" + user, sort_by = 'time_posted', sort_order = 'desc', num = 5)
         my_liked_id = access_my_info.get_liked_id()
         for a in range(len(my_posts)):
             #user_info = connection.get_user(all_test_posts[a]["user_id"])

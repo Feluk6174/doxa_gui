@@ -191,8 +191,9 @@ class MainScreen (Screen):
             self.posts_grid.bind(minimum_height=self.posts_grid.setter('height'))
         print(39)
 
-        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
-        self.posts_box.add_widget(self.next_post_btn)
+        if len(self.all_posts_i_get) != 0:
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+            self.posts_box.add_widget(self.next_post_btn)
 
         self.thinking = 0
         self.think()
@@ -218,7 +219,7 @@ class MainScreen (Screen):
         #include_background_color=str(1)
         print(my_posts)
         print(len(my_posts))
-        if my_posts != [] and my_posts != {}:
+        if my_posts != [{}]:
             self.posts_box.height = self.posts_box.height + (Window.size[1]- Window.size[0] * (1 / 5 + 1 / 5.08))
             print(38)
             actual_maybe_like = 0

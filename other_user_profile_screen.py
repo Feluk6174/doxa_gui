@@ -188,7 +188,7 @@ class OtherProfileScreen (Screen):
     def create_posts_2(self, dt):
         print(11)
         conn = self.connection
-        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted', sort_order = 'desc')
+        self.posts_list = conn.get_posts(user_name = self.user_id, sort_by = 'time_posted', sort_order = 'desc', num = 5)
         print(124)
         #self.my_posts_list = []
         #self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
@@ -239,7 +239,7 @@ class OtherProfileScreen (Screen):
         #self.my_posts_list = []
         #self.posts_list = functions.order_posts_by_timestamp(self.posts_list)
 
-        if self.posts_list != []:
+        if self.posts_list != [{}]:
             self.posts_list = self.posts_list[0]
             self.user_posts_box.remove_widget(self.next_post_btn)
             print(125)

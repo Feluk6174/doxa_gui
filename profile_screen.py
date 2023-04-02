@@ -333,7 +333,7 @@ class ProfileScreen (Screen):
         print(559)
         
         print(self.my_posts_list)
-        if self.my_posts_list != [] and self.my_posts_list != {}:
+        if self.my_posts_list != [] and self.my_posts_list != {} and self.my_posts_list != [{}]:
             self.my_posts_list = self.my_posts_list[0]
             self.zero_my_box.height = self.zero_my_box.height + (Window.size[1] - Window.size[0] * (1/5+1/5.08))
 
@@ -389,7 +389,7 @@ class ProfileScreen (Screen):
         #self.my_liked_posts_list = []
 
         #self.content_grid.add_widget(self.favourite_posts_box)
-        if self.my_liked_list != []:
+        if self.my_liked_list != [[]] and self.my_liked_list != []:
             self.my_liked_list = self.my_liked_list[0]
             actual_maybe_like = 1
             #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        

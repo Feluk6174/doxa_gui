@@ -52,6 +52,7 @@ class FollowingScreen (Screen):
         self.content_box.add_widget (self.content_grid_scroll)
 
         #self.refresh_following()
+        self.thinking = 0
 
         self.ground_box = BoxLayout (size_hint_y = None, height = Window.size[0] / 5)
         self.main_all_box.add_widget(self.ground_box)
@@ -101,12 +102,28 @@ class FollowingScreen (Screen):
 
     def header_btn_press(self, instance):
         pass
+
+    def think(self):
+        print(88)
+        if self.thinking == 1:
+            self.banner.background_normal = "images/banner_loading.png"
+        elif self.thinking == 0:
+            self.banner.background_normal = "images/banner.png"
     
     def go_to_user_profile_screen(self, instance):
+        self.thinking = 1
+        self.think()
+        self.go_to_user_profile_screen_2(instance)
+
+    def go_to_user_profile_screen_2(self, instance):
         con = self.connection
         other_user_profile_screen = self.other_profile_screen
         #user = self.users_info_list[order_number][0]["user_name"]
         other_user_profile_screen.refresh_profile_screen(instance.text)
+
+        self.thinking = 0
+        self.think()
+        
         self.manager.transition = SlideTransition()
         self.manager.current = "other_profile"
         self.manager.transition.direction = "right"
