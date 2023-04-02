@@ -100,6 +100,7 @@ class ChatScreen (Screen):
         user = access_my_info.get_user_name()
         my_posts = con.get_posts(hashtag = "@" + user, sort_by = 'time_posted', sort_order = 'desc', num = 5)
         my_liked_id = access_my_info.get_liked_id()
+        my_disliked_id = access_my_info.get_disliked_id()
         for a in range(len(my_posts)):
             #user_info = connection.get_user(all_test_posts[a]["user_id"])
             #print(user_info)
@@ -111,6 +112,10 @@ class ChatScreen (Screen):
                     if liked == my_posts[a]["id"]:
                         print(306)
                         actual_maybe_like = 1
+            for disliked in my_disliked_id:
+                    if disliked == my_posts[a]["id"]:
+                        print(306)
+                        actual_maybe_like = -1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
             self.posts_grid.add_widget(self.post_btn)
             self.all_displayed_posts.append([my_posts[a]["id"], self.post_btn, actual_maybe_like])
@@ -138,6 +143,7 @@ class ChatScreen (Screen):
         user = access_my_info.get_user_name()
         my_posts = con.get_posts(hashtag = "@" + user, sort_by = 'time_posted', sort_order="desc", num = 1, offset = len(self.all_displayed_posts))
         my_liked_id = access_my_info.get_liked_id()
+        my_disliked_id = access_my_info.get_disliked_id()
         print(302)
         
         #include_background_color=str(1)
@@ -150,6 +156,10 @@ class ChatScreen (Screen):
                     if liked == my_posts[-1]["id"]:
                         print(306)
                         actual_maybe_like = 1
+            for disliked in my_disliked_id:
+                    if disliked == my_posts[-1]["id"]:
+                        print(306)
+                        actual_maybe_like = -1
             self.post_btn = functions.make_post_btn(self, my_posts[-1]["user_id"], my_posts[-1]["content"], my_posts[-1]["time_posted"], actual_maybe_like, len(self.all_displayed_posts), my_posts[-1]["background_color"])
             self.posts_grid.add_widget(self.post_btn)
             self.all_displayed_posts.append([my_posts[-1]["id"], self.post_btn, actual_maybe_like, my_posts[-1]["user_id"]])

@@ -310,6 +310,7 @@ class ProfileScreen (Screen):
         #self.content_grid.add_widget(self.my_posts_box)
 
         my_liked_posts_id = access_my_info.get_liked_id()
+        my_disliked_posts_id = access_my_info.get_disliked_id()
         self.all_my_displayed_posts_list = []
         for a in range (len(self.my_posts_list)):
             actual_maybe_like = 0
@@ -317,6 +318,12 @@ class ProfileScreen (Screen):
                 for liked_id in my_liked_posts_id:
                     if liked_id == self.my_posts_list[a]["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked_id in my_disliked_posts_id:
+                    if disliked_id == self.my_posts_list[a]["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             print(560)
@@ -338,11 +345,18 @@ class ProfileScreen (Screen):
             self.zero_my_box.height = self.zero_my_box.height + (Window.size[1] - Window.size[0] * (1/5+1/5.08))
 
             my_liked_posts_id = access_my_info.get_liked_id()
+            my_disliked_posts_id = access_my_info.get_disliked_id()
             actual_maybe_like = 0
             try:
                 for liked_id in my_liked_posts_id:
                     if liked_id == self.my_posts_list["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked_id in my_disliked_posts_id:
+                    if disliked_id == self.my_posts_list["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             print(560)
@@ -360,7 +374,8 @@ class ProfileScreen (Screen):
         conn = self.connection
         #with connection or in phone memory
         self.my_liked_list_id = access_my_info.get_liked_id()
-        self.my_liked_posts_list = conn.get_posts(id=self.my_liked_list_id, sort_by = "time_posted", sort_order = 'desc')
+        my_disliked_posts_id = access_my_info.get_disliked_id()
+        self.my_liked_posts_list = conn.get_posts(id=self.my_liked_list_id, sort_by = "time_posted", sort_order = 'desc', num = 5)
         #self.my_liked_posts_list = []
         #self.my_liked_posts_list = functions.order_posts_by_timestamp(self.my_liked_list)
 
@@ -384,6 +399,7 @@ class ProfileScreen (Screen):
         conn = self.connection
         #with connection or in phone memory
         self.my_liked_list_id = access_my_info.get_liked_id()
+        my_disliked_list_id = access_my_info.get_disliked_id()
         self.my_liked_list = conn.get_posts(id=self.my_liked_list_id, num = 1, offset = len(self.all_liked_displayed_posts_list) - 1)
         print(self.my_liked_list)
         #self.my_liked_posts_list = []

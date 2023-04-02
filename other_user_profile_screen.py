@@ -201,6 +201,7 @@ class OtherProfileScreen (Screen):
         #self.content_grid.remove_widget(self.user_posts_box)
         print(12)
         my_liked_posts_id = access_my_info.get_liked_id()
+        my_disliked_posts_id = access_my_info.get_disliked_id()
         self.all_displayed_posts_list = []
         for a in range (len(self.posts_list)):
             actual_maybe_like = 0
@@ -208,6 +209,12 @@ class OtherProfileScreen (Screen):
                 for liked_id in my_liked_posts_id:
                     if liked_id == self.posts_list[a]["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked_id in my_disliked_posts_id:
+                    if disliked_id == self.posts_list[a]["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             self.post_btn = functions.make_post_btn(self, self.posts_list[a]["user_id"], self.posts_list[a]["content"], self.posts_list[a]["time_posted"], actual_maybe_like, a, self.posts_list[a]["background_color"])
@@ -246,11 +253,18 @@ class OtherProfileScreen (Screen):
             #self.user_posts_box.clear_widgets()
             print(12)
             my_liked_posts_id = access_my_info.get_liked_id()
+            my_disliked_posts_id = access_my_info.get_disliked_id()
             actual_maybe_like = 0
             try:
                 for liked_id in my_liked_posts_id:
                     if liked_id == self.posts_list["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked_id in my_disliked_posts_id:
+                    if disliked_id == self.posts_list["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             self.post_btn = functions.make_post_btn(self, self.posts_list["user_id"], self.posts_list["content"], self.posts_list["time_posted"], actual_maybe_like, len(self.all_displayed_posts_list), self.posts_list["background_color"])

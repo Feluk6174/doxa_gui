@@ -229,12 +229,19 @@ class SearchScreen (Screen):
         self.all_displayed_new_posts_list = []
 
         my_liked_posts_id = access_my_info.get_liked_id()
+        my_disliked_posts_id = access_my_info.get_disliked_id()
         for t in range(len(self.all_newest_posts_info)):
             actual_maybe_like = 0
             try:
                 for liked in my_liked_posts_id:
                     if liked == self.all_newest_posts_info[t]["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked in my_disliked_posts_id:
+                    if disliked == self.all_newest_posts_info[t]["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             print(self.all_newest_posts_info[t]["background_color"])
@@ -287,7 +294,7 @@ class SearchScreen (Screen):
 
     def recommended_posts_refresh(self, instance):
         connection = self.connection
-        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()))
+        self.all_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), num = 5)
         #include_background_color = str(1)
 
         #self.all_newest_posts_info = functions.order_posts_by_timestamp(self.all_new_posts_info)
@@ -300,6 +307,7 @@ class SearchScreen (Screen):
         self.all_displayed_recommended_posts_list = []
 
         my_liked_posts_id = access_my_info.get_liked_id()
+        my_disliked_posts_id = access_my_info.get_disliked_id()
         for t in range(len(self.all_recommended_posts_info)):
             actual_maybe_like = 0
             try:
@@ -308,7 +316,12 @@ class SearchScreen (Screen):
                         actual_maybe_like = 1
             except KeyError:
                 pass
-            print(self.all_newest_posts_info[t]["background_color"])
+            try:
+                for disliked in my_disliked_posts_id:
+                    if disliked == self.all_recommended_posts_info[t]["id"]:
+                        actual_maybe_like = -1
+            except KeyError:
+                pass
             self.post_btn = functions.make_post_btn(self, self.all_recommended_posts_info[t]["user_id"], self.all_recommended_posts_info[t]["content"], self.all_recommended_posts_info[t]["time_posted"], actual_maybe_like, t, self.all_recommended_posts_info[t]["background_color"])
             self.recommended_posts_box.add_widget(self.post_btn)
             self.all_displayed_recommended_posts_list.append([self.all_recommended_posts_info[t]["id"], self.post_btn, actual_maybe_like, self.all_recommended_posts_info[t]["user_id"]])
@@ -337,15 +350,22 @@ class SearchScreen (Screen):
         self.all_newest_posts_info = connection.get_posts(sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
 
         print(self.all_newest_posts_info)
-        if self.all_newest_posts_info != []:
+        if self.all_newest_posts_info != [{}]:
             self.all_newest_posts_info = self.all_newest_posts_info[0]
             self.new_posts_box.remove_widget(self.next_post_btn)
             my_liked_posts_id = access_my_info.get_liked_id()
+            my_disliked_posts_id = access_my_info.get_disliked_id()
             actual_maybe_like = 0
             try:
                 for liked in my_liked_posts_id:
                     if liked == self.all_newest_posts_info["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked in my_disliked_posts_id:
+                    if disliked == self.all_newest_posts_info["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             self.post_btn = functions.make_post_btn(self, self.all_newest_posts_info["user_id"], self.all_newest_posts_info["content"], self.all_newest_posts_info["time_posted"], actual_maybe_like, len(self.all_displayed_new_posts_list), self.all_newest_posts_info["background_color"])
@@ -364,18 +384,25 @@ class SearchScreen (Screen):
 
     def next_post_recommended(self, dt):
         connection = self.connection
-        self.all_new_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_new_posts_list))
+        self.all_new_recommended_posts_info = connection.get_posts(grup = access_my_info.get_group(connection, access_my_info.get_user_name()), num = 1, offset = len(self.all_displayed_new_posts_list))
 
         print(self.all_new_recommended_posts_info)
-        if self.all_new_recommended_posts_info != []:
+        if self.all_new_recommended_posts_info != [{}]:
             self.all_new_recommended_posts_info = self.all_new_recommended_posts_info[0]
             self.recommended_posts_box.remove_widget(self.next_post_btn)
             my_liked_posts_id = access_my_info.get_liked_id()
+            my_disliked_posts_id = access_my_info.get_disliked_id()
             actual_maybe_like = 0
             try:
                 for liked in my_liked_posts_id:
-                    if liked == self.all_newest_posts_info["id"]:
+                    if liked == self.all_new_recommended_posts_info["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked in my_disliked_posts_id:
+                    if disliked == self.all_new_recommended_posts_info["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             self.post_btn = functions.make_post_btn(self, self.all_new_recommended_posts_info["user_id"], self.all_new_recommended_posts_info["content"], self.all_new_recommended_posts_info["time_posted"], actual_maybe_like, len(self.all_new_recommended_posts_info), self.all_new_recommended_posts_info["background_color"])
@@ -397,14 +424,21 @@ class SearchScreen (Screen):
         searched_posts = conn.get_posts(hashtag = self.search_content, sort_by = "time_posted", sort_order = "desc", num = 1, offset = len(self.all_displayed_searched_posts_list))
         #exclude_flags = self.get_filter_flags()
         print(0, searched_posts)
-        if searched_posts != {}:
+        if searched_posts != [{}]:
             my_liked_posts_id = access_my_info.get_liked_id()
+            my_disliked_posts_id = access_my_info.get_disliked_id()
             self.searched_box.remove_widget(self.next_post_btn)
             actual_maybe_like = 0
             try:
                 for liked in my_liked_posts_id:
                     if liked == searched_posts["id"]:
                         actual_maybe_like = 1
+            except KeyError:
+                pass
+            try:
+                for disliked in my_disliked_posts_id:
+                    if disliked == searched_posts["id"]:
+                        actual_maybe_like = -1
             except KeyError:
                 pass
             self.post_btn = functions.make_post_btn(self, searched_posts["user_id"], searched_posts["content"], searched_posts["time_posted"], actual_maybe_like, len(self.all_displayed_searched_posts_list), searched_posts["background_color"])
@@ -597,12 +631,19 @@ class SearchScreen (Screen):
                 if searched_posts != {} and searched_posts != ():
                     self.all_displayed_searched_posts_list = []
                     my_liked_posts_id = access_my_info.get_liked_id()
+                    my_disliked_posts_id = access_my_info.get_disliked_id()
                     for t in range(len(searched_posts)):
                         actual_maybe_like = 0
                         try:
                             for liked in my_liked_posts_id:
                                 if liked == searched_posts[t]["id"]:
                                     actual_maybe_like = 1
+                        except KeyError:
+                            pass
+                        try:
+                            for disliked in my_disliked_posts_id:
+                                if disliked == searched_posts[t]["id"]:
+                                    actual_maybe_like = -1
                         except KeyError:
                             pass
                         self.post_btn = functions.make_post_btn(self, searched_posts[t]["user_id"], searched_posts[t]["content"], searched_posts[t]["time_posted"], actual_maybe_like, t, searched_posts[t]["background_color"])

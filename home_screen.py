@@ -162,6 +162,7 @@ class MainScreen (Screen):
         all_my_following = access_my_info.get_following()
         print(all_my_following)
         my_liked_posts = access_my_info.get_liked_id()
+        my_disliked_posts = access_my_info.get_disliked_id()
         print(302)
         if not all_my_following == []:
             my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc", num = 5)
@@ -183,6 +184,10 @@ class MainScreen (Screen):
                     if liked == my_posts[a]["id"]:
                         print(306)
                         actual_maybe_like = 1
+            for disliked in my_disliked_posts:
+                    if disliked == my_posts[a]["id"]:
+                        print(306)
+                        actual_maybe_like = -1
             self.post_btn = functions.make_post_btn(self, my_posts[a]["user_id"], my_posts[a]["content"], my_posts[a]["time_posted"], actual_maybe_like, a, my_posts[a]["background_color"])
             self.posts_box.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[a]["id"], self.post_btn, actual_maybe_like, my_posts[a]["user_id"]])
@@ -211,6 +216,7 @@ class MainScreen (Screen):
 
         all_my_following = access_my_info.get_following()
         my_liked_posts = access_my_info.get_liked_id()
+        my_disliked_posts = access_my_info.get_disliked_id()
         print(302)
         if not all_my_following == []:
             my_posts = self.connection.get_posts(sort_by= "time_posted", user_name=all_my_following, sort_order="desc", num = 1, offset = len(self.all_posts_i_get))
@@ -227,6 +233,10 @@ class MainScreen (Screen):
                     if liked == my_posts[-1]["id"]:
                         print(306)
                         actual_maybe_like = 1
+            for disliked in my_disliked_posts:
+                    if disliked == my_posts[-1]["id"]:
+                        print(306)
+                        actual_maybe_like = -1
             self.post_btn = functions.make_post_btn(self, my_posts[-1]["user_id"], my_posts[-1]["content"], my_posts[-1]["time_posted"], actual_maybe_like, len(self.all_posts_i_get), my_posts[-1]["background_color"])
             self.posts_box.add_widget(self.post_btn)
             self.all_posts_i_get.append([my_posts[-1]["id"], self.post_btn, actual_maybe_like, my_posts[-1]["user_id"]])
