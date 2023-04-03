@@ -158,7 +158,7 @@ class LogInScreen (Screen):
         dictionary["basic_info"]["password"] = self.password_text_input.text
         dictionary["semi_basic_info"]["profile_picture"] = info["profile_picture"]
         dictionary["semi_basic_info"]["description"] = info["info"]
-        dictionary["semi_basic_info"]["user_following"] = []
+        dictionary["semi_basic_info"]["user_following"] = ["doxa"]
         dictionary["semi_basic_info"]["liked_posts_id"] = []
         dictionary["semi_basic_info"]["disliked_posts_id"] = []
         my_info_file = open("my_info.json", "w")

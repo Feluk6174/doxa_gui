@@ -557,9 +557,9 @@ class SearchScreen (Screen):
     def dislike_press(self, instance):
         order_number = instance.order_number
         background = instance.background
-        if self.current_posts == 2:
+        if self.current_posts == 1:
             display = self.all_displayed_new_posts_list
-        elif self.current_posts == 1:
+        elif self.current_posts == 2:
             display = self.all_displayed_searched_posts_list
         elif self.current_posts == 3:
             display = self.all_displayed_recommended_posts_list
@@ -575,9 +575,10 @@ class SearchScreen (Screen):
     def name_press_user(self, instance):
         self.thinking = 1
         self.think()
-        self.name_press_user_2(instance)
+        Clock.schedule_once(partial(self.name_press_user_2, instance))
+        
     
-    def name_press_user_2(self, instance):
+    def name_press_user_2(self, instance, dt):
         other_user_profile_screen = self.other_profile_screen
         other_user_profile_screen.refresh_profile_screen(instance.text)
         
