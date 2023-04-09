@@ -33,7 +33,7 @@ print("conn")
 import register_screen, user_image_register_screen, profile_screen, home_screen, chat_screen, search_screen, create_post_screen, user_image_screen, other_user_profile_screen, following_screen, log_in_screen, advanced_settings_screen, add_encrypted, show_crypto_key, access_my_info, error_screens
 import recomendation
 try:
-    connection = api.Connection(host="34.175.220.44", port=30003)
+    connection = api.Connection()
     access_my_info.set_connection(connection)
     error = False
 except OSError:
