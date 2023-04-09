@@ -25,6 +25,7 @@ class Connection():
         
         if not host == None:
             self.connection.connect((host,  port))
+            print("connecting:", host+":"+str(port))
             self.connection.send(msg.encode("utf-8"))
             if self.connection.recv(1024).decode("utf-8") == "OK":
                 print("[ESTABLISHED CONNECTION]", __name__)
@@ -41,7 +42,11 @@ class Connection():
                     ip = ip.split(":")
                     host = ip[0]
                     port = int(ip[1])
+                    self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.connection.settimeout(2)
                     self.connection.connect((host,  port))
+                    self.connection.settimeout(None)
+                    print("connecting:", host+":"+str(port))
                     self.connection.send(msg.encode("utf-8"))
                     if self.connection.recv(1024).decode("utf-8") == "OK":
                         print("[ESTABLISHED CONNECTION]", __name__)
@@ -49,12 +54,14 @@ class Connection():
                     final_ips["ips"].append(":".join(ip))
                     connected = True
                     break
-                except ConnectionRefusedError:
-                    pass
                 except OSError:
                     pass
             if not connected:
+                self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.connection.settimeout(2)
                 self.connection.connect(("34.175.220.44",  30003))
+                self.connection.settimeout(None)
+                print("connecting:", host+":"+str(port))
                 self.connection.send(msg.encode("utf-8"))
                 if self.connection.recv(1024).decode("utf-8") == "OK":
                     print("[ESTABLISHED CONNECTION]", __name__)

@@ -36,7 +36,8 @@ try:
     connection = api.Connection()
     access_my_info.set_connection(connection)
     error = False
-except OSError:
+except OSError as e:
+    print(e)
     error = True
 
 
