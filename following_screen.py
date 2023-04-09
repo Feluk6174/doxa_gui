@@ -113,9 +113,10 @@ class FollowingScreen (Screen):
     def go_to_user_profile_screen(self, instance):
         self.thinking = 1
         self.think()
-        self.go_to_user_profile_screen_2(instance)
+        Clock.schedule_once(partial(self.go_to_user_profile_screen_2, instance))
+        
 
-    def go_to_user_profile_screen_2(self, instance):
+    def go_to_user_profile_screen_2(self, instance, dt):
         con = self.connection
         other_user_profile_screen = self.other_profile_screen
         #user = self.users_info_list[order_number][0]["user_name"]

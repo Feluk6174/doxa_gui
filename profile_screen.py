@@ -192,14 +192,18 @@ class ProfileScreen (Screen):
         self.description_box.add_widget(self.user_description_btn)
     
     def user_following_press(self, instance):
-        self.user_following_btn.text = "Thinking"
+        #self.user_following_btn.text = "Thinking"
+        self.thinking = 1
+        self.think()
         Clock.schedule_once(self.user_following_press2)
 
     def user_following_press2(self, instance):
         following_screen = self.following_screen
         following_screen.refresh_following()
 
-        self.user_following_btn.text = "Following"
+        #self.user_following_btn.text = "Following"
+        self.thinking = 0
+        self.think()
 
         self.manager.transition = FallOutTransition()
         self.manager.current = "following"
@@ -289,8 +293,9 @@ class ProfileScreen (Screen):
             #favourite posts
             self.display_liked_posts()
 
-            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
-            self.favourite_posts_box.add_widget(self.next_post_btn)
+            if self.all_liked_displayed_posts_list != []:
+                self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.next_post, text = "Next")
+                self.favourite_posts_box.add_widget(self.next_post_btn)
 
             self.current_posts = 2
 
@@ -385,11 +390,12 @@ class ProfileScreen (Screen):
         self.all_liked_displayed_posts_list = []
 
         actual_maybe_like = 1
-        for b in range (len(self.my_liked_posts_list)):
-            #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
-            self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["background_color"])
-            #self.zero_favourite_box.add_widget(self.post_btn)
-            self.all_liked_displayed_posts_list.append([self.my_liked_posts_list[b]["id"], self.post_btn, actual_maybe_like, self.my_liked_posts_list[b]["user_id"]])
+        if self.my_liked_posts_list != [{}]:
+            for b in range (len(self.my_liked_posts_list)):
+                #user_liked_info = conn.get_user(self.my_liked_posts_list[b]["user_id"])        
+                self.post_btn = functions.make_post_btn(self, self.my_liked_posts_list[b]["user_id"], self.my_liked_posts_list[b]["content"], self.my_liked_posts_list[b]["time_posted"], actual_maybe_like, b, self.my_liked_posts_list[b]["background_color"])
+                #self.zero_favourite_box.add_widget(self.post_btn)
+                self.all_liked_displayed_posts_list.append([self.my_liked_posts_list[b]["id"], self.post_btn, actual_maybe_like, self.my_liked_posts_list[b]["user_id"]])
 
         #self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
     

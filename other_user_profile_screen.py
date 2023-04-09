@@ -203,30 +203,30 @@ class OtherProfileScreen (Screen):
         my_liked_posts_id = access_my_info.get_liked_id()
         my_disliked_posts_id = access_my_info.get_disliked_id()
         self.all_displayed_posts_list = []
-        for a in range (len(self.posts_list)):
-            actual_maybe_like = 0
-            try:
-                for liked_id in my_liked_posts_id:
-                    if liked_id == self.posts_list[a]["id"]:
-                        actual_maybe_like = 1
-            except KeyError:
-                pass
-            try:
-                for disliked_id in my_disliked_posts_id:
-                    if disliked_id == self.posts_list[a]["id"]:
-                        actual_maybe_like = -1
-            except KeyError:
-                pass
-            self.post_btn = functions.make_post_btn(self, self.posts_list[a]["user_id"], self.posts_list[a]["content"], self.posts_list[a]["time_posted"], actual_maybe_like, a, self.posts_list[a]["background_color"])
-            self.user_posts_box.add_widget(self.post_btn)
-            self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like, self.posts_list[a]["user_id"]])
+        if self.posts_list != [{}]:
+            for a in range (len(self.posts_list)):
+                actual_maybe_like = 0
+                try:
+                    for liked_id in my_liked_posts_id:
+                        if liked_id == self.posts_list[a]["id"]:
+                            actual_maybe_like = 1
+                except KeyError:
+                    pass
+                try:
+                    for disliked_id in my_disliked_posts_id:
+                        if disliked_id == self.posts_list[a]["id"]:
+                            actual_maybe_like = -1
+                except KeyError:
+                    pass
+                self.post_btn = functions.make_post_btn(self, self.posts_list[a]["user_id"], self.posts_list[a]["content"], self.posts_list[a]["time_posted"], actual_maybe_like, a, self.posts_list[a]["background_color"])
+                self.user_posts_box.add_widget(self.post_btn)
+                self.all_displayed_posts_list.append([self.posts_list[a]["id"], self.post_btn, actual_maybe_like, self.posts_list[a]["user_id"]])
 
-        self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.create_new_posts, text = "Next")
-        self.user_posts_box.add_widget(self.next_post_btn)
+            self.next_post_btn = Button(size_hint_y = None, height = Window.size[1]/10, border = (0, 0, 0, 0), background_normal = "images/brick.png", background_down = "images/brick.png", on_release = self.create_new_posts, text = "Next")
+            self.user_posts_box.add_widget(self.next_post_btn)
 
-        self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) + Window.size[1]/10
-        self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
-        print(13)
+            self.user_posts_box.height = len(self.all_displayed_posts_list) * (Window.size[1] - Window.size[0] * (1 / 5 + 1 / 5.08)) + Window.size[1]/10
+            self.content_grid.bind(minimum_height=self.content_grid.setter('height'))
         
         self.posts_are_displayed = 1
 
