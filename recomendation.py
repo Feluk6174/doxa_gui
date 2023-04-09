@@ -111,7 +111,7 @@ def get_calc_info():
     return access_my_info.get_user_name(), access_my_info.get_following(), access_my_info.get_liked_id(), access_my_info.get_disliked_id(), access_my_info.get_priv_key()
 
 def recomendation_thread():
-    connection = api.Connection("34.175.220.44", 30003)
+    connection = api.Connection()
     user_name, following, liked, disliked, priv_key = get_calc_info()
     update_pos(connection, liked, disliked, following, user_name, priv_key)
     connection.close()

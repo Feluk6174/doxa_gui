@@ -61,7 +61,7 @@ class Connection():
                 self.connection.settimeout(2)
                 self.connection.connect(("34.175.220.44",  30003))
                 self.connection.settimeout(None)
-                print("connecting:", host+":"+str(port))
+                print("connecting: 34.175.220.44:30003")
                 self.connection.send(msg.encode("utf-8"))
                 if self.connection.recv(1024).decode("utf-8") == "OK":
                     print("[ESTABLISHED CONNECTION]", __name__)
