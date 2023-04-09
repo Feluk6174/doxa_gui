@@ -35,8 +35,11 @@ class Connection():
         else:
             connected = False
             final_ips = {"ips": []}
-            with open("ips.ips", "r") as f:
-                ips = json.loads(f.read())["ips"]
+            try:
+                with open("ips.ips", "r") as f:
+                    ips = json.loads(f.read())["ips"]
+            except FileNotFoundError:
+                ips = []
             for ip in ips:
                 try:
                     ip = ip.split(":")
