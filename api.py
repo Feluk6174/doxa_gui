@@ -69,7 +69,7 @@ class Connection():
                 final_ips["ips"].append("34.175.220.44:30003")
             final_ips["ips"].extend(self.get_ips())
             with open("ips.ips", "w") as f:
-                f.write(json.dumps({"ips": final_ips}))
+                f.write(json.dumps(final_ips))
         
         
 
