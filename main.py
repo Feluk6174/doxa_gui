@@ -137,3 +137,5 @@ if __name__ == "__main__":
 #text_input a alçada de teclat
 ##alarm symbol in chat button on ground box of other screens
 
+#search_screen is broken all next posts. search makes more space and newest and for me don't delate nxt_btn
+#profile screen is broken. favourites and my_posts don't add post when nxt_btn pressed

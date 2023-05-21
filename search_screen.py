@@ -425,6 +425,7 @@ class SearchScreen (Screen):
         #exclude_flags = self.get_filter_flags()
         print(0, searched_posts)
         if searched_posts != [{}]:
+            searched_posts = searched_posts[0]
             my_liked_posts_id = access_my_info.get_liked_id()
             my_disliked_posts_id = access_my_info.get_disliked_id()
             self.searched_box.remove_widget(self.next_post_btn)
@@ -626,10 +627,10 @@ class SearchScreen (Screen):
             if self.search_input.text[0] == "#":
                 print(1)
                 self.search_content = functions.filter_chars(self.search_input.text)
-                searched_posts = conn.get_posts(hashtag = self.search_content, sort_by = "time_posted", sort_order = "desc")
+                searched_posts = conn.get_posts(hashtag = self.search_content, sort_by = "time_posted", sort_order = "desc", num = 1)
                 #exclude_flags = self.get_filter_flags()
                 print(0, searched_posts)
-                if searched_posts != {} and searched_posts != ():
+                if searched_posts != {} and searched_posts != () and searched_posts != [{}]:
                     self.all_displayed_searched_posts_list = []
                     my_liked_posts_id = access_my_info.get_liked_id()
                     my_disliked_posts_id = access_my_info.get_disliked_id()
