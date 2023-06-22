@@ -8,6 +8,13 @@ from typing import Union
 import random
 import threading
 
+API_VERSION = "0.0.1"
+API_COMPATIBLE = ["0.0.1"]
+#DEFAULT_HOST = "127.0.0.1:30003"
+#DEFAULT_HOST = "34.175.220.44:30003"
+DEFAULT_HOST = "209.38.234.210:30003"
+DEFAULT_HOST = "146.190.179.32:30003"
+CONNECTION_TIMEOUT_TIME = 10 # [s]
 
 print("api", __name__)
 
@@ -15,64 +22,81 @@ class Connection():
     def __init__(self, host: str=None, port: int=None):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.response_queue = []
+        self.read = 0
+        self.size = 0
+        self.message = ""
 
         self.queue_started = False
 
         thread = threading.Thread(target=self.recv_queue)
-        thread.start()
 
-        msg = '{"type": "CLIENT"}'
+        msg = '{'+f'"type": "CLIENT", "api": "{API_VERSION}"'+'}'
         
         if not host == None:
+            self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.connection.connect((host,  port))
-            print("connecting:", host+":"+str(port))
             self.connection.send(msg.encode("utf-8"))
             if self.connection.recv(1024).decode("utf-8") == "OK":
                 print("[ESTABLISHED CONNECTION]", __name__)
                 self.queue_started = True
+            else:
+                raise OSError
+
+            thread.start()
+
             with open("ips.ips", "w") as f:
                 f.write(json.dumps({"ips": self.get_ips()}))
         else:
             connected = False
             final_ips = {"ips": []}
-            try:
-                with open("ips.ips", "r") as f:
-                    ips = json.loads(f.read())["ips"]
-            except FileNotFoundError:
-                ips = []
+            with open("ips.ips", "r") as f:
+                ips = json.loads(f.read())["ips"]
             for ip in ips:
                 try:
                     ip = ip.split(":")
                     host = ip[0]
                     port = int(ip[1])
                     self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.connection.settimeout(2)
+                    self.connection.settimeout(CONNECTION_TIMEOUT_TIME)
                     self.connection.connect((host,  port))
-                    self.connection.settimeout(None)
-                    print("connecting:", host+":"+str(port))
                     self.connection.send(msg.encode("utf-8"))
                     if self.connection.recv(1024).decode("utf-8") == "OK":
                         print("[ESTABLISHED CONNECTION]", __name__)
                         self.queue_started = True
+                    else:
+                        raise OSError
+                    self.connection.settimeout(None)
                     final_ips["ips"].append(":".join(ip))
                     connected = True
+                    thread.start()
+
                     break
+                except ConnectionRefusedError:
+                    pass
                 except OSError:
                     pass
             if not connected:
+                print(f"connectiong to default host: {DEFAULT_HOST}")
                 self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.connection.settimeout(2)
-                self.connection.connect(("34.175.220.44",  30003))
-                self.connection.settimeout(None)
-                print("connecting: 34.175.220.44:30003")
+                self.connection.settimeout(CONNECTION_TIMEOUT_TIME)
+                self.connection.connect((DEFAULT_HOST.split(":")[0],  int(DEFAULT_HOST.split(":")[1])))
                 self.connection.send(msg.encode("utf-8"))
-                if self.connection.recv(1024).decode("utf-8") == "OK":
-                    print("[ESTABLISHED CONNECTION]", __name__)
+                temp = self.connection.recv(1024).decode("utf-8")
+                if temp == "OK":
+                    print("[ESTABLISHED CONNECTION]", __name__, temp)
                     self.queue_started = True
-                final_ips["ips"].append("34.175.220.44:30003")
+                else:
+                    raise OSError
+                self.connection.settimeout(None)
+                final_ips["ips"].append(DEFAULT_HOST)
+            
+                # start thread to be able to get self.get_ips()
+                thread.start()
+
             final_ips["ips"].extend(self.get_ips())
             with open("ips.ips", "w") as f:
                 f.write(json.dumps(final_ips))
+        
         
         
 
@@ -307,62 +331,46 @@ class Connection():
                 raise WrongCaracters(post_id=post_id)
             return {}
 
-    def send(self, msg:str):
-        msg_len = len(msg)
-        msg_id = SHA256.new(msg.encode("utf-8")).hexdigest()
+    def send(self, data:str):
+        bdata = data.encode("utf-8")
+        lenghth = str(len(bdata))
+        lenghth = ("0"*(8-len(lenghth))+lenghth).encode("utf-8")
+        bdata = lenghth+bdata
+        self.connection.send(bdata)
 
-        num = int(msg_len/512)
-        num = num + 1 if not msg_len % 512 == 0 else num
-        
-        send_msg = "{"+f'"type": "NUM", "num": {num}, "id": "{msg_id}"'+"}"
-        temp = self.connection.send(send_msg.encode("utf-8"))
-
-        temp = json.loads(self.recv_from_queue())
-        temp = temp["response"]
-        if not temp == "OK":
-            print("S1" + str(temp))
-
-        for i in range(num):
-            msg_part = msg[512*i:512*i+512].replace("\"", '\\"')
-            send_msg = "{"+f'"type": "MSG PART", "id": "{msg_id}", "content": "{msg_part}"'+"}"
-            self.connection.send(send_msg.encode("utf-8"))
-            temp = self.recv_from_queue()
-            temp = json.loads(temp)
-            temp = temp["response"]
-            if not temp == "OK":
-                print("S2" + str(temp))
-
-
-    def recv(self):
-        data = json.loads(self.recv_from_queue())
-        num = data["num"]
-        msg_id = data["id"]
-        response = "{"+f'"type": "CONN RESPONSE", "response": "OK", "id": "{msg_id}"'+"}"
-        self.connection.send(response.encode("utf-8"))
-        msg = ""
-        for i in range(num):
-            msg += json.loads(self.recv_from_queue())["content"]
-            self.connection.send(response.encode("utf-8"))
-
-        return msg
 
     def recv_queue(self):
+        print("started queue")
         self.run = True
-        while self.run:
-            if self.queue_started:
-                temp = self.connection.recv(1024).decode("utf-8")
-                temp = "}\0{".join(temp.split("}{")).split("\0")
+        while True:
+            if True:
+                msg = self.connection.recv(1024).decode("utf-8")
+                print(msg)
+                if msg == "":
+                    raise socket.error
 
-                if "stop" in temp:
-                    break
-
-                for msg in temp:
-                    self.response_queue.append(msg)
+                for char in msg:
+                    # The first 8 bytes of a message indicate the size of it
+                    # This calculates the size of the message
+                    if self.read < 8:
+                        self.size += int(char)*(10**(7-self.read))
+                    else:
+                        self.message += char
+                    
+                    if self.read == self.size+7 and not self.read == 0:
+                        self.read = 0
+                        self.size = 0
+                        self.response_queue.append(self.message)
+                        self.message = ""
+                    else:
+                        self.read += 1
+            #except:
+            #    pass
         else:
             print(1)
         print("closed thread")
 
-    def recv_from_queue(self):
+    def recv(self):
         while True:
             if not len(self.response_queue) == 0:
                 temp = self.response_queue[0]
