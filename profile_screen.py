@@ -309,8 +309,8 @@ class ProfileScreen (Screen):
     def create_my_posts(self):
         print(1111)
         conn = self.connection
-        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_by = "time_posted", sort_order = 'desc')
-        print(559)
+        self.my_posts_list = conn.get_posts(user_name = self.user_name_btn.text, sort_by = "time_posted", sort_order = 'desc', num = 5)
+        print(self.my_posts_list)
         self.zero_my_box = BoxLayout(size_hint_y = None, height = len(self.my_posts_list) * (Window.size[1] - Window.size[0] * (1/5+1/5.08)), orientation = "vertical")
         #self.content_grid.add_widget(self.my_posts_box)
 
